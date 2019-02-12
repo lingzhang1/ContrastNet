@@ -64,9 +64,10 @@ for n=1:length(data_files)
 %             cut2 = xyzPoints(A2 ~= 0,:);           
             A1 = xyzPoints(:,max_axis) > M(max_axis);
             cut1 = xyzPoints(A1 ~= 0,:);
+            cut1 = cut1';
             A2 = xyzPoints(:,max_axis) <= M(max_axis);
             cut2 = xyzPoints(A2 ~= 0,:); 
-            
+            cut2 = cut2';
 %             figure;
 %             pcshow(cut1);
 %             title('cut1');
