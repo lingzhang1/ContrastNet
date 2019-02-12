@@ -181,8 +181,8 @@ def train_one_epoch(sess, ops, train_writer):
     current_data_1 = []
     current_data_2 = []
     current_label = []
-
-    for fn in range(len(TRAIN_FILES)):
+    length = len(TRAIN_FILES) % 2 == 0 ? len(TRAIN_FILES) : len(TRAIN_FILES) - 1
+    for fn in range(length):
         # log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
         if(len(a1[:, 1]) < NUM_POINT):
