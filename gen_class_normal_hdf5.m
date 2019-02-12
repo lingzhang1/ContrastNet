@@ -1,5 +1,5 @@
 % read data
-mainpath = 'data/modelnet40_ply_hdf5_2048';
+mainpath = './data/modelnet40_ply_hdf5_2048';
 
 data_path = strcat( mainpath, '/*.h5');
 data_files = dir(data_path);
@@ -7,11 +7,11 @@ data_files = dir(data_path);
 %     label_path = strcat( mainpath, '/', category, '/points_label', '/*.seg');
 %     label_files = dir(label_path);
 
-mkdir data/modelnet40_ply_hdf5_2048 coords_normal;
+mkdir data/modelnet40_ply_hdf5_2048 cut;
 
 for n=1:length(data_files)
     data_path = strcat( mainpath, '/',data_files(n).name);
-% %  data_files(n).name
+%  data_files(n).name
 
 %     h5disp(data_path);
     data = h5read(data_path,'/data');
@@ -19,15 +19,19 @@ for n=1:length(data_files)
     label = h5read(data_path,'/label');
     normal = h5read(data_path,'/normal');  
 
-    x = length(data(:, 1, 1)) + 3;
+    x = length(data(:, 1, 1));
     y = length(data(1, :, 1));
     z = length(data(1, 1, :));
     result = zeros(x,y,z);
     nan_num = 0;
     for i = 1:z
-        xyzPoints = data(:,:,i);
+        xyzPoints = data(:,:,300);
         xyzPoints = xyzPoints(1:3,:);
         xyzPoints = xyzPoints';
+        
+        figure;
+        pcshow(xyzPoints);
+        title('Original');
 
 %%%%%%%%%%%%%%%%  reduction based on label  %%%%%%%%%%%%%%%
 
@@ -37,51 +41,110 @@ for n=1:length(data_files)
 
 %%%%%%%%%%%%%%%%  cut part of the object bansed on axis  %%%%%%%%%%%%%%%
 
-    %         [Max_v,Max_i] = max(xyzPoints);
-    %         [Min_v,Min_i] = min(xyzPoints);
-    %         Range_value = Max_v - Min_v;
-    %         [value, axis] = max(Range_value);
-    %         A = xyzPoints(:,axis) > (Min_v(axis) + value * 0.3);
-    %
-    %         xyzPoints = xyzPoints(A ~= 0,:);
+            [Max_v,Max_i] = max(xyzPoints);
+            [Min_v,Min_i] = min(xyzPoints);
+            Range_value = Max_v - Min_v;
+            [max_val, max_axis] = max(Range_value);
+            [min_val, min_axis] = min(Range_value);
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            A1 = xyzPoints(:,max_axis) > (Min_v(max_axis) + max_val * 0.5);
+            cut1 = xyzPoints(A1 ~= 0,:);
+            A1 = cut1(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
+            cut1 = cut1(A1 ~= 0,:);
+            
+            A2 = xyzPoints(:,max_axis) <= (Min_v(max_axis) + max_val * 0.5);
+            cut2 = xyzPoints(A2 ~= 0,:);
+            A2 = cut2(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
+            cut2 = cut2(A2 ~= 0,:);
+            
+%             A3 = xyzPoints(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
+            
+            A3 = xyzPoints(:,min_axis) <= (Min_v(min_axis) + min_val * 0.5);
+            cut3 = xyzPoints(A3 ~= 0,:);
+            A3 = cut3(:,max_axis) > (Min_v(max_axis) + max_val * 0.5);
+            cut3 = cut3(A3 ~= 0,:);
+                        
+            A4 = xyzPoints(:,min_axis) <= (Min_v(min_axis) + min_val * 0.5);
+            cut4 = xyzPoints(A4 ~= 0,:);
+            A4 = cut4(:,max_axis) <= (Min_v(max_axis) + max_val * 0.5);
+            cut4 = cut4(A4 ~= 0,:);            
+            
+            % nomalize to 0 - 1
+%             cut1 = (xyzPoints(A1 ~= 0,:) - Min_v(max_axis)) / max_val;
+%             cut2 = (xyzPoints(A2 ~= 0,:) - Min_v(max_axis)) / max_val;
+%             cut3 = (xyzPoints(A3 ~= 0,:)- Min_v(min_axis)) /  min_val;
+%             cut4 = (xyzPoints(A4 ~= 0,:) - Min_v(min_axis)) /  min_val;
+
+%             cut1 = xyzPoints(A1 ~= 0,:);            
+%             cut2 = xyzPoints(A2 ~= 0,:);            
+%             cut3 = xyzPoints(A3 ~= 0,:);
+%             cut4 = xyzPoints(A4 ~= 0,:);
+            
+            figure;
+            pcshow(cut1);
+            title('cut1');
+            figure;
+            pcshow(cut2);
+            title('cut2');
+            figure;
+            pcshow(cut3);
+            title('cut3');
+            figure;
+            pcshow(cut4);
+            title('cut4');            
 
 %%%%%%%%%%%%%%%%  get normals  %%%%%%%%%%%%%%%
-        ptCloud = pointCloud(xyzPoints);
-        normals = pcnormals(ptCloud, 30);
-        
-        [row, col] = find(isnan(normals));
-        if length(row) ~= 0
-            xyzPoints(row,:) = xyzPoints(row-1,:);
-            normals(row,:) = normals(row-1,:);
-        end
+%         ptCloud = pointCloud(xyzPoints);
+%         normals = pcnormals(ptCloud, 10);
+%         
 %         [row, col] = find(isnan(normals));
-        nan_num = nan_num + length(row);
+%         if length(row) ~= 0
+%             xyzPoints(row,:) = xyzPoints(row-1,:);
+%             normals(row,:) = normals(row-1,:);
+%         end
+%         [row, col] = find(isnan(normals));
+%         nan_num = nan_num + length(row);
 
 %%%%%%%%%%%%%%%%  show normals  %%%%%%%%%%%%%%%
-        figure;
-        pcshow(ptCloud);
-        title('Estimated Normals of Point Cloud');
-        hold on;
-
-        x = ptCloud.Location(1:1:end,1);
-        y = ptCloud.Location(1:1:end,2);
-        z = ptCloud.Location(1:1:end,3);
-        u = normals(1:1:end,1);
-        v = normals(1:1:end,2);
-        w = normals(1:1:end,3);
-
-        quiver3(x,y,z,u,v,w);
-        hold off
+%         figure;
+%         pcshow(ptCloud);
+%         title('Cut');
+%         hold on;
+% 
+%         x = ptCloud.Location(1:1:end,1);
+%         y = ptCloud.Location(1:1:end,2);
+%         z = ptCloud.Location(1:1:end,3);
+%         u = normals(1:1:end,1);
+%         v = normals(1:1:end,2);
+%         w = normals(1:1:end,3);
+% 
+%         quiver3(x,y,z,u,v,w);
+%         hold off
 
 %%%%%%%%%%%%%%%%  out put normals and coords  %%%%%%%%%%%%%%%
-        coords_normal = cat(2, xyzPoints, normals);
-        coords_normal = coords_normal';
-        result(:,:,i) = coords_normal;
+%         coords_normal = cat(2, xyzPoints, normals);
+%         coords_normal = coords_normal';
+        result(:,:,i) = cut1';
     end
 
 %   
     processing = data_files(n).name
-    nan_num
+%     nan_num
 %     Max = max(result,[],1,'includenan');
 %     Max = max(Max,[],2,'includenan');
 %     Max = max(Max,[],3,'includenan')
