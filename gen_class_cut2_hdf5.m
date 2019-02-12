@@ -41,21 +41,19 @@ for n=1:length(data_files)
 
 %%%%%%%%%%%%%%%%  cut part of the object bansed on axis  %%%%%%%%%%%%%%%
 
-%             [Max_v,Max_i] = max(xyzPoints);
-%             [Min_v,Min_i] = min(xyzPoints);
-%             Range_value = Max_v - Min_v;
-%             [max_val, max_axis] = max(Range_value);
-%             [min_val, min_axis] = min(Range_value);
-%             
-%             middle_axis = 3 * 2 - max_axis - min_axis;
+            [Max_v,Max_i] = max(xyzPoints);
+            [Min_v,Min_i] = min(xyzPoints);
+            Range_value = Max_v - Min_v;
+            [max_val, max_axis] = max(Range_value);
+            [min_val, min_axis] = min(Range_value);
+            
+            middle_axis = 3 * 2 - max_axis - min_axis;
 
-            x = rand * 3; % 0 - 3
+            x = rand * 2; % 0 - 3
             if (x >= 0) && (x < 1)
-                max_axis = 1;
-            elseif (x >= 1) && (x < 2)
-                max_axis = 2;
+                max_axis = max_axis;
             else
-                max_axis = 3;
+                max_axis = middle_axis;
             end
             % mean
             M = mean(xyzPoints);          
