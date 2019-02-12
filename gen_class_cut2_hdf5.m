@@ -60,10 +60,14 @@ for n=1:length(data_files)
             % mean
             M = mean(xyzPoints);          
             
-            A1 = xyzPoints(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
+%             A1 = xyzPoints(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
+%             cut1 = xyzPoints(A1 ~= 0,:);
+%             A2 = xyzPoints(:,max_axis) <= M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
+%             cut2 = xyzPoints(A2 ~= 0,:);           
+            A1 = xyzPoints(:,max_axis) > M(max_axis);
             cut1 = xyzPoints(A1 ~= 0,:);
-            A2 = xyzPoints(:,max_axis) <= M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut2 = xyzPoints(A2 ~= 0,:);           
+            A2 = xyzPoints(:,max_axis) <= M(max_axis);
+            cut2 = xyzPoints(A2 ~= 0,:); 
             
 %             figure;
 %             pcshow(cut1);
