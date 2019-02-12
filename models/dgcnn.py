@@ -108,7 +108,7 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
 def get_loss(pred, label, end_points):
   """ pred: B*NUM_CLASSES,
       label: B, """
-  labels = tf.one_hot(indices=label, depth=40)
+  labels = tf.one_hot(indices=label, depth=1)
   loss = tf.losses.softmax_cross_entropy(onehot_labels=labels, logits=pred, label_smoothing=0.2)
   classify_loss = tf.reduce_mean(loss)
   return classify_loss
