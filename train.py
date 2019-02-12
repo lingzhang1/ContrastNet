@@ -187,7 +187,7 @@ def train_one_epoch(sess, ops, train_writer):
         a1, a2, a_label = provider.loadDataFile(TRAIN_FILES[train_file_idxs[fn]])
         a1 = a1[:,0:NUM_POINT,:]
         a2 = a2[:,0:NUM_POINT,:]
-        fn ++;
+        fn = fn + 1;
         b1, b2, b_label = provider.loadDataFile(TRAIN_FILES[train_file_idxs[fn]])
         b1 = b1[:,0:NUM_POINT,:]
         b2 = b2[:,0:NUM_POINT,:]
