@@ -85,8 +85,8 @@ def model(point_cloud, is_training, cut, bn_decay=None):
 
 
 def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
-  net1 = model(point_cloud_1, is_training, 1, bn_decay=None)
-  net2 = model(point_cloud_2, is_training, 2, bn_decay=None)
+  net1 = model(point_cloud_1, is_training, '1', bn_decay=None)
+  net2 = model(point_cloud_2, is_training, '2', bn_decay=None)
   net = tf.concat([net1, net2], 3)
   # MLP on global point cloud vector
   net = tf.reshape(net, [batch_size, -1])
