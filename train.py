@@ -188,7 +188,9 @@ def train_one_epoch(sess, ops, train_writer):
     else:
         length = len(TRAIN_FILES) - 1
 
-    for fn in range(length):
+    # for fn in range(length):
+    fn = 0
+    while fn < length:
         # log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
         if(len(a1[:, 1]) < NUM_POINT):
@@ -197,6 +199,7 @@ def train_one_epoch(sess, ops, train_writer):
             a2 = np.concatenate((a2, a2[0 : (NUM_POINT - len(a2[:, 1])), :]), axis=0)
         a1 = a1[0:NUM_POINT,:]
         a2 = a2[0:NUM_POINT,:]
+
         fn = fn + 1;
 
         b1, b2, b_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
