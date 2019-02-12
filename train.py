@@ -185,12 +185,12 @@ def train_one_epoch(sess, ops, train_writer):
     for fn in range(len(TRAIN_FILES)):
         log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
-        a1 = a1[:,0:NUM_POINT,:]
-        a2 = a2[:,0:NUM_POINT,:]
+        a1 = a1[0:NUM_POINT,:]
+        a2 = a2[0:NUM_POINT,:]
         fn = fn + 1;
         b1, b2, b_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
-        b1 = b1[:,0:NUM_POINT,:]
-        b2 = b2[:,0:NUM_POINT,:]
+        b1 = b1[0:NUM_POINT,:]
+        b2 = b2[0:NUM_POINT,:]
 
         current_data_1.append(a1)
         current_data_2.append(a2)
