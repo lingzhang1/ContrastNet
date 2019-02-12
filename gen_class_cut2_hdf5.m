@@ -49,12 +49,12 @@ for n=1:length(data_files)
             
             middle_axis = 3 * 2 - max_axis - min_axis;
 
-            x = rand * 2; % 0 - 3
-            if (x >= 0) && (x < 1)
-                max_axis = max_axis;
-            else
-                max_axis = middle_axis;
-            end
+%             x = rand * 2; % 0 - 3
+%             if (x >= 0) && (x < 1)
+%                 max_axis = max_axis;
+%             else
+%                 max_axis = middle_axis;
+%             end
             % mean
             M = mean(xyzPoints);          
             
@@ -98,6 +98,6 @@ for n=1:length(data_files)
 
     %     h5disp(out_path);
     end
-
+    num
     processing = data_files(n).name
 end
