@@ -145,6 +145,16 @@ def load_h5(h5_filename):
   label = f['label'][:]
   return (data, label)
 
+def load_cut_h5(h5_filename):
+  f = h5py.File(h5_filename)
+  cut1 = f['cut1'][:]
+  cut2 = f['cut2'][:]
+  label = f['label'][:]
+  return (cut1, cut2, label)
+
+def loadDataFile_cut(filename):
+  return load_cut_h5(filename)
+
 def loadDataFile(filename):
   return load_h5(filename)
 
