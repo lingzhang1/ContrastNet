@@ -187,24 +187,14 @@ def train_one_epoch(sess, ops, train_writer):
     while fn < len(TRAIN_FILES) - 1:
         # log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
-        a1 = np.transpose(a1,(1,0))
-        a2 = np.transpose(a2,(1,0))
         
-        print('-----------------------------------')
-        print(a1.shape)
-        print(a2.shape)
-        print(a_label.shape)
-        print('-----------------------------------')
         if(a1.shape[1] < NUM_POINT):
-            print('aaaaaaaaaaaaa')
             a1 = np.concatenate((a1, a1[0 : (NUM_POINT - a1.shape[1]), :]), axis=1)
         if(a2.shape[1] < NUM_POINT):
-            print('bbbbbbbbbbbbbbbbbbb')
             a2 = np.concatenate((a2, a2[0 : (NUM_POINT - a2.shape[1]), :]), axis=1)
 
         a1 = a1[0:NUM_POINT,:]
         a2 = a2[0:NUM_POINT,:]
-        # a_label = a_label[0:NUM_POINT]
 
         fn = fn + 1;
 
@@ -215,18 +205,6 @@ def train_one_epoch(sess, ops, train_writer):
             b2 = np.concatenate((b2, b2[0 : (NUM_POINT - b2.shape[1]), :]), axis=0)
         b1 = b1[0:NUM_POINT,:]
         b2 = b2[0:NUM_POINT,:]
-
-
-        print('AAAAAAAAAAAAAAAAAAAAAAAAA')
-        print(a1.shape)
-        print(a2.shape)
-        print(b1.shape)
-        print(b2.shape)
-        print(a_label.shape)
-        print(b_label.shape)
-        print('BBBBBBBBBBBBBBBBBBBBBBBBBBBB')
-
-
 
         fn = fn + 1;
 
