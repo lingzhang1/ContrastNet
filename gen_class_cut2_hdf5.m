@@ -28,6 +28,7 @@ for n=1:length(data_files)
         xyzPoints = xyzPoints(1:3,:);
         xyzPoints = xyzPoints'; 
         xyzLabel = label(i);
+        
         figure;
         pcshow(xyzPoints);
         title('Original');
@@ -53,40 +54,16 @@ for n=1:length(data_files)
             
             A1 = xyzPoints(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut1 = xyzPoints(A1 ~= 0,:);
-            A1 = cut1(:,middle_axis) > M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut1 = cut1(A1 ~= 0,:);
-%             length(cut1)
-            
             A2 = xyzPoints(:,max_axis) <= M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut2 = xyzPoints(A2 ~= 0,:);
-            A2 = cut2(:,middle_axis) > M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut2 = cut2(A2 ~= 0,:);
-%             length(cut2)
+            cut2 = xyzPoints(A2 ~= 0,:);           
             
-            A3 = xyzPoints(:,middle_axis) <= M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut3 = xyzPoints(A3 ~= 0,:);
-            A3 = cut3(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut3 = cut3(A3 ~= 0,:);
-%             length(cut3)
-                        
-            A4 = xyzPoints(:,middle_axis) <= M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut4 = xyzPoints(A4 ~= 0,:);
-            A4 = cut4(:,max_axis) <=  M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-            cut4 = cut4(A4 ~= 0,:);            
-%             length(cut4)
-            
-%             figure;
-%             pcshow(cut1);
-%             title('cut1');
-%             figure;
-%             pcshow(cut2);
-%             title('cut2');
-%             figure;
-%             pcshow(cut3);
-%             title('cut3');
-%             figure;
-%             pcshow(cut4);
-%             title('cut4');            
+            figure;
+            pcshow(cut1);
+            title('cut1');
+            figure;
+            pcshow(cut2);
+            title('cut2');
+           
 
         out_path = strcat('./data/modelnet40_ply_hdf5_2048_cut/',num2str(num),'_', data_files(n).name);
         num = num + 1;
@@ -104,13 +81,7 @@ for n=1:length(data_files)
         h5write(out_path,'/cut1',cut1);
         
         h5create(out_path,'/cut2',[length(cut2) length(cut2(1,:))],'Datatype','single');
-        h5write(out_path,'/cut2',cut2);
-   
-        h5create(out_path,'/cut3',[length(cut3) length(cut3(1,:))],'Datatype','single');
-        h5write(out_path,'/cut3',cut3);
-        
-        h5create(out_path,'/cut4',[length(cut4) length(cut4(1,:))],'Datatype','single');
-        h5write(out_path,'/cut4',cut4);        
+        h5write(out_path,'/cut2',cut2);      
         
 %         h5create(out_path,'/label',[1],'Datatype','uint8', 'Deflate', 1);
         h5create(out_path,'/label',[1],'Datatype','uint8');
