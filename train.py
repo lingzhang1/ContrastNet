@@ -183,12 +183,21 @@ def train_one_epoch(sess, ops, train_writer):
     current_label = []
 
     for fn in range(len(TRAIN_FILES)):
-        log_string('----' + str(fn) + '-----')
+        # log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
+        if(len(a1[:, 1]) <= NUM_POINT):
+            a1.append(a1[0 : NUM_POINT - len(a1[:, 1]), :])
+        if(len(a2[:, 1]) <= NUM_POINT):
+            a2.append(a2[0 : NUM_POINT - len(a2[:, 1]), :])
         a1 = a1[0:NUM_POINT,:]
         a2 = a2[0:NUM_POINT,:]
         fn = fn + 1;
+
         b1, b2, b_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
+        if(len(b1[:, 1]) <= NUM_POINT):
+            b1.append(b1[0 : NUM_POINT - len(b1[:, 1]), :])
+        if(len(b2[:, 1]) <= NUM_POINT):
+            b2.append(b2[0 : NUM_POINT - len(b2[:, 1]), :])
         b1 = b1[0:NUM_POINT,:]
         b2 = b2[0:NUM_POINT,:]
 
