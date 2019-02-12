@@ -190,7 +190,7 @@ def train_one_epoch(sess, ops, train_writer):
 
     # for fn in range(length):
     fn = 0
-    while fn < length:
+    while fn < length - 1:
         # log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
         if(len(a1[:, 1]) < NUM_POINT):
