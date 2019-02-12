@@ -7,11 +7,11 @@ data_files = dir(data_path);
 %     label_path = strcat( mainpath, '/', category, '/points_label', '/*.seg');
 %     label_files = dir(label_path);
 
-mkdir data/modelnet40_ply_hdf5_2048 cut;
+mkdir data/modelnet40_ply_hdf5_2048_cut;
 
+num = 0;
 for n=1:length(data_files)
     data_path = strcat( mainpath, '/',data_files(n).name);
-%  data_files(n).name
 
 %     h5disp(data_path);
     data = h5read(data_path,'/data');
@@ -22,13 +22,12 @@ for n=1:length(data_files)
     x = length(data(:, 1, 1));
     y = length(data(1, :, 1));
     z = length(data(1, 1, :));
-    result = zeros(x,y,z);
-    nan_num = 0;
+
     for i = 1:z
-        xyzPoints = data(:,:,400);
+        xyzPoints = data(:,:,11);
         xyzPoints = xyzPoints(1:3,:);
-        xyzPoints = xyzPoints';
-        
+        xyzPoints = xyzPoints'; 
+        xyzLabel = label(i);
         figure;
         pcshow(xyzPoints);
         title('Original');
@@ -46,124 +45,79 @@ for n=1:length(data_files)
             Range_value = Max_v - Min_v;
             [max_val, max_axis] = max(Range_value);
             [min_val, min_axis] = min(Range_value);
+            
+            middle_axis = 3 * 2 - max_axis - min_axis;
+            
             % mean
-            M = mean(xyzPoints);
+            M = mean(xyzPoints)          
             
-%             A1 = xyzPoints(:,max_axis) > (Min_v(max_axis) + max_val * 0.5);
-%             cut1 = xyzPoints(A1 ~= 0,:);
-%             A1 = cut1(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
-%             cut1 = cut1(A1 ~= 0,:);
-            
-            A1 = xyzPoints(:,max_axis) > M(max_axis);
+            A1 = xyzPoints(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut1 = xyzPoints(A1 ~= 0,:);
-            A1 = cut1(:,min_axis) > M(min_axis);
+            A1 = cut1(:,middle_axis) > M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut1 = cut1(A1 ~= 0,:);
+%             length(cut1)
             
-            A2 = xyzPoints(:,max_axis) <= M(max_axis);
+            A2 = xyzPoints(:,max_axis) <= M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut2 = xyzPoints(A2 ~= 0,:);
-            A2 = cut2(:,min_axis) > M(min_axis);
+            A2 = cut2(:,middle_axis) > M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut2 = cut2(A2 ~= 0,:);
+%             length(cut2)
             
-            A3 = xyzPoints(:,min_axis) <= M(min_axis);
+            A3 = xyzPoints(:,middle_axis) <= M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut3 = xyzPoints(A3 ~= 0,:);
-            A3 = cut3(:,max_axis) > M(max_axis);
+            A3 = cut3(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut3 = cut3(A3 ~= 0,:);
+%             length(cut3)
                         
-            A4 = xyzPoints(:,min_axis) <= M(min_axis);
+            A4 = xyzPoints(:,middle_axis) <= M(middle_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut4 = xyzPoints(A4 ~= 0,:);
-            A4 = cut4(:,max_axis) <=  M(max_axis);
+            A4 = cut4(:,max_axis) <=  M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut4 = cut4(A4 ~= 0,:);            
+%             length(cut4)
             
-            % nomalize to 0 - 1
-%             cut1 = (xyzPoints(A1 ~= 0,:) - Min_v(max_axis)) / max_val;
-%             cut2 = (xyzPoints(A2 ~= 0,:) - Min_v(max_axis)) / max_val;
-%             cut3 = (xyzPoints(A3 ~= 0,:)- Min_v(min_axis)) /  min_val;
-%             cut4 = (xyzPoints(A4 ~= 0,:) - Min_v(min_axis)) /  min_val;
-            
-            figure;
-            pcshow(cut1);
-            title('cut1');
-            figure;
-            pcshow(cut2);
-            title('cut2');
-            figure;
-            pcshow(cut3);
-            title('cut3');
-            figure;
-            pcshow(cut4);
-            title('cut4');            
+%             figure;
+%             pcshow(cut1);
+%             title('cut1');
+%             figure;
+%             pcshow(cut2);
+%             title('cut2');
+%             figure;
+%             pcshow(cut3);
+%             title('cut3');
+%             figure;
+%             pcshow(cut4);
+%             title('cut4');            
 
-%%%%%%%%%%%%%%%%  get normals  %%%%%%%%%%%%%%%
-%         ptCloud = pointCloud(xyzPoints);
-%         normals = pcnormals(ptCloud, 10);
-%         
-%         [row, col] = find(isnan(normals));
-%         if length(row) ~= 0
-%             xyzPoints(row,:) = xyzPoints(row-1,:);
-%             normals(row,:) = normals(row-1,:);
-%         end
-%         [row, col] = find(isnan(normals));
-%         nan_num = nan_num + length(row);
-
-%%%%%%%%%%%%%%%%  show normals  %%%%%%%%%%%%%%%
-%         figure;
-%         pcshow(ptCloud);
-%         title('Cut');
-%         hold on;
+        out_path = strcat('./data/modelnet40_ply_hdf5_2048_cut/',num2str(num),'_', data_files(n).name);
+        num = num + 1;
 % 
-%         x = ptCloud.Location(1:1:end,1);
-%         y = ptCloud.Location(1:1:end,2);
-%         z = ptCloud.Location(1:1:end,3);
-%         u = normals(1:1:end,1);
-%         v = normals(1:1:end,2);
-%         w = normals(1:1:end,3);
+%         info = h5info(data_path);
 % 
-%         quiver3(x,y,z,u,v,w);
-%         hold off
+%         Dataspace_data = info.Datasets(1).Dataspace.Size;
+%         ChunkSize_data = info.Datasets(1).ChunkSize;
+% 
+%         Dataspace_label = info.Datasets(3).Dataspace.Size;
+%         ChunkSize_label = info.Datasets(3).ChunkSize;
 
-%%%%%%%%%%%%%%%%  out put normals and coords  %%%%%%%%%%%%%%%
-%         coords_normal = cat(2, xyzPoints, normals);
-%         coords_normal = coords_normal';
-        result(:,:,i) = cut1';
+%         h5create(out_path,'/cut1',[length(cut1) length(cut1(1,:)) 1],'Datatype','single','Deflate', 4);
+        h5create(out_path,'/cut1',[length(cut1) length(cut1(1,:))],'Datatype','single');
+        h5write(out_path,'/cut1',cut1);
+        
+        h5create(out_path,'/cut2',[length(cut2) length(cut2(1,:))],'Datatype','single');
+        h5write(out_path,'/cut2',cut2);
+   
+        h5create(out_path,'/cut3',[length(cut3) length(cut3(1,:))],'Datatype','single');
+        h5write(out_path,'/cut3',cut3);
+        
+        h5create(out_path,'/cut4',[length(cut4) length(cut4(1,:))],'Datatype','single');
+        h5write(out_path,'/cut4',cut4);        
+        
+%         h5create(out_path,'/label',[1],'Datatype','uint8', 'Deflate', 1);
+        h5create(out_path,'/label',[1],'Datatype','uint8');
+        h5write(out_path,'/label',xyzLabel);
+
+    %     h5disp(out_path);
     end
 
-%   
     processing = data_files(n).name
-%     nan_num
-%     Max = max(result,[],1,'includenan');
-%     Max = max(Max,[],2,'includenan');
-%     Max = max(Max,[],3,'includenan')
-%     Min = min(result,[],1,'includenan');
-%     Min = min(Min,[],2,'includenan');
-%     Min = min(Min,[],3,'includenan')
-
-    out_path = strcat( mainpath, '/coords_normal/',data_files(n).name);
-
-    info = h5info(data_path);
-
-%     Dataspace_data = info.Datasets(1).Dataspace.Size;
-    ChunkSize_data = info.Datasets(1).ChunkSize;
-
-    Dataspace_faceId = info.Datasets(2).Dataspace.Size;
-    ChunkSize_faceId = info.Datasets(2).ChunkSize;
-
-    Dataspace_label = info.Datasets(3).Dataspace.Size;
-    ChunkSize_label = info.Datasets(3).ChunkSize;
-
-    Dataspace_normal = info.Datasets(4).Dataspace.Size;
-    ChunkSize_normal = info.Datasets(4).ChunkSize;
-
-    h5create(out_path,'/data',[x y z],'Datatype','single','ChunkSize', [ChunkSize_data], 'Deflate', 4);
-    h5write(out_path,'/data',result);
-
-    h5create(out_path,'/faceId',[Dataspace_faceId],'Datatype','int32','ChunkSize', [ChunkSize_faceId],'Deflate', 1);
-    h5write(out_path,'/faceId',faceId);
-
-    h5create(out_path,'/label',[Dataspace_label],'Datatype','uint8','ChunkSize', [ChunkSize_label],'Deflate', 1);
-    h5write(out_path,'/label',label);
-
-    h5create(out_path,'/normal',[Dataspace_normal],'Datatype','single','ChunkSize', [ChunkSize_normal],'Deflate', 4);
-    h5write(out_path,'/normal',normal);
-
-%     h5disp(out_path);
 end
