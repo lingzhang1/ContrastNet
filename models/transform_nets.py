@@ -7,7 +7,7 @@ sys.path.append(BASE_DIR)
 sys.path.append(os.path.join(BASE_DIR, '../utils'))
 import tf_util
 
-def input_transform_net(edge_feature, is_training, bn_decay=None, K=3, is_dist=False):
+def input_transform_net(edge_feature, is_training, cut, bn_decay=None, K=3, is_dist=False):
   """ Input (XYZ) Transform Net, input is BxNx3 gray image
     Return:
       Transformation matrix of size 3xK """
@@ -18,26 +18,26 @@ def input_transform_net(edge_feature, is_training, bn_decay=None, K=3, is_dist=F
   net = tf_util.conv2d(edge_feature, 64, [1,1],
              padding='VALID', stride=[1,1],
              bn=True, is_training=is_training,
-             scope='tconv1', bn_decay=bn_decay, is_dist=is_dist)
+             scope=cut+'tconv1', bn_decay=bn_decay, is_dist=is_dist)
   net = tf_util.conv2d(net, 128, [1,1],
              padding='VALID', stride=[1,1],
              bn=True, is_training=is_training,
-             scope='tconv2', bn_decay=bn_decay, is_dist=is_dist)
-  
+             scope=cut+'tconv2', bn_decay=bn_decay, is_dist=is_dist)
+
   net = tf.reduce_max(net, axis=-2, keep_dims=True)
-  
+
   net = tf_util.conv2d(net, 1024, [1,1],
              padding='VALID', stride=[1,1],
              bn=True, is_training=is_training,
-             scope='tconv3', bn_decay=bn_decay, is_dist=is_dist)
+             scope=cut+'tconv3', bn_decay=bn_decay, is_dist=is_dist)
   net = tf_util.max_pool2d(net, [num_point,1],
-               padding='VALID', scope='tmaxpool')
+               padding='VALID', scope=cut+'tmaxpool')
 
   net = tf.reshape(net, [batch_size, -1])
   net = tf_util.fully_connected(net, 512, bn=True, is_training=is_training,
-                  scope='tfc1', bn_decay=bn_decay,is_dist=is_dist)
+                  scope=cut+'tfc1', bn_decay=bn_decay,is_dist=is_dist)
   net = tf_util.fully_connected(net, 256, bn=True, is_training=is_training,
-                  scope='tfc2', bn_decay=bn_decay,is_dist=is_dist)
+                  scope=cut+'tfc2', bn_decay=bn_decay,is_dist=is_dist)
 
   with tf.variable_scope('transform_XYZ') as sc:
     # assert(K==3)
