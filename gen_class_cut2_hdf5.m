@@ -29,9 +29,9 @@ for n=1:length(data_files)
         xyzPoints = xyzPoints'; 
         xyzLabel = label(i);
         
-        figure;
-        pcshow(xyzPoints);
-        title('Original');
+%         figure;
+%         pcshow(xyzPoints);
+%         title('Original');
 
 %%%%%%%%%%%%%%%%  reduction based on label  %%%%%%%%%%%%%%%
 
@@ -41,30 +41,37 @@ for n=1:length(data_files)
 
 %%%%%%%%%%%%%%%%  cut part of the object bansed on axis  %%%%%%%%%%%%%%%
 
-            [Max_v,Max_i] = max(xyzPoints);
-            [Min_v,Min_i] = min(xyzPoints);
-            Range_value = Max_v - Min_v;
-            [max_val, max_axis] = max(Range_value);
-            [min_val, min_axis] = min(Range_value);
-            
-            middle_axis = 3 * 2 - max_axis - min_axis;
-            
+%             [Max_v,Max_i] = max(xyzPoints);
+%             [Min_v,Min_i] = min(xyzPoints);
+%             Range_value = Max_v - Min_v;
+%             [max_val, max_axis] = max(Range_value);
+%             [min_val, min_axis] = min(Range_value);
+%             
+%             middle_axis = 3 * 2 - max_axis - min_axis;
+
+            x = rand * 3; % 0 - 3
+            if (x >= 0) && (x < 1)
+                max_axis = 1;
+            elseif (x >= 1) && (x < 2)
+                max_axis = 2;
+            else
+                max_axis = 3;
+            end
             % mean
-            M = mean(xyzPoints)          
+            M = mean(xyzPoints);          
             
             A1 = xyzPoints(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut1 = xyzPoints(A1 ~= 0,:);
             A2 = xyzPoints(:,max_axis) <= M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut2 = xyzPoints(A2 ~= 0,:);           
             
-            figure;
-            pcshow(cut1);
-            title('cut1');
-            figure;
-            pcshow(cut2);
-            title('cut2');
+%             figure;
+%             pcshow(cut1);
+%             title('cut1');
+%             figure;
+%             pcshow(cut2);
+%             title('cut2');
            
-
         out_path = strcat('./data/modelnet40_ply_hdf5_2048_cut/',num2str(num),'_', data_files(n).name);
         num = num + 1;
 % 

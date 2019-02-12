@@ -28,9 +28,9 @@ for n=1:length(data_files)
         xyzPoints = xyzPoints(1:3,:);
         xyzPoints = xyzPoints'; 
         xyzLabel = label(i);
-        figure;
-        pcshow(xyzPoints);
-        title('Original');
+%         figure;
+%         pcshow(xyzPoints);
+%         title('Original');
 
 %%%%%%%%%%%%%%%%  reduction based on label  %%%%%%%%%%%%%%%
 
@@ -49,7 +49,7 @@ for n=1:length(data_files)
             middle_axis = 3 * 2 - max_axis - min_axis;
             
             % mean
-            M = mean(xyzPoints)          
+            M = mean(xyzPoints);          
             
             A1 = xyzPoints(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
             cut1 = xyzPoints(A1 ~= 0,:);
