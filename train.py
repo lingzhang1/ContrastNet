@@ -178,19 +178,13 @@ def train_one_epoch(sess, ops, train_writer):
     train_file_idxs = np.arange(0, len(TRAIN_FILES))
     np.random.shuffle(train_file_idxs)
 
-    current_data_1 = []
-    current_data_2 = []
-    current_label = []
+    current_data_1 = np.empty((TRAIN_FILES, NUM_POINT,1,1,1))
+    current_data_2 = np.empty((TRAIN_FILES, NUM_POINT,1,1,1))
+    current_label  =  np.empty((TRAIN_FILES,1))
 
-    length = 0
-    if len(TRAIN_FILES) % 2 == 0:
-        length = len(TRAIN_FILES)
-    else:
-        length = len(TRAIN_FILES) - 1
-
-    # for fn in range(length):
     fn = 0
-    while fn < length - 1:
+    count = 0
+    while fn < len(TRAIN_FILES) - 1:
         # log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
         if(len(a1[:, 1]) < NUM_POINT):
@@ -210,29 +204,33 @@ def train_one_epoch(sess, ops, train_writer):
         b1 = b1[0:NUM_POINT,:]
         b2 = b2[0:NUM_POINT,:]
 
-        current_data_1.append(a1)
-        current_data_2.append(a2)
-        current_label.append(1)
+        fn = fn + 1;
 
-        current_data_1.append(a1)
-        current_data_2.append(b1)
-        current_label.append(0)
+        current_data_1[6*count, :,:,:,:] = a1
+        current_data_2[6*count, :,:,:,:] = a2
+        current_label[6*count,:] = 1
 
-        current_data_1.append(a1)
-        current_data_2.append(b2)
-        current_label.append(0)
+        current_data_1[6*count+1, :,:,:,:] = b1
+        current_data_2[6*count+1, :,:,:,:] = b2
+        current_label[6*count+1,:] = 1
 
-        current_data_1.append(a2)
-        current_data_2.append(b1)
-        current_label.append(0)
+        current_data_1[6*count+2, :,:,:,:] = a1
+        current_data_2[6*count+2, :,:,:,:] = b1
+        current_label[6*count+2,:] = 0
 
-        current_data_1.append(a2)
-        current_data_2.append(b2)
-        current_label.append(0)
+        current_data_1[6*count+3, :,:,:,:] = a1
+        current_data_2[6*count+3, :,:,:,:] = b2
+        current_label[6*count+3,:] = 0
 
-        current_data_1.append(b1)
-        current_data_2.append(b2)
-        current_label.append(1)
+        current_data_1[6*count+4, :,:,:,:] = a2
+        current_data_2[6*count+4, :,:,:,:] = b1
+        current_label[6*count+4,:] = 0
+
+        current_data_1[6*count+5, :,:,:,:] = a2
+        current_data_2[6*count+5, :,:,:,:] = b2
+        current_label[6*count+5,:] = 0
+
+        count = count + 1
 
     # current_data, current_label, _ = provider.shuffle_data(current_data, np.squeeze(current_label))
     # current_label = np.squeeze(current_label)
