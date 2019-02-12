@@ -39,7 +39,7 @@ def input_transform_net(edge_feature, is_training, cut, bn_decay=None, K=3, is_d
   net = tf_util.fully_connected(net, 256, bn=True, is_training=is_training,
                   scope=cut+'tfc2', bn_decay=bn_decay,is_dist=is_dist)
 
-  with tf.variable_scope('transform_XYZ') as sc:
+  with tf.variable_scope(cut+'transform_XYZ') as sc:
     # assert(K==3)
     with tf.device('/cpu:0'):
       weights = tf.get_variable('weights', [256, K*K],
