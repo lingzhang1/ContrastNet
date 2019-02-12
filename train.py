@@ -178,9 +178,9 @@ def train_one_epoch(sess, ops, train_writer):
     train_file_idxs = np.arange(0, len(TRAIN_FILES))
     np.random.shuffle(train_file_idxs)
 
-    current_data_1 = np.empty((TRAIN_FILES, NUM_POINT,1,1,1))
-    current_data_2 = np.empty((TRAIN_FILES, NUM_POINT,1,1,1))
-    current_label  =  np.empty((TRAIN_FILES,1))
+    current_data_1 = np.empty([len(TRAIN_FILES), NUM_POINT,3])
+    current_data_2 = np.empty([len(TRAIN_FILES), NUM_POINT,3])
+    current_label  =  np.empty([len(TRAIN_FILES),1])
 
     fn = 0
     count = 0
@@ -206,8 +206,8 @@ def train_one_epoch(sess, ops, train_writer):
 
         fn = fn + 1;
 
-        current_data_1[6*count, :,:,:,:] = a1
-        current_data_2[6*count, :,:,:,:] = a2
+        current_data_1[6*count,:,:] = a1
+        current_data_2[6*count, :,:] = a2
         current_label[6*count,:] = 1
 
         current_data_1[6*count+1, :,:,:,:] = b1
