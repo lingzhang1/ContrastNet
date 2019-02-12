@@ -25,7 +25,7 @@ for n=1:length(data_files)
     result = zeros(x,y,z);
     nan_num = 0;
     for i = 1:z
-        xyzPoints = data(:,:,300);
+        xyzPoints = data(:,:,400);
         xyzPoints = xyzPoints(1:3,:);
         xyzPoints = xyzPoints';
         
@@ -46,42 +46,32 @@ for n=1:length(data_files)
             Range_value = Max_v - Min_v;
             [max_val, max_axis] = max(Range_value);
             [min_val, min_axis] = min(Range_value);
+            % mean
+            M = mean(xyzPoints);
             
+%             A1 = xyzPoints(:,max_axis) > (Min_v(max_axis) + max_val * 0.5);
+%             cut1 = xyzPoints(A1 ~= 0,:);
+%             A1 = cut1(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
+%             cut1 = cut1(A1 ~= 0,:);
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            A1 = xyzPoints(:,max_axis) > (Min_v(max_axis) + max_val * 0.5);
+            A1 = xyzPoints(:,max_axis) > M(max_axis);
             cut1 = xyzPoints(A1 ~= 0,:);
-            A1 = cut1(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
+            A1 = cut1(:,min_axis) > M(min_axis);
             cut1 = cut1(A1 ~= 0,:);
             
-            A2 = xyzPoints(:,max_axis) <= (Min_v(max_axis) + max_val * 0.5);
+            A2 = xyzPoints(:,max_axis) <= M(max_axis);
             cut2 = xyzPoints(A2 ~= 0,:);
-            A2 = cut2(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
+            A2 = cut2(:,min_axis) > M(min_axis);
             cut2 = cut2(A2 ~= 0,:);
             
-%             A3 = xyzPoints(:,min_axis) > (Min_v(min_axis) + min_val * 0.5);
-            
-            A3 = xyzPoints(:,min_axis) <= (Min_v(min_axis) + min_val * 0.5);
+            A3 = xyzPoints(:,min_axis) <= M(min_axis);
             cut3 = xyzPoints(A3 ~= 0,:);
-            A3 = cut3(:,max_axis) > (Min_v(max_axis) + max_val * 0.5);
+            A3 = cut3(:,max_axis) > M(max_axis);
             cut3 = cut3(A3 ~= 0,:);
                         
-            A4 = xyzPoints(:,min_axis) <= (Min_v(min_axis) + min_val * 0.5);
+            A4 = xyzPoints(:,min_axis) <= M(min_axis);
             cut4 = xyzPoints(A4 ~= 0,:);
-            A4 = cut4(:,max_axis) <= (Min_v(max_axis) + max_val * 0.5);
+            A4 = cut4(:,max_axis) <=  M(max_axis);
             cut4 = cut4(A4 ~= 0,:);            
             
             % nomalize to 0 - 1
@@ -89,11 +79,6 @@ for n=1:length(data_files)
 %             cut2 = (xyzPoints(A2 ~= 0,:) - Min_v(max_axis)) / max_val;
 %             cut3 = (xyzPoints(A3 ~= 0,:)- Min_v(min_axis)) /  min_val;
 %             cut4 = (xyzPoints(A4 ~= 0,:) - Min_v(min_axis)) /  min_val;
-
-%             cut1 = xyzPoints(A1 ~= 0,:);            
-%             cut2 = xyzPoints(A2 ~= 0,:);            
-%             cut3 = xyzPoints(A3 ~= 0,:);
-%             cut4 = xyzPoints(A4 ~= 0,:);
             
             figure;
             pcshow(cut1);
