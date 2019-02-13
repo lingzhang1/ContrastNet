@@ -235,13 +235,12 @@ def train_one_epoch(sess, ops, train_writer):
         current_data_1[6*count+5, :,:] = a2
         current_data_2[6*count+5, :,:] = b2
         current_label[6*count+5,:] = 0
-        print("$$$$$$$$$$$$$$$$$$$$")
-        print(current_label.shape)
 
         count = count + 1
 
     # current_data, current_label, _ = provider.shuffle_data(current_data, np.squeeze(current_label))
-    # current_label = np.squeeze(current_label)
+    current_label = np.squeeze(current_label)
+    # current_label = current_label[:,0]
 
     file_size = current_data_1.shape[0]
     num_batches = file_size // BATCH_SIZE
