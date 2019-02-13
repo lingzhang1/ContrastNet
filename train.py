@@ -254,16 +254,16 @@ def train_one_epoch(sess, ops, train_writer):
 
         # Augment batched point clouds by rotation and jittering
         rotated_data_1 = provider.rotate_point_cloud(current_data_1[start_idx:end_idx, :, :])
-        jittered_data_1 = provider.jitter_point_cloud(rotated_data)
-        jittered_data_1 = provider.random_scale_point_cloud(jittered_data)
-        jittered_data_1 = provider.rotate_perturbation_point_cloud(jittered_data)
-        jittered_data_1 = provider.shift_point_cloud(jittered_data)
+        jittered_data_1 = provider.jitter_point_cloud(rotated_data_1)
+        jittered_data_1 = provider.random_scale_point_cloud(jittered_data_1)
+        jittered_data_1 = provider.rotate_perturbation_point_cloud(jittered_data_1)
+        jittered_data_1 = provider.shift_point_cloud(jittered_data_1)
 
         rotated_data_2 = provider.rotate_point_cloud(current_data_2[start_idx:end_idx, :, :])
-        jittered_data_2 = provider.jitter_point_cloud(rotated_data)
-        jittered_data_2 = provider.random_scale_point_cloud(jittered_data)
-        jittered_data_2 = provider.rotate_perturbation_point_cloud(jittered_data)
-        jittered_data_2 = provider.shift_point_cloud(jittered_data)
+        jittered_data_2 = provider.jitter_point_cloud(rotated_data_2)
+        jittered_data_2 = provider.random_scale_point_cloud(jittered_data_2)
+        jittered_data_2 = provider.rotate_perturbation_point_cloud(jittered_data_2)
+        jittered_data_2 = provider.shift_point_cloud(jittered_data_2)
 
         feed_dict = {ops['pointclouds_pl_1']: jittered_data_1,
                      ops['pointclouds_pl_2']: jittered_data_2,
