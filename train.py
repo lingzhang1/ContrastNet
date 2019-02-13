@@ -192,8 +192,10 @@ def train_one_epoch(sess, ops, train_writer):
         if(a2.shape[0] < NUM_POINT):
             a2 = np.concatenate((a2, a2[0 : (NUM_POINT - a2.shape[0]), :]), axis=0)
 
-        a1 = a1[0:NUM_POINT,:]
-        a2 = a2[0:NUM_POINT,:]
+        idx = np.random.randint(a1.shape[0], size=NUM_POINT)
+        a1 = a1[idx,:]
+        idx = np.random.randint(a2.shape[0], size=NUM_POINT)
+        a2 = a2[idx,:]
 
         fn = fn + 1;
 
@@ -202,8 +204,11 @@ def train_one_epoch(sess, ops, train_writer):
             b1 = np.concatenate((b1, b1[0 : (NUM_POINT - b1.shape[0]), :]), axis=0)
         if(b2.shape[0] < NUM_POINT):
             b2 = np.concatenate((b2, b2[0 : (NUM_POINT - b2.shape[0]), :]), axis=0)
-        b1 = b1[0:NUM_POINT,:]
-        b2 = b2[0:NUM_POINT,:]
+
+        idx = np.random.randint(b1.shape[0], size=NUM_POINT)
+        b1 = b1[idx,:]
+        idx = np.random.randint(b2.shape[0], size=NUM_POINT)
+        b2 = b2[idx,:]
 
         fn = fn + 1;
 
@@ -233,9 +238,12 @@ def train_one_epoch(sess, ops, train_writer):
 
         count = count + 1
 
-    # current_data, current_label, _ = provider.shuffle_data(current_data, np.squeeze(current_label))
+    combine_data = np.concatenate((current_data_1, current_data_2), axis=2)
+    combine_data, current_label, _ = provider.shuffle_data(combine_data, np.squeeze(current_label))
+    current_data_1 = combine_data[:, :, 0:3]
+    current_data_2 = combine_data[:, :, 3:6]
+
     current_label = np.squeeze(current_label)
-    # current_label = current_label[:,0]
 
     file_size = current_data_1.shape[0]
     num_batches = file_size // BATCH_SIZE
