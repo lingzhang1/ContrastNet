@@ -193,12 +193,12 @@ def train_one_epoch(sess, ops, train_writer):
         if(a1.shape[0] < NUM_POINT):
             print(a1.shape[0])
             print(a1.shape[1])
-            a1 = np.concatenate((a1, a1[0 : (NUM_POINT - a1.shape[0]), :]), axis=1)
+            a1 = np.concatenate((a1, a1[0 : (NUM_POINT - a1.shape[0]), :]), axis=0)
             print("=================")
             print(a1.shape[0])
             print(a1.shape[1])
         if(a2.shape[0] < NUM_POINT):
-            a2 = np.concatenate((a2, a2[0 : (NUM_POINT - a2.shape[0]), :]), axis=1)
+            a2 = np.concatenate((a2, a2[0 : (NUM_POINT - a2.shape[0]), :]), axis=0)
 
         a1 = a1[0:NUM_POINT,:]
         a2 = a2[0:NUM_POINT,:]
