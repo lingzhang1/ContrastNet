@@ -193,12 +193,12 @@ def train_one_epoch(sess, ops, train_writer):
         if(a1.shape[0] < NUM_POINT):
             print(a1.shape[0])
             print(a1.shape[1])
-            a1 = np.concatenate((a1, a1[0 : (NUM_POINT - a1.shape[1]), :]), axis=1)
+            a1 = np.concatenate((a1, a1[0 : (NUM_POINT - a1.shape[0]), :]), axis=1)
             print("=================")
+            print(a1.shape[0])
             print(a1.shape[1])
-            print(a1.shape[2])
         if(a2.shape[0] < NUM_POINT):
-            a2 = np.concatenate((a2, a2[0 : (NUM_POINT - a2.shape[1]), :]), axis=1)
+            a2 = np.concatenate((a2, a2[0 : (NUM_POINT - a2.shape[0]), :]), axis=1)
 
         a1 = a1[0:NUM_POINT,:]
         a2 = a2[0:NUM_POINT,:]
@@ -209,10 +209,10 @@ def train_one_epoch(sess, ops, train_writer):
         fn = fn + 1;
 
         b1, b2, b_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
-        if(b1.shape[1] < NUM_POINT):
-            b1 = np.concatenate((b1, b1[0 : (NUM_POINT - b1.shape[1]), :]), axis=0)
-        if(b2.shape[1] < NUM_POINT):
-            b2 = np.concatenate((b2, b2[0 : (NUM_POINT - b2.shape[1]), :]), axis=0)
+        if(b1.shape[0] < NUM_POINT):
+            b1 = np.concatenate((b1, b1[0 : (NUM_POINT - b1.shape[0]), :]), axis=0)
+        if(b2.shape[0] < NUM_POINT):
+            b2 = np.concatenate((b2, b2[0 : (NUM_POINT - b2.shape[0]), :]), axis=0)
         b1 = b1[0:NUM_POINT,:]
         b2 = b2[0:NUM_POINT,:]
 
