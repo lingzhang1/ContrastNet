@@ -22,7 +22,7 @@ for n=1:length(data_files)
     x = length(data(:, 1, 1));
     y = length(data(1, :, 1));
     z = length(data(1, 1, :));
-
+    
     for i = 1:z
         xyzPoints = data(:,:,i);
         xyzPoints = xyzPoints(1:3,:);
@@ -87,10 +87,10 @@ for n=1:length(data_files)
 %         ChunkSize_label = info.Datasets(3).ChunkSize;
 
 %         h5create(out_path,'/cut1',[length(cut1) length(cut1(1,:)) 1],'Datatype','single','Deflate', 4);
-        h5create(out_path,'/cut1',[length(cut1) length(cut1(1,:))],'Datatype','single');
+        h5create(out_path,'/cut1',[length(cut1(:, 1)) length(cut1(1,:))],'Datatype','single');
         h5write(out_path,'/cut1',cut1);
         
-        h5create(out_path,'/cut2',[length(cut2) length(cut2(1,:))],'Datatype','single');
+        h5create(out_path,'/cut2',[length(cut2(:, 1)) length(cut2(1,:))],'Datatype','single');
         h5write(out_path,'/cut2',cut2);      
         
 %         h5create(out_path,'/label',[1],'Datatype','uint8', 'Deflate', 1);
