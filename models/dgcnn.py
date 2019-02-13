@@ -100,7 +100,7 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
                                 scope='fc2', bn_decay=bn_decay)
   net = tf_util.dropout(net, keep_prob=0.5, is_training=is_training,
                         scope='dp2')
-  net = tf_util.fully_connected(net, 1, activation_fn=None, scope='fc3')
+  net = tf_util.fully_connected(net, 2, activation_fn=None, scope='fc3')
 
   return net, end_points
 
@@ -108,7 +108,7 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
 def get_loss(pred, label, end_points):
   """ pred: B*NUM_CLASSES,
       label: B, """
-  labels = tf.one_hot(indices=label, depth=1)
+  labels = tf.one_hot(indices=label, depth=2)
   loss = tf.losses.softmax_cross_entropy(onehot_labels=labels, logits=pred, label_smoothing=0.2)
   classify_loss = tf.reduce_mean(loss)
   return classify_loss

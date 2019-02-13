@@ -324,8 +324,6 @@ def eval_one_epoch(sess, ops, test_writer):
     log_string('eval accuracy: %f'% (total_correct / float(total_seen)))
     log_string('eval avg class acc: %f' % (np.mean(np.array(total_correct_class)/np.array(total_seen_class,dtype=np.float))))
 
-
-
 if __name__ == "__main__":
     train()
     LOG_FOUT.close()
