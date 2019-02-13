@@ -235,6 +235,8 @@ def train_one_epoch(sess, ops, train_writer):
         current_data_1[6*count+5, :,:] = a2
         current_data_2[6*count+5, :,:] = b2
         current_label[6*count+5,:] = 0
+        print("$$$$$$$$$$$$$$$$$$$$")
+        print(current_label.shape)
 
         count = count + 1
 
