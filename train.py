@@ -187,9 +187,6 @@ def train_one_epoch(sess, ops, train_writer):
     while fn < len(TRAIN_FILES) - 1:
         # log_string('----' + str(fn) + '-----')
         a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
-        print(a1.shape[0])
-        print(a1.shape[1])
-
         if(a1.shape[0] < NUM_POINT):
             print(a1.shape[0])
             print(a1.shape[1])
@@ -202,9 +199,6 @@ def train_one_epoch(sess, ops, train_writer):
 
         a1 = a1[0:NUM_POINT,:]
         a2 = a2[0:NUM_POINT,:]
-
-        print(a1.shape[0])
-        print(a1.shape[1])
 
         fn = fn + 1;
 
