@@ -102,7 +102,7 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
                         scope='dp2')
   net = tf_util.fully_connected(net, 2, activation_fn=None, scope='fc3')
 
-  return net, end_points
+  return net, net1, net2, end_points
 
 
 def get_loss(pred, label, end_points):

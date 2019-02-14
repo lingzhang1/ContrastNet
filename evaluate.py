@@ -60,14 +60,14 @@ def evaluate(num_votes):
         pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
         #save labels for test
-        # with open('feature.txt') as f:
+        # with open('feature.txt', 'w+') as f:
         #     for line in current_label:
         #         np.savetxt(f, line, fmt='%d')
         # simple model
-        pred,end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
+        pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
         print("=======================")
-        # print(feature.shape)
+        # print(feature1.shape)
 
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
@@ -115,10 +115,9 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
         label = np.squeeze(label)
         current_data[fn] = data
         current_label[fn] = label
-        print(current_data.shape)
 
     #save labels for test
-    with open('label.txt') as f:
+    with open('label.txt', 'w+') as f:
         for line in current_label:
             np.savetxt(f, line, fmt='%d')
 
