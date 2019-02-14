@@ -58,13 +58,14 @@ def evaluate(num_votes):
 
     with tf.device('/gpu:'+str(GPU_INDEX)):
         pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
+        pointclouds_pl_2 = pointclouds_pl
         is_training_pl = tf.placeholder(tf.bool, shape=())
         #save labels for test
         # with open('feature.txt') as f:
         #     for line in current_label:
         #         np.savetxt(f, line, fmt='%d')
         # simple model
-        pred, feature, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
+        pred, feature, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl_2, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
         print(feature.shape)
 
