@@ -106,7 +106,8 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
     current_label  =  np.empty([len(TRAIN_FILES),1])
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
-        data, label = provider.loadDataFile_cut(TEST_FILES[fn])
+        cut1, cut2, label = provider.loadDataFile_cut(TEST_FILES[fn])
+        data = np.concatenate((cut1, cut2), axis=0)
         idx = np.random.randint(current_data.shape[0], size=NUM_POINT)
         data = data[idx,:]
         label = np.squeeze(label)
