@@ -80,7 +80,7 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   net = tf.reduce_max(net, axis=1, keep_dims=True)
   return net
 
-def get_model(point_cloud_1, is_training, bn_decay=None):
+def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
 
   batch_size = point_cloud_1.get_shape()[0].value
   num_point = point_cloud_1.get_shape()[1].value
@@ -103,13 +103,13 @@ def get_model(point_cloud_1, is_training, bn_decay=None):
                         scope='dp2')
   net = tf_util.fully_connected(net, 2, activation_fn=None, scope='fc3')
 
-  return net, net1, end_points
+  return net net1, end_points
 
 
 def get_loss(pred, label, end_points):
   """ pred: B*NUM_CLASSES,
       label: B, """
-  labels = tf.one_hot(indices=label, depth=40)
+  labels = tf.one_hot(indices=label, depth=2)
   loss = tf.losses.softmax_cross_entropy(onehot_labels=labels, logits=pred, label_smoothing=0.2)
   classify_loss = tf.reduce_mean(loss)
   return classify_loss

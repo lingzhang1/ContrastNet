@@ -64,10 +64,10 @@ def evaluate(num_votes):
         #     for line in current_label:
         #         np.savetxt(f, line, fmt='%d')
         # simple model
-        pred, feature, end_points = MODEL.get_model(pointclouds_pl, is_training_pl)
+        pred,end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
         print("=======================")
-        print(feature.shape)
+        # print(feature.shape)
 
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
