@@ -67,6 +67,7 @@ def evaluate(num_votes):
         # simple model
         pred, feature, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl_2, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
+        print("=======================")
         print(feature.shape)
 
         # Add ops to save and restore all the variables.
