@@ -138,20 +138,21 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
             feed_dict = {ops['pointclouds_pl']: rotated_data,
                          ops['labels_pl']: current_label[start_idx:end_idx],
                          ops['is_training_pl']: is_training}
+            print(ops['feature'].shape)
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
 
-            array = tf.reshape(ops['feature'], [BATCH_SIZE, -1])
-            array = array.eval(session=sess)
+            # array = tf.reshape(ops['feature'], [BATCH_SIZE, -1])
+            # array = array.eval(sess)
 
             batch_pred_sum += pred_val
             batch_pred_val = np.argmax(pred_val, 1)
             for el_idx in range(cur_batch_size):
                 batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
-
-        for line in array:
-            np.savetxt(f, line, fmt='%f')
+        #
+        # for line in array:
+        #     np.savetxt(f, line, fmt='%f')
 
         # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
         # pred_val = np.argmax(batch_pred_classes, 1)
