@@ -140,14 +140,16 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
                          ops['is_training_pl']: is_training}
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
+
+            array = tf.reshape(ops['feature'], [BATCH_SIZE, -1])
+            array = array.eval(session=sess)
+
             batch_pred_sum += pred_val
             batch_pred_val = np.argmax(pred_val, 1)
             for el_idx in range(cur_batch_size):
                 batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
 
-        array = tf.reshape(ops['feature'], [BATCH_SIZE, -1])
-        array = array.eval(session=sess)
         for line in array:
             np.savetxt(f, line, fmt='%f')
 
