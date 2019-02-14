@@ -62,6 +62,8 @@ def evaluate(num_votes):
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
+        
+        feature1 = tf.reshape(feature1, [BATCH_SIZE, -1])
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
@@ -75,7 +77,6 @@ def evaluate(num_votes):
     # Restore variables from disk.
     saver.restore(sess, MODEL_PATH)
     log_string("Model restored.")
-
     ops = {'pointclouds_pl': pointclouds_pl,
            'labels_pl': labels_pl,
            'is_training_pl': is_training_pl,
@@ -142,7 +143,7 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
 
-            # array = tf.reshape(ops['feature'], [BATCH_SIZE, -1])
+
             # array = array.eval(sess)
 
             batch_pred_sum += pred_val
