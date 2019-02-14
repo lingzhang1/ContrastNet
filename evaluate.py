@@ -36,7 +36,7 @@ if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
-NUM_CLASSES = 40
+NUM_CLASSES = 2
 SHAPE_NAMES = [line.rstrip() for line in \
     open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/shape_names.txt'))]
 
@@ -66,8 +66,6 @@ def evaluate(num_votes):
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
-        print("=======================")
-        print(feature1.shape)
 
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
@@ -101,6 +99,9 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
     total_seen_class = [0 for _ in range(NUM_CLASSES)]
     total_correct_class = [0 for _ in range(NUM_CLASSES)]
     fout = open(os.path.join(DUMP_DIR, 'pred_label.txt'), 'w')
+
+    print("=======================")
+    print(feature1.shape)
 
     current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3])
     labels  =  np.empty([len(TRAIN_FILES),1])
