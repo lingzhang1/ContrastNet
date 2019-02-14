@@ -62,16 +62,6 @@ def evaluate(num_votes):
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
-
-        init = tf.global_variables_initializer()
-        sess = tf.Session()
-        sess.run(init)
-        array = feature1.eval(sess)
-        #save labels for test
-        with open('feature.txt', 'w+') as f:
-            for line in array:
-                np.savetxt(f, line, fmt='%f')
-
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
@@ -92,8 +82,12 @@ def evaluate(num_votes):
            'pred': pred,
            'loss': loss}
 
-    eval_one_epoch(sess, ops, num_votes)
-
+    #save labels for test
+    with open('feature.txt', 'w+') as f:
+        eval_one_epoch(sess, ops, num_votes)
+        array = feature1.eval(sess)
+        for line in array:
+            np.savetxt(f, line, fmt='%f')
 
 def eval_one_epoch(sess, ops, num_votes=1, topk=1):
     error_cnt = 0
