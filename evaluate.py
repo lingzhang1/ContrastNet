@@ -146,7 +146,7 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
                 batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
 
-        array = ops['feature'].eval(sess)
+        array = ops['feature'].eval(session=sess)
         for line in array:
             np.savetxt(f, line, fmt='%f')
 
