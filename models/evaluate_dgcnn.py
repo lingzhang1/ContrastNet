@@ -80,7 +80,7 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   net = tf.reduce_max(net, axis=1, keep_dims=True)
   return net
 
-def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
+def get_model(point_cloud_1, is_training, bn_decay=None):
 
   batch_size = point_cloud_1.get_shape()[0].value
   num_point = point_cloud_1.get_shape()[1].value
