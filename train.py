@@ -242,7 +242,6 @@ def train_one_epoch(sess, ops, train_writer):
     combine_data, current_label, _ = provider.shuffle_data(combine_data, np.squeeze(current_label))
     current_data_1 = combine_data[:, :, 0:3]
     current_data_2 = combine_data[:, :, 3:6]
-
     current_label = np.squeeze(current_label)
 
     file_size = current_data_1.shape[0]
