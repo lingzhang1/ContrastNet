@@ -140,10 +140,10 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
                          ops['labels_pl']: current_label[start_idx:end_idx],
                          ops['is_training_pl']: is_training}
 
-            array = ops['feature'].eval(sess)
-
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
+                                      
+            array = ops['feature'].eval(sess)
 
             batch_pred_sum += pred_val
             batch_pred_val = np.argmax(pred_val, 1)
