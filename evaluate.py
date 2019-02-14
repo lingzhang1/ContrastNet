@@ -103,6 +103,7 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
     fout = open(os.path.join(DUMP_DIR, 'pred_label.txt'), 'w')
 
     current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3])
+    labels  =  np.empty([len(TRAIN_FILES),1])
     current_label  =  np.empty([len(TRAIN_FILES),1])
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
@@ -114,11 +115,13 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
 
         label = np.squeeze(label)
         current_data[fn] = data
-        current_label[fn] = label
+        current_label[fn] = 0
+        labels[fn] = label
 
+    current_label = np.squeeze(current_label)
     #save labels for test
     with open('label.txt', 'w+') as f:
-        for line in current_label:
+        for line in labels:
             np.savetxt(f, line, fmt='%d')
 
     file_size = current_data.shape[0]
