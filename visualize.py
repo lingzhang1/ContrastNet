@@ -5,7 +5,7 @@
 import numpy as np
 from numpy import array
 
-num = 1000
+num = 2000
 NUM_POINT = 256
 X = np.empty([num, NUM_POINT], dtype=float)
 read_feature = open("feature.txt", "r")
@@ -18,7 +18,7 @@ for l in range(num):
   count = count + 1
 
 print(len(X))
-X = X[:1000]
+X = X[:num]
 
 y = np.empty([num], dtype=int)
 read_label = open("label.txt", "r")
@@ -29,11 +29,7 @@ for l in range(num):
   line_split = [float(i) for i in line_split]
   y[count] = array(line_split)
   count = count + 1
-y = y[:1000]
-
-print(X[1,:])
-print(y[1])
-
+y = y[:num]
 
 from sklearn.manifold import TSNE
 tsne = TSNE(n_components=2, random_state=0)
