@@ -86,7 +86,7 @@ def evaluate(num_votes):
 
     #save labels for test
     feature_f = open('feature.txt', 'w+')
-    eval_one_epoch(sess, ops, num_votes, feature_f)
+    eval_one_epoch(sess, ops,feature_f, num_votes)
 
 def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     error_cnt = 0
