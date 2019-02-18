@@ -7,7 +7,7 @@ from numpy import array
 
 num = 3000
 NUM_POINT = 256
-X = np.empty([len(num), NUM_POINT], dtype=float)
+X = np.empty([num, NUM_POINT], dtype=float)
 read_feature = open("feature.txt", "r")
 count = 0
 for line in read_feature:
@@ -19,7 +19,7 @@ for line in read_feature:
 print(len(X))
 X = X[:1000]
 
-y = np.empty([len(num)], dtype=int)
+y = np.empty([num], dtype=int)
 read_label = open("label.txt", "r")
 count = 0
 for line in read_label:
