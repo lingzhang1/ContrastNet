@@ -4,7 +4,7 @@
 # X = digits.data[:500]
 import numpy as np
 from numpy import array
-
+from matplotlib import pyplot as plt
 num = 2000
 NUM_POINT = 256
 X = np.empty([num, NUM_POINT], dtype=float)
@@ -17,8 +17,8 @@ for l in range(num):
   X[count] = array(line_split)
   count = count + 1
 
-print(len(X))
 X = X[:num]
+print(len(X))
 
 y = np.empty([num], dtype=int)
 read_label = open("label.txt", "r")
@@ -30,6 +30,7 @@ for l in range(num):
   y[count] = array(line_split)
   count = count + 1
 y = y[:num]
+print(y)
 
 from sklearn.manifold import TSNE
 tsne = TSNE(n_components=2, random_state=0)
@@ -38,10 +39,12 @@ X_2d = tsne.fit_transform(X)
 
 target_ids = range(len(y))
 
-from matplotlib import pyplot as plt
+
 plt.figure(figsize=(6, 5))
-colors = 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'orange', 'purple'
-for i, c in zip(target_ids, colors):
-    plt.scatter(X_2d[y == i, 0], X_2d[y == i, 1], c=c)
+# colors = 'r', 'g', 'b', 'c', 'm', 'y', 'k', 'w', 'orange', 'purple'
+# for i, c in zip(target_ids, colors):
+for i in target_ids:
+    if i<=10:
+      plt.scatter(X_2d[y == i, 0], X_2d[y == i, 1], c=np.random.rand(1,3))
 plt.legend()
 plt.show()
