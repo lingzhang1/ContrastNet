@@ -18,7 +18,7 @@ import pc_util
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
-parser.add_argument('--batch_size', type=int, default=4, help='Batch Size during training [default: 1]')
+parser.add_argument('--batch_size', type=int, default=1, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
@@ -85,10 +85,10 @@ def evaluate(num_votes):
            'feature': feature1}
 
     #save labels for test
-    with open('feature.txt', 'w+') as f:
-        eval_one_epoch(sess, ops, num_votes)
+    feature_f = open('feature.txt', 'w+')
+    eval_one_epoch(sess, ops, num_votes, feature_f)
 
-def eval_one_epoch(sess, ops, num_votes=1, topk=1):
+def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     error_cnt = 0
     is_training = False
     total_correct = 0
@@ -116,9 +116,9 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
 
     current_label = np.squeeze(current_label)
     #save labels for test
-    with open('label.txt', 'w+') as f:
-        for line in labels:
-            np.savetxt(f, line, fmt='%d')
+    label_f =  open('label.txt', 'w+')
+    for line in labels:
+        np.savetxt(label_f, line, fmt='%d')
 
     file_size = current_data.shape[0]
     num_batches = file_size // BATCH_SIZE
@@ -143,16 +143,16 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
             print("==========")
-            print(ops['feature'].shape)
+            print(ops['feature'])
             batch_pred_sum += pred_val
             batch_pred_val = np.argmax(pred_val, 1)
             for el_idx in range(cur_batch_size):
                 batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
 
-        array = ops['feature'].eval(session = sess)
+        # array = ops['feature'].eval(session = sess)
         for line in array:
-            np.savetxt(f, line, fmt='%f')
+            np.savetxt(feature_f, line, fmt='%f')
         # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
         # pred_val = np.argmax(batch_pred_classes, 1)
         pred_val = np.argmax(batch_pred_sum, 1)
