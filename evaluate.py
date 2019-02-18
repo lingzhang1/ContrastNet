@@ -142,9 +142,6 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
 
             loss_val, pred_val, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
-            print("***********************************************")
-            print(feat_out)
-            print("***********************************************")
             batch_pred_sum += pred_val
             batch_pred_val = np.argmax(pred_val, 1)
             for el_idx in range(cur_batch_size):
@@ -152,9 +149,6 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
 
         feat_np = sess.run(tf.constant(feat_out))
-        print("----------------------------------------")
-        print(feat_np)
-        print("----------------------------------------")
 
         for line in feat_np:
             np.savetxt(feature_f, line, fmt='%f')
