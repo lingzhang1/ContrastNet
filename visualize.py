@@ -10,7 +10,7 @@ for line in read_feature:
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
   X.append(line_split)
-print(X.shape)
+print(len(X))
 X = X[:1000]
 
 y = []
