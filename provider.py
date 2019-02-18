@@ -151,9 +151,7 @@ def load_cut_h5(h5_filename):
   while random_id[0] ==  random_id[1]:
     random_id = np.random.randint(30, size=2)
     random_id = random_id + 1
-
   random_id = map(str, random_id)
-  print('cut' + random_id[0])
   cut1 = f['cut' + random_id[0]][:]
   cut2 = f['cut' + random_id[1]][:]
   label = f['label'][:]
