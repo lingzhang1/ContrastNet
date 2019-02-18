@@ -26,7 +26,7 @@ tsne = TSNE(n_components=2, random_state=0)
 
 X_2d = tsne.fit_transform(X)
 
-# target_ids = range(len(digits.target_names))
+target_ids = range(len(y))
 
 from matplotlib import pyplot as plt
 plt.figure(figsize=(6, 5))
