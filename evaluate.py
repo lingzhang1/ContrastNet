@@ -151,8 +151,12 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
                 batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
 
-        array = ops['feature'].eval(session = sess)
-        for line in array:
+        feat_np = sess.run(tf.constant(feat_out))
+        print("----------------------------------------")
+        print(feat_np)
+        print("----------------------------------------")
+
+        for line in feat_np:
             np.savetxt(feature_f, line, fmt='%f')
         # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
         # pred_val = np.argmax(batch_pred_classes, 1)
