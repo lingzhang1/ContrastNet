@@ -8,6 +8,7 @@ X = []
 read_feature = open("feature.txt", "r")
 for line in read_feature:
   line_split = line.split(" ")
+  line_split = [float(i) for i in line_split]
   X.append(float(line_split))
 print(X.shape)
 X = X[:1000]
@@ -16,6 +17,7 @@ y = []
 read_label = open("label.txt", "r")
 for line in read_label:
   line_split = line.split(" ")
+  line_split = [float(i) for i in line_split]
   y.append(float(line_split))
 y = y[:1000]
 
