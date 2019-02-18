@@ -5,12 +5,13 @@
 import numpy as np
 from numpy import array
 
-num = 3000
+num = 1000
 NUM_POINT = 256
 X = np.empty([num, NUM_POINT], dtype=float)
 read_feature = open("feature.txt", "r")
 count = 0
-for line in read_feature:
+for l in len(num):
+  line = read_feature[l]
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
   X[count] = array(line_split)
@@ -22,7 +23,8 @@ X = X[:1000]
 y = np.empty([num], dtype=int)
 read_label = open("label.txt", "r")
 count = 0
-for line in read_label:
+for l in : len(num)
+  line = read_label[l]
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
   y[count] = array(line_split)
