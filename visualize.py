@@ -23,7 +23,7 @@ X = X[:1000]
 y = np.empty([num], dtype=int)
 read_label = open("label.txt", "r")
 count = 0
-for l in len(num)
+for l in len(num):
   line = read_label[l]
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
