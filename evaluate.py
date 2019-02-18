@@ -63,7 +63,7 @@ def evaluate(num_votes):
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
 
-        feature1 = tf.reshape(feature1, [BATCH_SIZE, -1])
+        # feature1 = tf.reshape(feature1, [BATCH_SIZE, -1])
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
