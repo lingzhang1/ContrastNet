@@ -4,12 +4,19 @@
 # X = digits.data[:500]
 # y = digits.target[:500]
 
+X = []
 read_feature = open("feature.txt", "r")
-X = read_feature.read()
+for line in read_feature:
+  line_split = line.split(" ")
+  X.append(float(line_split))
 print(X.shape)
 X = X[:1000]
+
+y = []
 read_label = open("label.txt", "r")
-y = read_label.read()
+for line in read_label:
+  line_split = line.split(" ")
+  y.append(float(line_split))
 y = y[:1000]
 
 from sklearn.manifold import TSNE
