@@ -142,8 +142,8 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
 
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
-            cout << "==========" << endl;
-            cout << ops['feature'].shape << endl;
+            print("==========")
+            print(ops['feature'].shape)
             batch_pred_sum += pred_val
             batch_pred_val = np.argmax(pred_val, 1)
             for el_idx in range(cur_batch_size):
