@@ -35,5 +35,5 @@ SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
     max_iter=-1, probability=False, random_state=None, shrinking=True,
     tol=0.001, verbose=False)
     
-clf.score(X, y)
+print(clf.score(X, y))
 # print(clf.predict([[-0.8, -1]]))
