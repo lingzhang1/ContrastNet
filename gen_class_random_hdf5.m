@@ -73,11 +73,12 @@ for n=1:length(data_files)
                 h5write(out_path, cut2_path,cut2);
                
                 count = count + 1;
-
+                
             end
         end
         h5create(out_path,'/label',[1],'Datatype','uint8');
         h5write(out_path,'/label',xyzLabel);
+%         h5disp(out_path);
     end
     num
     processing = data_files(n).name
