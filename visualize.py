@@ -26,7 +26,7 @@ for line in read_label:
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
   y[count] = array(line_split)
-  y.append(line_split)
+  count = count + 1
 y = y[:1000]
 
 print(X[1,:])
