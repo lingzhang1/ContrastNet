@@ -21,6 +21,10 @@ for line in read_label:
   y.append(line_split)
 y = y[:1000]
 
+print(X[1, :])
+print(y[1])
+
+
 from sklearn.manifold import TSNE
 tsne = TSNE(n_components=2, random_state=0)
 
