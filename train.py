@@ -280,7 +280,7 @@ def train_one_epoch(sess, ops, train_writer):
         total_correct += correct
         total_seen += BATCH_SIZE
         loss_sum += loss_val
-        if batch_idx % 200 == 0:
+        if batch_idx % 50 == 0:
             log_string('mean loss: %f' % (loss_sum / float(batch_idx+1)))
             log_string('accuracy: %f' % (total_correct / float(total_seen)))
 
