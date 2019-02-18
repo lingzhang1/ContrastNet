@@ -6,7 +6,7 @@ import numpy as np
 from numpy import array
 from matplotlib import pyplot as plt
 num = 2000
-NUM_POINT = 256
+NUM_POINT = 512
 X = np.empty([num, NUM_POINT], dtype=float)
 read_feature = open("feature.txt", "r")
 count = 0
