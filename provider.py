@@ -147,8 +147,12 @@ def load_h5(h5_filename):
 
 def load_cut_h5(h5_filename):
   f = h5py.File(h5_filename)
-  cut1 = f['cut1'][:]
-  cut2 = f['cut2'][:]
+  random_id = np.random.randint(30, size=2)
+  random_id = random_id + 1
+  random_id = map(str, random_id)
+  print('cut' + random_id[0])
+  cut1 = f['cut' + random_id[0]][:]
+  cut2 = f['cut' + random_id[1]][:]
   label = f['label'][:]
   return (cut1, cut2, label)
 
