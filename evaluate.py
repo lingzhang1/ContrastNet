@@ -98,9 +98,10 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     total_correct_class = [0 for _ in range(NUM_CLASSES)]
     fout = open(os.path.join(DUMP_DIR, 'pred_label.txt'), 'w')
 
-    current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    labels  =  np.empty([len(TRAIN_FILES),1], dtype=int)
-    current_label  =  np.empty([len(TRAIN_FILES),1], dtype=int)
+    current_data = np.empty([len(TEST_FILES), NUM_POINT, 3], dtype=float)
+    labels  =  np.empty([len(TEST_FILES),1], dtype=int)
+    current_label  =  np.empty([len(TEST_FILES),1], dtype=int)
+
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
         cut1, cut2, label = provider.loadDataFile_cut(TEST_FILES[fn])
