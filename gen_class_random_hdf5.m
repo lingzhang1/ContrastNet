@@ -26,9 +26,9 @@ for n=1:length(data_files)
         xyzPoints = xyzPoints(1:3,:);
         xyzPoints = xyzPoints';
         xyzLabel = label(i);
-        figure;
-        pcshow(xyzPoints);
-        title('Original');
+%         figure;
+%         pcshow(xyzPoints);
+%         title('Original');
 
         out_path = strcat('./data/modelnet40_ply_hdf5_2048_cut/',num2str(num),'_', data_files(n).name);
         num = num + 1;
@@ -53,12 +53,12 @@ for n=1:length(data_files)
             A2 = S < 0;
             cut2 = xyzPoints(A2 ~= 0,:);
             
-            figure;
-            pcshow(cut1);
-            title('cut1');
-            figure;
-            pcshow(cut2);
-            title('cut2');
+%             figure;
+%             pcshow(cut1);
+%             title('cut1');
+%             figure;
+%             pcshow(cut2);
+%             title('cut2');
             
             if (length(cut1(:, 1)) > point_num) && (length(cut2(:, 1)) > point_num)
                 
