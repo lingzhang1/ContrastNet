@@ -178,19 +178,15 @@ def train_one_epoch(sess, ops, train_writer):
     train_file_idxs = np.arange(0, len(TRAIN_FILES))
     np.random.shuffle(train_file_idxs)
 
-    current_data_1 = np.empty([6*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    current_data_2 = np.empty([6*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    current_label  =  np.empty([6*len(TRAIN_FILES),1], dtype=int)
+    current_data_1 = np.empty([3*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_data_2 = np.empty([3*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_label  =  np.empty([3*len(TRAIN_FILES),1], dtype=int)
 
     fn = 0
     count = 0
     while fn < len(TRAIN_FILES) - 1:
         # log_string('----' + str(fn) + '-----')
-        a1, a2, a_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
-        if(a1.shape[0] < NUM_POINT):
-            a1 = np.concatenate((a1, a1[0 : (NUM_POINT - a1.shape[0]), :]), axis=0)
-        if(a2.shape[0] < NUM_POINT):
-            a2 = np.concatenate((a2, a2[0 : (NUM_POINT - a2.shape[0]), :]), axis=0)
+        a1, a2, _ = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(a1.shape[0], size=NUM_POINT)
         a1 = a1[idx,:]
@@ -200,10 +196,6 @@ def train_one_epoch(sess, ops, train_writer):
         fn = fn + 1;
 
         b1, b2, b_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
-        if(b1.shape[0] < NUM_POINT):
-            b1 = np.concatenate((b1, b1[0 : (NUM_POINT - b1.shape[0]), :]), axis=0)
-        if(b2.shape[0] < NUM_POINT):
-            b2 = np.concatenate((b2, b2[0 : (NUM_POINT - b2.shape[0]), :]), axis=0)
 
         idx = np.random.randint(b1.shape[0], size=NUM_POINT)
         b1 = b1[idx,:]
@@ -238,10 +230,10 @@ def train_one_epoch(sess, ops, train_writer):
 
         count = count + 1
 
-    combine_data = np.concatenate((current_data_1, current_data_2), axis=2)
-    combine_data, current_label, _ = provider.shuffle_data(combine_data, np.squeeze(current_label))
-    current_data_1 = combine_data[:, :, 0:3]
-    current_data_2 = combine_data[:, :, 3:6]
+    # combine_data = np.concatenate((current_data_1, current_data_2), axis=2)
+    # combine_data, current_label, _ = provider.shuffle_data(combine_data, np.squeeze(current_label))
+    # current_data_1 = combine_data[:, :, 0:3]
+    # current_data_2 = combine_data[:, :, 3:6]
     current_label = np.squeeze(current_label)
 
     file_size = current_data_1.shape[0]
