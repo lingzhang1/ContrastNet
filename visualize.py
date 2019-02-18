@@ -4,9 +4,12 @@
 # X = digits.data[:500]
 # y = digits.target[:500]
 
-X = open("feature.txt", "r")
+read_feature = open("feature.txt", "r")
+X = read_feature.read()
+print(X.shape)
 X = X[:1000]
-y = open("label.txt", "r")
+read_label = open("label.txt", "r")
+y = read_label.read()
 y = y[:1000]
 
 from sklearn.manifold import TSNE
