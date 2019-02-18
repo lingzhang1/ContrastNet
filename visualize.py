@@ -11,7 +11,7 @@ X = np.empty([num, NUM_POINT], dtype=float)
 read_feature = open("feature.txt", "r")
 count = 0
 for l in range(num):
-  line = read_feature[l]
+  line = read_feature.readline()
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
   X[count] = array(line_split)
@@ -24,7 +24,7 @@ y = np.empty([num], dtype=int)
 read_label = open("label.txt", "r")
 count = 0
 for l in range(num):
-  line = read_label[l]
+  line = read_label.readline()
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
   y[count] = array(line_split)
