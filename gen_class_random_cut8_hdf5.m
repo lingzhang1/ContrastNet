@@ -35,7 +35,9 @@ for n=1:length(data_files)
         num = num + 1;
 
 %%%%%%%%%%%%%%%%  random cut part of the object  %%%%%%%%%%%%%%%
-        % create 15 ramdom plains
+        % create count ramdom plains
+        
+        iteration = 0;
         count = 0;
         while count < 1
             % a * x + b * y + c * z = 0
@@ -148,7 +150,7 @@ for n=1:length(data_files)
 %             figure;
 %             pcshow(cut_88);
 %             title('cut8');
-            
+            iteration = iteration + 1;
             if (length(cut_11(:, 1)) > point_num) && (length(cut_22(:, 1)) > point_num) && (length(cut_33(:, 1)) > point_num) && (length(cut_44(:, 1)) > point_num) && (length(cut_55(:, 1)) > point_num) && (length(cut_66(:, 1)) > point_num) && (length(cut_77(:, 1)) > point_num) && (length(cut_88(:, 1)) > point_num)
                 cut_11 = cut_11';
                 cut1_path = strcat( '/cut',num2str(count*8 + 1));
@@ -191,6 +193,12 @@ for n=1:length(data_files)
                 h5write(out_path, cut8_path,cut_88);
                 
                 count = count + 1;
+            else
+                if iteration > 500000
+                    i
+                    i = i + 1;
+                    break;
+                end
             end
         end
         h5create(out_path,'/label',[1],'Datatype','uint8');

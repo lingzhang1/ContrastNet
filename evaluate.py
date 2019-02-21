@@ -104,8 +104,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
 
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
-        cut1, cut2, label = provider.loadDataFile_cut(TEST_FILES[fn])
-        data = np.concatenate((cut1, cut2), axis=0)
+        cut1, cut2, cut3, cut4, label = provider.loadDataFile_cut(TEST_FILES[fn])
+        data = np.concatenate((cut1, cut2, cut3, cut4), axis=0)
 
         idx = np.random.randint(data.shape[0], size=NUM_POINT)
         data = data[idx,:]
