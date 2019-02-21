@@ -240,8 +240,6 @@ def train_one_epoch(sess, ops, train_writer):
                     current_label[28*count+pair_num,:] = 1
                 else:
                     current_label[28*count+pair_num,:] = 2
-        print(pair_num)
-
         count = count + 1
 
     # combine_data = np.concatenate((current_data_1, current_data_2), axis=2)
