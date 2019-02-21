@@ -1,11 +1,11 @@
-mainpath = './data/modelnet40_ply_hdf5_2048_cut';
+mainpath = './data/modelnet40_ply_hdf5_2048_cut4';
 data_path = strcat( mainpath, '/*.h5');
 data_files = dir(data_path);
 
-train_out = './data/modelnet40_ply_hdf5_2048_cut/train_files.txt';
+train_out = './data/modelnet40_ply_hdf5_2048_cut4/train_files.txt';
 train_fileID = fopen(train_out,'w');
 
-test_out = './data/modelnet40_ply_hdf5_2048_cut/test_files.txt';
+test_out = './data/modelnet40_ply_hdf5_2048_cut4/test_files.txt';
 test_fileID = fopen(test_out,'w');
 
 for n=1:length(data_files)
