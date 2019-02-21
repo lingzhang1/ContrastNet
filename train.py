@@ -234,7 +234,7 @@ def train_one_epoch(sess, ops, train_writer):
                 current_data_1[28*count+pair_num,:,:] = total_current[index]
                 current_data_2[28*count+pair_num, :,:] = total_current[index2]
                 pair_num = pair_num + 1
-                if index < 4 && index2 >= 4:
+                if (index < 4) && (index2 >= 4):
                     current_label[28*count+pair_num,:] = 0
                 else if (index == 0 && index2 == 3) || (index == 4 && index2 == 7) || (index == 1 && index2 == 2) || (index == 5 && index2 == 6):
                     current_label[28*count+pair_num,:] = 1
