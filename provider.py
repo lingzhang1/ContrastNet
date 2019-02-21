@@ -152,12 +152,25 @@ def load_cut_h5(h5_filename):
   # random_id = random_id + 1
   # random_id = map(str, random_id)
   # cut1 = f['cut' + random_id[0]][:]
+  total = []
   cut1 = f['cut1'][:]
   cut2 = f['cut2'][:]
   cut3 = f['cut3'][:]
   cut4 = f['cut4'][:]
+  cut5 = f['cut5'][:]
+  cut6 = f['cut6'][:]
+  cut7 = f['cut7'][:]
+  cut8 = f['cut8'][:]
   label = f['label'][:]
-  return (cut1, cut2, cut3, cut4, label)
+   total.append(cut1)
+   total.append(cut2)
+   total.append(cut3)
+   total.append(cut4)
+   total.append(cut5)
+   total.append(cut6)
+   total.append(cut7)
+   total.append(cut8)
+  return (total, label)
 
 def loadDataFile_cut(filename):
   return load_cut_h5(filename)
