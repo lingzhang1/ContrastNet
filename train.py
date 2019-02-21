@@ -230,7 +230,7 @@ def train_one_epoch(sess, ops, train_writer):
 
         pair_num = 0
         for index in range(len(total_current)):
-            for index2 in range(index + 1, len(total_current))
+            for index2 in range(index + 1, len(total_current)):
                 current_data_1[28*count+pair_num,:,:] = total_current[index]
                 current_data_2[28*count+pair_num, :,:] = total_current[index2]
                 pair_num = pair_num + 1
