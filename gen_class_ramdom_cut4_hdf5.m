@@ -36,7 +36,7 @@ for n=1:length(data_files)
 %%%%%%%%%%%%%%%%  random cut part of the object  %%%%%%%%%%%%%%%
         % create 15 ramdom plains
         count = 0;
-        while count < 8
+        while count < 1
             % a * x + b * y + c * z = 0
             % plain one
             a = rand;
@@ -54,9 +54,9 @@ for n=1:length(data_files)
             cut2 = xyzPoints(A2 ~= 0,:);
             
             % plain two         
-            a = rand;
+            a = rand * 3 * (-1);
             b = rand * 2;
-            c = rand * 3 * (-1);
+            c = rand;
             
             points = cut1;
             points(:, 1) = points(:, 1) * a;
@@ -92,7 +92,6 @@ for n=1:length(data_files)
 %             title('cut4');
             
             if (length(cut_1(:, 1)) > point_num) && (length(cut_2(:, 1)) > point_num) && (length(cut_3(:, 1)) > point_num) && (length(cut_4(:, 1)) > point_num)
-                
                 cut_1 = cut_1';
                 cut1_path = strcat( '/cut',num2str(count*4 + 1));
                 h5create(out_path, cut1_path,[length(cut_1(:, 1)) length(cut_1(1,:))],'Datatype','single');

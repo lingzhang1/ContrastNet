@@ -18,9 +18,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn')
 parser.add_argument('--log_dir', default='log', help='Log dir [default: log]')
-parser.add_argument('--num_point', type=int, default=512, help='Point Number [256/512/1024/2048] [default: 1024]')
+parser.add_argument('--num_point', type=int, default=256, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=250, help='Epoch to run [default: 250]')
-parser.add_argument('--batch_size', type=int, default=40, help='Batch Size during training [default: 32]')
+parser.add_argument('--batch_size', type=int, default=56, help='Batch Size during training [default: 32]')
 parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
 parser.add_argument('--momentum', type=float, default=0.9, help='Initial learning rate [default: 0.9]')
 parser.add_argument('--optimizer', default='adam', help='adam or momentum [default: adam]')
@@ -184,55 +184,63 @@ def train_one_epoch(sess, ops, train_writer):
     train_file_idxs = np.arange(0, len(TRAIN_FILES))
     np.random.shuffle(train_file_idxs)
 
-    current_data_1 = np.empty([3*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    current_data_2 = np.empty([3*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    current_label  =  np.empty([3*len(TRAIN_FILES),1], dtype=int)
+    current_data_1 = np.empty([14*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_data_2 = np.empty([14*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_label  =  np.empty([14*len(TRAIN_FILES),1], dtype=int)
 
     fn = 0
     count = 0
     while fn < len(TRAIN_FILES) - 1:
         # log_string('----' + str(fn) + '-----')
-        a1, a2, _ = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
+
+        total_current = [];
+        a1, a2, a3, a4, _ = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(a1.shape[0], size=NUM_POINT)
         a1 = a1[idx,:]
         idx = np.random.randint(a2.shape[0], size=NUM_POINT)
         a2 = a2[idx,:]
+        idx = np.random.randint(a3.shape[0], size=NUM_POINT)
+        a3 = a3[idx,:]
+        idx = np.random.randint(a4.shape[0], size=NUM_POINT)
+        a4 = a4[idx,:]
+        total_current.append(a1)
+        total_current.append(a2)
+        total_current.append(a3)
+        total_current.append(a4)
 
         fn = fn + 1;
 
-        b1, b2, b_label = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
+        b1, b2, b3, b4, _ = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(b1.shape[0], size=NUM_POINT)
         b1 = b1[idx,:]
         idx = np.random.randint(b2.shape[0], size=NUM_POINT)
         b2 = b2[idx,:]
+        idx = np.random.randint(b3.shape[0], size=NUM_POINT)
+        b3 = b3[idx,:]
+        idx = np.random.randint(b4.shape[0], size=NUM_POINT)
+        b4 = b4[idx,:]
+        total_current.append(b1)
+        total_current.append(b2)
+        total_current.append(b3)
+        total_current.append(b4)
 
         fn = fn + 1;
 
-        current_data_1[6*count,:,:] = a1
-        current_data_2[6*count, :,:] = a2
-        current_label[6*count,:] = 1
-
-        current_data_1[6*count+1, :,:] = b1
-        current_data_2[6*count+1, :,:] = b2
-        current_label[6*count+1,:] = 1
-
-        current_data_1[6*count+2, :,:] = a1
-        current_data_2[6*count+2, :,:] = b1
-        current_label[6*count+2,:] = 0
-
-        current_data_1[6*count+3, :,:] = a1
-        current_data_2[6*count+3, :,:] = b2
-        current_label[6*count+3,:] = 0
-
-        current_data_1[6*count+4, :,:] = a2
-        current_data_2[6*count+4, :,:] = b1
-        current_label[6*count+4,:] = 0
-
-        current_data_1[6*count+5, :,:] = a2
-        current_data_2[6*count+5, :,:] = b2
-        current_label[6*count+5,:] = 0
+        pair_num = 0
+        for index in range(len(total_current)):
+            for index2 in range(index + 1, len(total_current))
+                current_data_1[28*count+pair_num,:,:] = total_current[index]
+                current_data_2[28*count+pair_num, :,:] = total_current[index2]
+                pair_num = pair_num + 1
+                if index < 4 && index2 >= 4:
+                    current_label[28*count+pair_num,:] = 0
+                else if (index == 0 && index2 == 3) || (index == 4 && index2 == 7) || (index == 1 && index2 == 2) || (index == 5 && index2 == 6):
+                    current_label[28*count+pair_num,:] = 1
+                else:
+                    current_label[28*count+pair_num,:] = 2
+        print(pair_num)
 
         count = count + 1
 
