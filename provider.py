@@ -162,14 +162,14 @@ def load_cut_h5(h5_filename):
   cut7 = f['cut7'][:]
   cut8 = f['cut8'][:]
   label = f['label'][:]
-   total.append(cut1)
-   total.append(cut2)
-   total.append(cut3)
-   total.append(cut4)
-   total.append(cut5)
-   total.append(cut6)
-   total.append(cut7)
-   total.append(cut8)
+  total.append(cut1)
+  total.append(cut2)
+  total.append(cut3)
+  total.append(cut4)
+  total.append(cut5)
+  total.append(cut6)
+  total.append(cut7)
+  total.append(cut8)
   return (total, label)
 
 def loadDataFile_cut(filename):
