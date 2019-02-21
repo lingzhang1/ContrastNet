@@ -286,8 +286,10 @@ def train_one_epoch(sess, ops, train_writer):
         total_seen += BATCH_SIZE
         loss_sum += loss_val
         if batch_idx % 50 == 0:
-            log_string('mean loss: %f' % (loss_sum / float(batch_idx+1)) % '    accuracy: %f' % (total_correct / float(total_seen)))
-
+            # '{0:2d} {1:3d} {2:4d}'.format(x, x*x, x*x*x)
+            log_string('mean loss: {0:f}     accuracy: {1:f}'.format(loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
+            # log_string('mean loss: %f' % (loss_sum / float(batch_idx+1)))
+            # log_string('accuracy: %f' % (total_correct / float(total_seen)))
 
 def eval_one_epoch(sess, ops, test_writer):
     """ ops: dict mapping from string to tf ops """
