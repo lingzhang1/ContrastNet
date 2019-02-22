@@ -152,7 +152,6 @@ def load_cut_h5(h5_filename):
   # random_id = random_id + 1
   # random_id = map(str, random_id)
   # cut1 = f['cut' + random_id[0]][:]
-  print(h5_filename)
   total = []
   cut1 = f['cut1'][:]
   cut2 = f['cut2'][:]
