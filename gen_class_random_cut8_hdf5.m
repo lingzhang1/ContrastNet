@@ -192,6 +192,9 @@ for n=1:length(data_files)
                 h5create(out_path,cut8_path,[length(cut_88(:, 1)) length(cut_88(1,:))],'Datatype','single');
                 h5write(out_path, cut8_path,cut_88);
                 
+                h5create(out_path,'/label',[1],'Datatype','uint8');
+                h5write(out_path,'/label',xyzLabel);
+                
                 count = count + 1;
             else
                 if iteration > 500000
@@ -201,8 +204,6 @@ for n=1:length(data_files)
                 end
             end
         end
-        h5create(out_path,'/label',[1],'Datatype','uint8');
-        h5write(out_path,'/label',xyzLabel);
 %         h5disp(out_path);
     end
     num
