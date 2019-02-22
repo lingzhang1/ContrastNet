@@ -209,54 +209,67 @@ def train_one_epoch(sess, ops, train_writer):
 
         fn = fn + 1
 
-        label_1 = [[2, 5], [3, 5], [1, 6], [1, 7], [2, 8], [3, 8], [4, 7], [4, 6], [5, 8], [1, 4], [2, 3], [6, 7]]
-        label_2 = [[4, 5], [1, 8], [2, 7], [3, 6]]
-        label_3 = [[5, 7], [1, 3], [1, 5], [2, 4], [2, 6], [4, 8], [6, 8], [3, 7]]
-        label_4 = [[5, 6], [1, 2], [3, 4], [7, 8]]
-
+        # label_1 = [[2, 5], [3, 5], [1, 6], [1, 7], [2, 8], [3, 8], [4, 7], [4, 6], [5, 8], [1, 4], [2, 3], [6, 7]]
+        # label_2 = [[4, 5], [1, 8], [2, 7], [3, 6]]
+        # label_3 = [[5, 7], [1, 3], [1, 5], [2, 4], [2, 6], [4, 8], [6, 8], [3, 7]]
+        # label_4 = [[5, 6], [1, 2], [3, 4], [7, 8]]
+        #
         pair_num = 0
-        for index in range(len(label_1)):
-                current_data_1[120*count+pair_num,:,:] = total_a[label_1[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_a[label_1[index][1] - 1]
-                current_label[120*count+pair_num,:] = 1
-                pair_num = pair_num + 1
-                current_data_1[120*count+pair_num,:,:] = total_b[label_1[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_b[label_1[index][1] - 1]
-                current_label[120*count+pair_num,:] = 1
-                pair_num = pair_num + 1
-        for index in range(len(label_2)):
-                current_data_1[120*count+pair_num,:,:] = total_a[label_2[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_a[label_2[index][1] - 1]
-                current_label[120*count+pair_num,:] = 2
-                pair_num = pair_num + 1
-                current_data_1[120*count+pair_num,:,:] = total_b[label_2[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_b[label_2[index][1] - 1]
-                current_label[120*count+pair_num,:] = 2
-                pair_num = pair_num + 1
-        for index in range(len(label_3)):
-                current_data_1[120*count+pair_num,:,:] = total_a[label_3[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_a[label_3[index][1] - 1]
-                current_label[120*count+pair_num,:] = 3
-                pair_num = pair_num + 1
-                current_data_1[120*count+pair_num,:,:] = total_b[label_3[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_b[label_3[index][1] - 1]
-                current_label[120*count+pair_num,:] = 3
-                pair_num = pair_num + 1
-        for index in range(len(label_4)):
-                current_data_1[120*count+pair_num,:,:] = total_a[label_4[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_a[label_4[index][1] - 1]
-                current_label[120*count+pair_num,:] = 4
-                pair_num = pair_num + 1
-                current_data_1[120*count+pair_num,:,:] = total_b[label_4[index][0] - 1]
-                current_data_2[120*count+pair_num, :,:] = total_b[label_4[index][1] - 1]
-                current_label[120*count+pair_num,:] = 4
-                pair_num = pair_num + 1
-        # label 0
+
+        # for index in range(len(label_1)):
+        #         current_data_1[120*count+pair_num,:,:] = total_a[label_1[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_a[label_1[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 1
+        #         pair_num = pair_num + 1
+        #         current_data_1[120*count+pair_num,:,:] = total_b[label_1[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_b[label_1[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 1
+        #         pair_num = pair_num + 1
+        # for index in range(len(label_2)):
+        #         current_data_1[120*count+pair_num,:,:] = total_a[label_2[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_a[label_2[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 2
+        #         pair_num = pair_num + 1
+        #         current_data_1[120*count+pair_num,:,:] = total_b[label_2[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_b[label_2[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 2
+        #         pair_num = pair_num + 1
+        # for index in range(len(label_3)):
+        #         current_data_1[120*count+pair_num,:,:] = total_a[label_3[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_a[label_3[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 3
+        #         pair_num = pair_num + 1
+        #         current_data_1[120*count+pair_num,:,:] = total_b[label_3[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_b[label_3[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 3
+        #         pair_num = pair_num + 1
+        # for index in range(len(label_4)):
+        #         current_data_1[120*count+pair_num,:,:] = total_a[label_4[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_a[label_4[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 4
+        #         pair_num = pair_num + 1
+        #         current_data_1[120*count+pair_num,:,:] = total_b[label_4[index][0] - 1]
+        #         current_data_2[120*count+pair_num, :,:] = total_b[label_4[index][1] - 1]
+        #         current_label[120*count+pair_num,:] = 4
+        #         pair_num = pair_num + 1
+
+        # label 0, 64
         for index in range(len(total_a)):
             for index2 in range(len(total_b)):
                 current_data_1[120*count+pair_num,:,:] = total_a[index]
                 current_data_2[120*count+pair_num, :,:] = total_b[index2]
                 current_label[120*count+pair_num,:] = 0
+                pair_num = pair_num + 1
+        # label 1, 56
+        for index in range(len(total_a)):
+            for index2 in range(index+1, len(total_a)):
+                current_data_1[120*count+pair_num,:,:] = total_a[index]
+                current_data_2[120*count+pair_num, :,:] = total_a[index2]
+                current_label[120*count+pair_num,:] = 1
+                pair_num = pair_num + 1
+                current_data_1[120*count+pair_num,:,:] = total_b[index]
+                current_data_2[120*count+pair_num, :,:] = total_b[index2]
+                current_label[120*count+pair_num,:] = 1
                 pair_num = pair_num + 1
         count = count + 1
 
