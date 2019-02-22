@@ -260,6 +260,7 @@ def train_one_epoch(sess, ops, train_writer):
                 pair_num = pair_num + 1
         count = count + 1
 
+    print(count)
     current_label = np.squeeze(current_label)
 
     file_size = current_data_1.shape[0]
