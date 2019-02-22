@@ -194,7 +194,7 @@ def train_one_epoch(sess, ops, train_writer):
         # log_string('----' + str(fn) + '-----')
 
         total_current = [];
-        a1, a2, a3, a4, _ = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
+        a1, a2, a3, a4, _ = provider.loadDataFile_cut_4(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(a1.shape[0], size=NUM_POINT)
         a1 = a1[idx,:]
@@ -211,7 +211,7 @@ def train_one_epoch(sess, ops, train_writer):
 
         fn = fn + 1;
 
-        b1, b2, b3, b4, _ = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
+        b1, b2, b3, b4, _ = provider.loadDataFile_cut_4(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(b1.shape[0], size=NUM_POINT)
         b1 = b1[idx,:]
