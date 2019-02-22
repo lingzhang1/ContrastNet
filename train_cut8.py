@@ -199,7 +199,6 @@ def train_one_epoch(sess, ops, train_writer):
     count = 0
     while fn < len(TRAIN_FILES) - 1:
         # log_string('----' + str(fn) + '-----')
-        print(TRAIN_FILES[train_file_idxs[fn]])
         total_a, _ = provider.loadDataFile_cut(TRAIN_FILES[train_file_idxs[fn]])
         total_a = get_random_points(total_a)
 
@@ -261,7 +260,6 @@ def train_one_epoch(sess, ops, train_writer):
                 pair_num = pair_num + 1
         count = count + 1
 
-    print(count)
     current_label = np.squeeze(current_label)
 
     file_size = current_data_1.shape[0]
