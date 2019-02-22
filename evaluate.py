@@ -36,7 +36,7 @@ if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
-NUM_CLASSES = 2
+NUM_CLASSES = 5
 SHAPE_NAMES = [line.rstrip() for line in \
     open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/shape_names.txt'))]
 
@@ -109,7 +109,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
 
         total, label = provider.loadDataFile_cut(TEST_FILES[fn])
         data = np.concatenate((total[0], total[1], total[2], total[3], total[4], total[5], total[6], total[7]), axis=0)
-        
+
         idx = np.random.randint(data.shape[0], size=NUM_POINT)
         data = data[idx,:]
 
