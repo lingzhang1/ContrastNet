@@ -213,22 +213,22 @@ def train_one_epoch(sess, ops, train_writer):
         for index in range(len(label_1)):
                 current_data_1[28*count+pair_num,:,:] = total_a[label_1[index][0] - 1]
                 current_data_2[28*count+pair_num, :,:] = total_a[label_1[index][1] - 1]
-                current_label[28*count+pair_num,:] = 1
+                current_label[28*count+pair_num,:] = 0
                 pair_num = pair_num + 1
         for index in range(len(label_2)):
                 current_data_1[28*count+pair_num,:,:] = total_a[label_2[index][0] - 1]
                 current_data_2[28*count+pair_num, :,:] = total_a[label_2[index][1] - 1]
-                current_label[28*count+pair_num,:] = 2
+                current_label[28*count+pair_num,:] = 1
                 pair_num = pair_num + 1
         for index in range(len(label_3)):
                 current_data_1[28*count+pair_num,:,:] = total_a[label_3[index][0] - 1]
                 current_data_2[28*count+pair_num, :,:] = total_a[label_3[index][1] - 1]
-                current_label[28*count+pair_num,:] = 3
+                current_label[28*count+pair_num,:] = 2
                 pair_num = pair_num + 1
         for index in range(len(label_4)):
                 current_data_1[28*count+pair_num,:,:] = total_a[label_4[index][0] - 1]
                 current_data_2[28*count+pair_num, :,:] = total_a[label_4[index][1] - 1]
-                current_label[28*count+pair_num,:] = 4
+                current_label[28*count+pair_num,:] = 3
                 pair_num = pair_num + 1
         count = count + 1
 
