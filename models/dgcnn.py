@@ -104,7 +104,7 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
                                 scope='fc2', bn_decay=bn_decay)
   net = tf_util.dropout(net, keep_prob=0.5, is_training=is_training,
                         scope='dp2')
-  net = tf_util.fully_connected(net, 2, activation_fn=None, scope='fc3')
+  net = tf_util.fully_connected(net, 5, activation_fn=None, scope='fc3')
 
   return net, net1, net2, end_points
 
