@@ -282,7 +282,7 @@ def train_one_epoch(sess, ops, train_writer):
         jittered_data_2 = provider.random_scale_point_cloud(jittered_data_2)
         jittered_data_2 = provider.rotate_perturbation_point_cloud(jittered_data_2)
         jittered_data_2 = provider.shift_point_cloud(jittered_data_2)
-
+        print(jittered_data_1.shape)
         feed_dict = {ops['pointclouds_pl_1']: jittered_data_1,
                      ops['pointclouds_pl_2']: jittered_data_2,
                      ops['labels_pl']: label[start_idx:end_idx],
