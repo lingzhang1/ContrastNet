@@ -52,7 +52,7 @@ LOG_FOUT = open(os.path.join(LOG_DIR, 'log_train.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
 MAX_NUM_POINT = 2048
-NUM_CLASSES = 40
+NUM_CLASSES = 2
 
 BN_INIT_DECAY = 0.5
 BN_DECAY_DECAY_RATE = 0.5
@@ -260,14 +260,24 @@ def train_one_epoch(sess, ops, train_writer):
         start_idx = batch_idx * BATCH_SIZE
         end_idx = (batch_idx+1) * BATCH_SIZE
 
+        # shuffle each batch
+        data_1 = current_data_1[start_idx:end_idx, :, :]
+        data_2 = current_data_2[start_idx:end_idx, :, :]
+        label = current_label[start_idx:end_idx]
+        combine_data = np.concatenate((data_1, data_2), axis=2)
+        combine_data, label, _ = provider.shuffle_data(combine_data, np.squeeze(label))
+        data_1 = combine_data[:, :, 0:3]
+        data_2 = combine_data[:, :, 3:6]
+        label = np.squeeze(label)
+
         # Augment batched point clouds by rotation and jittering
-        rotated_data_1 = provider.rotate_point_cloud(current_data_1[start_idx:end_idx, :, :])
+        rotated_data_1 = provider.rotate_point_cloud(data_1[start_idx:end_idx, :, :])
         jittered_data_1 = provider.jitter_point_cloud(rotated_data_1)
         jittered_data_1 = provider.random_scale_point_cloud(jittered_data_1)
         jittered_data_1 = provider.rotate_perturbation_point_cloud(jittered_data_1)
         jittered_data_1 = provider.shift_point_cloud(jittered_data_1)
 
-        rotated_data_2 = provider.rotate_point_cloud(current_data_2[start_idx:end_idx, :, :])
+        rotated_data_2 = provider.rotate_point_cloud(data_2[start_idx:end_idx, :, :])
         jittered_data_2 = provider.jitter_point_cloud(rotated_data_2)
         jittered_data_2 = provider.random_scale_point_cloud(jittered_data_2)
         jittered_data_2 = provider.rotate_perturbation_point_cloud(jittered_data_2)
@@ -275,13 +285,13 @@ def train_one_epoch(sess, ops, train_writer):
 
         feed_dict = {ops['pointclouds_pl_1']: jittered_data_1,
                      ops['pointclouds_pl_2']: jittered_data_2,
-                     ops['labels_pl']: current_label[start_idx:end_idx],
+                     ops['labels_pl']: label[start_idx:end_idx],
                      ops['is_training_pl']: is_training,}
         summary, step, _, loss_val, pred_val = sess.run([ops['merged'], ops['step'],
             ops['train_op'], ops['loss'], ops['pred']], feed_dict=feed_dict)
         train_writer.add_summary(summary, step)
         pred_val = np.argmax(pred_val, 1)
-        correct = np.sum(pred_val == current_label[start_idx:end_idx])
+        correct = np.sum(pred_val == label[start_idx:end_idx])
         total_correct += correct
         total_seen += BATCH_SIZE
         loss_sum += loss_val
