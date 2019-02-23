@@ -36,12 +36,12 @@ for n=1:length(data_files)
 %%%%%%%%%%%%%%%%  random cut part of the object  %%%%%%%%%%%%%%%
         % create 15 ramdom plains
         count = 0;
-        while count < 1
+        while count < 10
             % a * x + b * y + c * z = 0
             % plain one
-            a = rand;
-            b = rand * 2;
-            c = rand * 3 * (-1);
+            a = (rand - 0.5) * 2;
+            b = (rand - 0.5) * 2;
+            c = (rand - 0.5) * 2;
             
             points = xyzPoints;
             points(:, 1) = points(:, 1) * a;
@@ -54,9 +54,9 @@ for n=1:length(data_files)
             cut2 = xyzPoints(A2 ~= 0,:);
             
             % plain two         
-            a = rand * 3 * (-1);
-            b = rand * 2;
-            c = rand;
+            a = (rand - 0.5) * 2;
+            b = (rand - 0.5) * 2;
+            c = (rand - 0.5) * 2;
             
             points = cut1;
             points(:, 1) = points(:, 1) * a;

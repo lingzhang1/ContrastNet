@@ -147,11 +147,6 @@ def load_h5(h5_filename):
 
 def load_cut_h5(h5_filename):
   f = h5py.File(h5_filename)
-  # random_id = np.zeros(4)
-  # random_id = np.random.randint(32, size=4)
-  # random_id = random_id + 1
-  # random_id = map(str, random_id)
-  # cut1 = f['cut' + random_id[0]][:]
   total = []
   total.append(f['cut1'][:])
   total.append(f['cut2'][:])
@@ -165,8 +160,17 @@ def load_cut_h5(h5_filename):
   return (total, label)
 
 def load_cut4_h5(h5_filename):
+  random_id = np.zeros(4)
+  random_id = np.random.randint(40, size=4)
+  random_id = random_id + 1
+  random_id = map(str, random_id)
+  cut1 = f['cut' + random_id[0]][:]
+  cut2 = f['cut' + random_id[1]][:]
+  cut3 = f['cut' + random_id[2]][:]
+  cut4 = f['cut' + random_id[3]][:]
+  label = f['label'][:]
   f = h5py.File(h5_filename)
-  return (f['cut1'][:], f['cut2'][:], f['cut3'][:], f['cut4'][:], f['label'][:])
+  return (cut1, cut2, cut3, cut4, label)
 
 def loadDataFile_cut(filename):
   return load_cut_h5(filename)
