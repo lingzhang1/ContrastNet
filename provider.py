@@ -188,7 +188,6 @@ def loadDataFile_cut_4(filename, training=True):
   if training:
     return load_cut4_random_h5(filename)
   else:
-    print('testing')
     return load_cut4_h5(filename)
 
 def loadDataFile(filename):
