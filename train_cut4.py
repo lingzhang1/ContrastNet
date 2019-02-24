@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn')
 parser.add_argument('--log_dir', default='log', help='Log dir [default: log]')
-parser.add_argument('--num_point', type=int, default=512, help='Point Number [256/512/1024/2048] [default: 1024]')
+parser.add_argument('--num_point', type=int, default=256, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=250, help='Epoch to run [default: 250]')
 parser.add_argument('--batch_size', type=int, default=56, help='Batch Size during training [default: 32]')
 parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
@@ -63,9 +63,9 @@ HOSTNAME = socket.gethostname()
 
 # ModelNet40 official train/test split
 TRAIN_FILES = provider.getDataFiles( \
-    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut2/train_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut4/train_files.txt'))
 TEST_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut2/test_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut4/test_files.txt'))
 
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
@@ -184,9 +184,9 @@ def train_one_epoch(sess, ops, train_writer):
     train_file_idxs = np.arange(0, len(TRAIN_FILES))
     np.random.shuffle(train_file_idxs)
 
-    current_data_1 = np.empty([3*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    current_data_2 = np.empty([3*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    current_label  =  np.empty([3*len(TRAIN_FILES),1], dtype=int)
+    current_data_1 = np.empty([14*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_data_2 = np.empty([14*len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_label  =  np.empty([14*len(TRAIN_FILES),1], dtype=int)
 
     fn = 0
     count = 0
@@ -194,37 +194,51 @@ def train_one_epoch(sess, ops, train_writer):
         # log_string('----' + str(fn) + '-----')
 
         total_current = [];
-        a1, a2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[fn]])
+        a1, a2, a3, a4, _ = provider.loadDataFile_cut_4(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(a1.shape[0], size=NUM_POINT)
         a1 = a1[idx,:]
         idx = np.random.randint(a2.shape[0], size=NUM_POINT)
         a2 = a2[idx,:]
+        idx = np.random.randint(a3.shape[0], size=NUM_POINT)
+        a3 = a3[idx,:]
+        idx = np.random.randint(a4.shape[0], size=NUM_POINT)
+        a4 = a4[idx,:]
         total_current.append(a1)
         total_current.append(a2)
+        total_current.append(a3)
+        total_current.append(a4)
 
         fn = fn + 1;
 
-        b1, b2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[fn]])
+        b1, b2, b3, b4, _ = provider.loadDataFile_cut_4(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(b1.shape[0], size=NUM_POINT)
         b1 = b1[idx,:]
         idx = np.random.randint(b2.shape[0], size=NUM_POINT)
         b2 = b2[idx,:]
+        idx = np.random.randint(b3.shape[0], size=NUM_POINT)
+        b3 = b3[idx,:]
+        idx = np.random.randint(b4.shape[0], size=NUM_POINT)
+        b4 = b4[idx,:]
         total_current.append(b1)
         total_current.append(b2)
+        total_current.append(b3)
+        total_current.append(b4)
 
         fn = fn + 1;
 
         pair_num = 0
         for index in range(len(total_current)):
             for index2 in range(index + 1, len(total_current)):
-                current_data_1[6*count+pair_num,:,:] = total_current[index]
-                current_data_2[6*count+pair_num, :,:] = total_current[index2]
-                if (index < 2) and (index2 >= 2):
-                    current_label[6*count+pair_num,:] = 0
+                current_data_1[28*count+pair_num,:,:] = total_current[index]
+                current_data_2[28*count+pair_num, :,:] = total_current[index2]
+                if (index < 4) and (index2 >= 4):
+                    current_label[28*count+pair_num,:] = 0
+                # elif (index == 0 and index2 == 3) or (index == 4 and index2 == 7) or (index == 1 and index2 == 2) or (index == 5 and index2 == 6):
+                #     current_label[28*count+pair_num,:] = 1
                 else:
-                    current_label[6*count+pair_num,:] = 1
+                    current_label[28*count+pair_num,:] = 1
 
                 pair_num = pair_num + 1
         count = count + 1

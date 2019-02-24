@@ -181,6 +181,24 @@ def load_cut4_h5(h5_filename):
   label = f['label'][:]
   return (cut1, cut2, cut3, cut4, label)
 
+def load_cut2_random_h5(h5_filename):
+  f = h5py.File(h5_filename)
+  random_id = np.zeros(4)
+  random_id = np.random.randint(40, size=2)
+  random_id = random_id + 1
+  random_id = map(str, random_id)
+  cut1 = f['cut' + random_id[0]][:]
+  cut2 = f['cut' + random_id[1]][:]
+  label = f['label'][:]
+  return (cut1, cut2, cut3, cut4, label)
+
+def load_cut2_h5(h5_filename):
+  f = h5py.File(h5_filename)
+  cut1 = f['cut1'][:]
+  cut2 = f['cut2'][:]
+  label = f['label'][:]
+  return (cut1, cut2, label)
+
 def loadDataFile_cut(filename):
   return load_cut_h5(filename)
 
@@ -189,6 +207,12 @@ def loadDataFile_cut_4(filename, training=True):
     return load_cut4_random_h5(filename)
   else:
     return load_cut4_h5(filename)
+
+def loadDataFile_cut_2(filename, training=True):
+  if training:
+    return load_cut2_random_h5(filename)
+  else:
+    return load_cut2_h5(filename)
 
 def loadDataFile(filename):
   return load_h5(filename)
