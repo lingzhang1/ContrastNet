@@ -211,7 +211,7 @@ def train_one_epoch(sess, ops, train_writer):
 
         fn = fn + 1;
 
-        b1, b2, b3, b4, _ = provider.loadDataFile_cut_4(TRAIN_FILES[train_file_idxs[fn]], True)
+        b1, b2, b3, b4, _ = provider.loadDataFile_cut_4(TRAIN_FILES[train_file_idxs[fn]])
 
         idx = np.random.randint(b1.shape[0], size=NUM_POINT)
         b1 = b1[idx,:]
