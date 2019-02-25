@@ -202,16 +202,17 @@ def load_cut2_h5(h5_filename):
 def loadDataFile_cut(filename):
   return load_cut_h5(filename)
 
-def loadDataFile_cut_4(filename, training=True):
-  if training:
+def loadDataFile_cut_4(filename, random=True):
+  if random:
     return load_cut4_random_h5(filename)
   else:
     return load_cut4_h5(filename)
 
-def loadDataFile_cut_2(filename, training=True):
-  if training:
+def loadDataFile_cut_2(filename, random=True):
+  if random:
     return load_cut2_random_h5(filename)
   else:
+    print("=============")
     return load_cut2_h5(filename)
 
 def loadDataFile(filename):
