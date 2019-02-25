@@ -212,7 +212,6 @@ def loadDataFile_cut_2(filename, random=True):
   if random:
     return load_cut2_random_h5(filename)
   else:
-    print("=============")
     return load_cut2_h5(filename)
 
 def loadDataFile(filename):
