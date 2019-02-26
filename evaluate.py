@@ -18,7 +18,7 @@ import pc_util
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
-parser.add_argument('--batch_size', type=int, default=1, help='Batch Size during training [default: 1]')
+parser.add_argument('--batch_size', type=int, default=20, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
@@ -155,7 +155,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
 
         feat_np = sess.run(tf.constant(feat_out))
-        np.savetxt(feature_f, feat_np, fmt='%f')
+        for i in range(feat_np.shape[0]):
+            np.savetxt(feature_f, feat_np, fmt='%f')
         # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
         # pred_val = np.argmax(batch_pred_classes, 1)
         pred_val = np.argmax(batch_pred_sum, 1)
