@@ -157,39 +157,6 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         feat_np = sess.run(tf.constant(feat_out))
         for i in range(feat_np.shape[0]):
             np.savetxt(feature_f, feat_np[i, :], fmt='%f')
-        # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
-        # pred_val = np.argmax(batch_pred_classes, 1)
-        pred_val = np.argmax(batch_pred_sum, 1)
-        # Aggregating END
-
-        correct = np.sum(pred_val == current_label[start_idx:end_idx])
-        # correct = np.sum(pred_val_topk[:,0:topk] == label_val)
-        total_correct += correct
-        total_seen += cur_batch_size
-        loss_sum += batch_loss_sum
-
-        for i in range(start_idx, end_idx):
-            l = current_label[i]
-            total_seen_class[l] += 1
-            total_correct_class[l] += (pred_val[i-start_idx] == l)
-            fout.write('%d, %d\n' % (pred_val[i-start_idx], l))
-
-            if pred_val[i-start_idx] != l and FLAGS.visu: # ERROR CASE, DUMP!
-                img_filename = '%d_label_%s_pred_%s.jpg' % (error_cnt, SHAPE_NAMES[l],
-                                                       SHAPE_NAMES[pred_val[i-start_idx]])
-                img_filename = os.path.join(DUMP_DIR, img_filename)
-                output_img = pc_util.point_cloud_three_views(np.squeeze(current_data[i, :, :]))
-                scipy.misc.imsave(img_filename, output_img)
-                error_cnt += 1
-
-    log_string('eval mean loss: %f' % (loss_sum / float(total_seen)))
-    log_string('eval accuracy: %f' % (total_correct / float(total_seen)))
-    log_string('eval avg class acc: %f' % (np.mean(np.array(total_correct_class)/np.array(total_seen_class,dtype=np.float))))
-
-    class_accuracies = np.array(total_correct_class)/np.array(total_seen_class,dtype=np.float)
-    for i, name in enumerate(SHAPE_NAMES):
-        log_string('%10s:\t%0.3f' % (name, class_accuracies[i]))
-
 
 
 if __name__=='__main__':
