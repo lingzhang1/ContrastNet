@@ -1,39 +1,61 @@
 import numpy as np
 from numpy import array
 from sklearn.svm import SVC
+from sklearn.preprocessing import normalize
 
-num = 2000
+test_num = 2000
+train_num = 9500
 NUM_POINT = 256
-X = np.empty([num, NUM_POINT], dtype=float)
-read_feature = open("feature.txt", "r")
+
+# train featrue
+train_X = np.empty([train_num, NUM_POINT], dtype=float)
+read_feature = open("train_feature.txt", "r")
 count = 0
-for l in range(num):
+for l in range(train_num):
   line = read_feature.readline()
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
-  X[count] = array(line_split)
-  count = count + 1
+  train_X[l] = array(line_split)
 
-print(len(X))
-X = X[:num]
+# train_X = normalize(train_X, norm='l2', axis=1, copy=True, return_norm=False)
 
-y = np.empty([num], dtype=int)
-read_label = open("label.txt", "r")
-count = 0
-for l in range(num):
+# train label
+train_y = np.empty([train_num], dtype=int)
+read_label = open("train_label.txt", "r")
+for l in range(train_num):
   line = read_label.readline()
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
-  y[count] = array(line_split)
-  count = count + 1
-y = y[:num]
+  train_y[l] = array(line_split)
+
+
+# test featrue
+X = np.empty([test_num, NUM_POINT], dtype=float)
+read_feature = open("feature.txt", "r")
+for l in range(test_num):
+  line = read_feature.readline()
+  line_split = line.split(" ")
+  line_split = [float(i) for i in line_split]
+  X[l] = array(line_split)
+
+# X = normalize(X, norm='l2', axis=1, copy=True, return_norm=False)
+# X = array(X)
+
+# test label
+y = np.empty([test_num], dtype=int)
+read_label = open("label.txt", "r")
+for l in range(test_num):
+  line = read_label.readline()
+  line_split = line.split(" ")
+  line_split = [float(i) for i in line_split]
+  y[l] = array(line_split)
 
 clf = SVC(gamma='auto')
-clf.fit(X, y)
+clf.fit(train_X, train_y)
+
 SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
     decision_function_shape='ovr', degree=3, gamma='auto', kernel='rbf',
     max_iter=-1, probability=False, random_state=None, shrinking=True,
     tol=0.001, verbose=False)
-    
+
 print(clf.score(X, y))
-# print(clf.predict([[-0.8, -1]]))
