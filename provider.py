@@ -198,7 +198,7 @@ def load_cut2_h5(h5_filename):
   random_id = np.random.randint(30, size=1)
   random_id = random_id + 1
   random_id = map(str, random_id)
-  if random_id[0] % == 0:
+  if random_id[0] % 2 == 0:
     cut1 = f['cut' + random_id[0]][:]
     cut2 = f['cut' + random_id[0] + 1][:]
   else:
