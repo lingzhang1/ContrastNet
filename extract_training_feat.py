@@ -157,9 +157,9 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         feat_np = sess.run(tf.constant(feat_out))
         print(feat_np.shape)
         print(feat_np.shape[0])
-        for i in range(feat_np.shape[0]):
-            print(feat_np[i, :].shape)
-            np.savetxt(feature_f, feat_np[i, :], fmt='%f')
+        # for i in range(feat_np.shape[0]):
+        #     print(feat_np[i, :].shape)
+        np.savetxt(feature_f, feat_np, fmt='%f')
 
 
 if __name__=='__main__':
