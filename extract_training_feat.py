@@ -155,7 +155,10 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
 
         feat_np = sess.run(tf.constant(feat_out))
+        print(feat_np.shape)
+        print(feat_np.shape[0])
         for i in range(feat_np.shape[0]):
+            print(feat_np[i, :].shape)
             np.savetxt(feature_f, feat_np[i, :], fmt='%f')
 
 
