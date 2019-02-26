@@ -4,7 +4,7 @@ from sklearn.svm import SVC
 from sklearn.preprocessing import normalize
 
 test_num = 2000
-train_num = 9500
+train_num = 9800
 NUM_POINT = 256
 
 # train featrue

@@ -184,7 +184,7 @@ def load_cut4_h5(h5_filename):
 def load_cut2_random_h5(h5_filename):
   f = h5py.File(h5_filename)
   random_id = np.zeros(2)
-  random_id = np.random.randint(30, size=2)
+  random_id = np.random.randint(60, size=2)
   random_id = random_id + 1
   random_id = map(str, random_id)
   cut1 = f['cut' + random_id[0]][:]
@@ -195,7 +195,7 @@ def load_cut2_random_h5(h5_filename):
 def load_cut2_h5(h5_filename):
   f = h5py.File(h5_filename)
   random_id = np.zeros((1,), dtype=int)
-  # random_id = np.random.randint(30, size=1)
+  random_id = np.random.randint(60, size=1)
   random_id = random_id + 1
   if random_id[0] % 2 == 0:
     cut1 = f['cut' + str(random_id[0]-1)][:]

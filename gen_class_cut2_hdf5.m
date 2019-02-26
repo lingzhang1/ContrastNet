@@ -57,11 +57,7 @@ for n=1:length(data_files)
 %             end
             % mean
             M = mean(xyzPoints);          
-            
-%             A1 = xyzPoints(:,max_axis) > M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-%             cut1 = xyzPoints(A1 ~= 0,:);
-%             A2 = xyzPoints(:,max_axis) <= M(max_axis) * (1 + 2 * 0.1 * (rand - 0.5));
-%             cut2 = xyzPoints(A2 ~= 0,:);           
+               
             A1 = xyzPoints(:,max_axis) > M(max_axis);
             cut1 = xyzPoints(A1 ~= 0,:);
             cut1 = cut1';
@@ -77,23 +73,12 @@ for n=1:length(data_files)
            
         out_path = strcat('./data/modelnet40_ply_hdf5_2048_cut/',num2str(num),'_', data_files(n).name);
         num = num + 1;
-% 
-%         info = h5info(data_path);
-% 
-%         Dataspace_data = info.Datasets(1).Dataspace.Size;
-%         ChunkSize_data = info.Datasets(1).ChunkSize;
-% 
-%         Dataspace_label = info.Datasets(3).Dataspace.Size;
-%         ChunkSize_label = info.Datasets(3).ChunkSize;
-
-%         h5create(out_path,'/cut1',[length(cut1) length(cut1(1,:)) 1],'Datatype','single','Deflate', 4);
         h5create(out_path,'/cut1',[length(cut1(:, 1)) length(cut1(1,:))],'Datatype','single');
         h5write(out_path,'/cut1',cut1);
         
         h5create(out_path,'/cut2',[length(cut2(:, 1)) length(cut2(1,:))],'Datatype','single');
         h5write(out_path,'/cut2',cut2);      
         
-%         h5create(out_path,'/label',[1],'Datatype','uint8', 'Deflate', 1);
         h5create(out_path,'/label',[1],'Datatype','uint8');
         h5write(out_path,'/label',xyzLabel);
 
