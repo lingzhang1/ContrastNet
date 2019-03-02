@@ -270,7 +270,7 @@ def train_one_epoch(sess, ops, train_writer):
                      ops['pointclouds_pl_2']: jittered_data_2,
                      ops['labels_pl']: label,
                      ops['is_training_pl']: is_training,}
-        summary, step, _, loss_val, pred_val = sess.run([ops['merged'], ops['step'],
+        summary, step, _, loss_val, feat1, feat2 = sess.run([ops['merged'], ops['step'],
             ops['train_op'], ops['loss'], ops['feature1'], ops['feature2']], feed_dict=feed_dict)
         train_writer.add_summary(summary, step)
         loss_sum += loss_val
