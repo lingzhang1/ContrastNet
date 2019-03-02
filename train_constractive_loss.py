@@ -93,6 +93,15 @@ def get_bn_decay(batch):
     bn_decay = tf.minimum(BN_DECAY_CLIP, 1 - bn_momentum)
     return bn_decay
 
+def get_loss(feat1, feat2, label, end_points):
+  """ feat1: B*256,
+      feat2: B*256,
+      label: B, """
+  feat1 = tf.math.l2_normalize(feat1, axis=0, epsilon=1e-12, name=None, dim=None)
+  feat2 = tf.math.l2_normalize(feat2, axis=0, epsilon=1e-12, name=None, dim=None)
+  contrastive_loss = tf.contrib.losses.metric_learning.contrastive_loss(label, feat1, feat2, margin=1.0)
+  return contrastive_loss
+
 def train():
     with tf.Graph().as_default():
         with tf.device('/gpu:'+str(GPU_INDEX)):
@@ -108,13 +117,9 @@ def train():
             tf.summary.scalar('bn_decay', bn_decay)
 
             # Get model and loss
-            feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl, bn_decay=bn_decay)
-            loss = MODEL.get_loss(feature1, feature2, labels_pl, end_points)
+            _, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl, bn_decay=bn_decay)
+            loss = get_loss(feature1, feature2, labels_pl, end_points)
             tf.summary.scalar('loss', loss)
-
-            # correct = tf.equal(tf.argmax(pred, 1), tf.to_int64(labels_pl))
-            # accuracy = tf.reduce_sum(tf.cast(correct, tf.float32)) / float(BATCH_SIZE)
-            # tf.summary.scalar('accuracy', accuracy)
 
             # Get training operator
             learning_rate = get_learning_rate(batch)
@@ -135,9 +140,8 @@ def train():
         config.log_device_placement = False
         sess = tf.Session(config=config)
 
-        # saver.restore(sess, tf.train.latest_checkpoint(MODEL_PATH))
-        # saver.restore(sess, MODEL_PATH)
-        # log_string("Model restored.")
+        saver.restore(sess, MODEL_PATH)
+        log_string("Model restored.")
 
         # Add summary writers
         #merged = tf.merge_all_summaries()
@@ -147,12 +151,12 @@ def train():
         test_writer = tf.summary.FileWriter(os.path.join(LOG_DIR, 'test'))
 
         # Init variables
-        init = tf.global_variables_initializer()
+        # init = tf.global_variables_initializer()
 
         # To fix the bug introduced in TF 0.12.1 as in
         # http://stackoverflow.com/questions/41543774/invalidargumenterror-for-tensor-bool-tensorflow-0-12-1
         #sess.run(init)
-        sess.run(init, {is_training_pl: True})
+        # sess.run(init, {is_training_pl: True})
 
         ops = {'pointclouds_pl_1': pointclouds_pl_1,
                'pointclouds_pl_2': pointclouds_pl_2,
