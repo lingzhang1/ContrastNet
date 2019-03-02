@@ -273,17 +273,10 @@ def train_one_epoch(sess, ops, train_writer):
         summary, step, _, loss_val, pred_val = sess.run([ops['merged'], ops['step'],
             ops['train_op'], ops['loss'], ops['feature1'], ops['feature2']], feed_dict=feed_dict)
         train_writer.add_summary(summary, step)
-        pred_val = np.argmax(pred_val, 1)
-        correct = np.sum(pred_val == label)
-        total_correct += correct
-        total_seen += BATCH_SIZE
         loss_sum += loss_val
         if batch_idx % 50 == 0:
             # '{0:2d} {1:3d} {2:4d}'.format(x, x*x, x*x*x)
-            log_string('mean loss: {0:f}     accuracy: {1:f}'.format(loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
-            # log_string('mean loss: %f' % (loss_sum / float(batch_idx+1)))
-            # log_string('accuracy: %f' % (total_correct / float(total_seen)))
-
+            log_string('mean loss: {0:f}     accuracy: {1:f}'.format(loss_sum / float(batch_idx+1)))
 if __name__ == "__main__":
     train()
     LOG_FOUT.close()
