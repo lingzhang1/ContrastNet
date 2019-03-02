@@ -120,7 +120,7 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
 #   return classify_loss
 
 # contrastive loss
-def get_loss(feat1, feat2, label, end_points):
+def get_constra_loss(feat1, feat2, label, end_points):
   """ feat1: B*256,
       feat2: B*256,
       label: B, """

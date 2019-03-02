@@ -93,14 +93,6 @@ def get_bn_decay(batch):
     bn_decay = tf.minimum(BN_DECAY_CLIP, 1 - bn_momentum)
     return bn_decay
 
-def get_loss(feat1, feat2, label, end_points):
-  """ feat1: B*256,
-      feat2: B*256,
-      label: B, """
-  feat1 = tf.math.l2_normalize(feat1, axis=0, epsilon=1e-12, name=None, dim=None)
-  feat2 = tf.math.l2_normalize(feat2, axis=0, epsilon=1e-12, name=None, dim=None)
-  contrastive_loss = tf.contrib.losses.metric_learning.contrastive_loss(label, feat1, feat2, margin=1.0)
-  return contrastive_loss
 
 def train():
     with tf.Graph().as_default():
@@ -118,7 +110,7 @@ def train():
 
             # Get model and loss
             _, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl, bn_decay=bn_decay)
-            loss = MODEL.get_loss(feature1, feature2, labels_pl, end_points)
+            loss = MODEL.get_constra_loss(feature1, feature2, labels_pl, end_points)
             tf.summary.scalar('loss', loss)
 
             # Get training operator
