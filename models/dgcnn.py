@@ -94,21 +94,21 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
 
   net1 = tf.reshape(net1, [batch_size, -1])
   net2 = tf.reshape(net2, [batch_size, -1])
-  
-  # MLP on global point cloud vector
-  # net = tf.reshape(net, [batch_size, -1])
-  # net = tf_util.fully_connected(net, 1024, bn=True, is_training=is_training,
-  #                               scope='fc1', bn_decay=bn_decay)
-  # net = tf_util.dropout(net, keep_prob=0.5, is_training=is_training,
-  #                        scope='dp1')
-  # net = tf_util.fully_connected(net, 512, bn=True, is_training=is_training,
-  #                               scope='fc2', bn_decay=bn_decay)
-  # net = tf_util.dropout(net, keep_prob=0.5, is_training=is_training,
-  #                       scope='dp2')
-  # net = tf_util.fully_connected(net, 2, activation_fn=None, scope='fc3')
 
-  # return net, net1, net2, end_points
-  return net1, net2, end_points
+  # MLP on global point cloud vector
+  net = tf.reshape(net, [batch_size, -1])
+  net = tf_util.fully_connected(net, 1024, bn=True, is_training=is_training,
+                                scope='fc1', bn_decay=bn_decay)
+  net = tf_util.dropout(net, keep_prob=0.5, is_training=is_training,
+                         scope='dp1')
+  net = tf_util.fully_connected(net, 512, bn=True, is_training=is_training,
+                                scope='fc2', bn_decay=bn_decay)
+  net = tf_util.dropout(net, keep_prob=0.5, is_training=is_training,
+                        scope='dp2')
+  net = tf_util.fully_connected(net, 2, activation_fn=None, scope='fc3')
+
+  return net, net1, net2, end_points
+  # return net1, net2, end_points
 
 
 # def get_loss(pred, label, end_points):
@@ -124,6 +124,7 @@ def get_loss(feat1, feat2, label, end_points):
   """ feat1: B*256,
       feat2: B*256,
       label: B, """
+  print('geting loss...')
   feat1 = tf.math.l2_normalize(feat1, axis=0, epsilon=1e-12, name=None, dim=None)
   feat2 = tf.math.l2_normalize(feat2, axis=0, epsilon=1e-12, name=None, dim=None)
   contrastive_loss = tf.contrib.losses.metric_learning.contrastive_loss(label, feat1, feat2, margin=1.0)
