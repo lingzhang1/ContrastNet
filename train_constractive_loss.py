@@ -108,13 +108,13 @@ def train():
             tf.summary.scalar('bn_decay', bn_decay)
 
             # Get model and loss
-            pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl, bn_decay=bn_decay)
-            loss = MODEL.get_loss(pred, labels_pl, end_points)
+            feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl, bn_decay=bn_decay)
+            loss = MODEL.get_loss(feature1, feature2, labels_pl, end_points)
             tf.summary.scalar('loss', loss)
 
-            correct = tf.equal(tf.argmax(pred, 1), tf.to_int64(labels_pl))
-            accuracy = tf.reduce_sum(tf.cast(correct, tf.float32)) / float(BATCH_SIZE)
-            tf.summary.scalar('accuracy', accuracy)
+            # correct = tf.equal(tf.argmax(pred, 1), tf.to_int64(labels_pl))
+            # accuracy = tf.reduce_sum(tf.cast(correct, tf.float32)) / float(BATCH_SIZE)
+            # tf.summary.scalar('accuracy', accuracy)
 
             # Get training operator
             learning_rate = get_learning_rate(batch)
@@ -158,7 +158,8 @@ def train():
                'pointclouds_pl_2': pointclouds_pl_2,
                'labels_pl': labels_pl,
                'is_training_pl': is_training_pl,
-               'pred': pred,
+               'feature1': feature1,
+               'feature2': feature2,
                'loss': loss,
                'train_op': train_op,
                'merged': merged,
@@ -270,7 +271,7 @@ def train_one_epoch(sess, ops, train_writer):
                      ops['labels_pl']: label,
                      ops['is_training_pl']: is_training,}
         summary, step, _, loss_val, pred_val = sess.run([ops['merged'], ops['step'],
-            ops['train_op'], ops['loss'], ops['pred']], feed_dict=feed_dict)
+            ops['train_op'], ops['loss'], ops['feature1'], ops['feature2']], feed_dict=feed_dict)
         train_writer.add_summary(summary, step)
         pred_val = np.argmax(pred_val, 1)
         correct = np.sum(pred_val == label)
