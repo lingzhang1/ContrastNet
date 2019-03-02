@@ -50,6 +50,7 @@ for l in range(test_num):
   line_split = [float(i) for i in line_split]
   y[l] = array(line_split)
 
+print('Training SVM...')
 clf = SVC(gamma='auto')
 clf.fit(train_X, train_y)
 
@@ -58,4 +59,5 @@ SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0,
     max_iter=-1, probability=False, random_state=None, shrinking=True,
     tol=0.001, verbose=False)
 
+print('Testing SVM...')
 print(clf.score(X, y))

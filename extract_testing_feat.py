@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--batch_size', type=int, default=50, help='Batch Size during training [default: 1]')
-parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
+parser.add_argument('--num_point', type=int, default=512, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
 parser.add_argument('--visu', action='store_true', help='Whether to dump image for error case [default: False]')
@@ -104,7 +104,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
         cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
-        data = np.concatenate((cut1, cut2), axis=0)
+        # data = np.concatenate((cut1, cut2), axis=0)
+        data = cut1
         #
         # cut1, cut2, cut3, cut4, label = provider.loadDataFile_cut_4(TEST_FILES[fn], False)
         # data = np.concatenate((cut1, cut2, cut3, cut4), axis=0)
