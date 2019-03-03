@@ -150,7 +150,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
             feat_sum = tf.math.add(feat_sum, feat_out)
             print(feat_sum.shape)
 
-        feat_avg = sess.run(tf.constant(feat_sum))
+        # feat_avg = sess.run(tf.constant(feat_sum))
+        feat_avg = sess.run(feat_sum)
         feat_avg = feat_avg / num_votes
         print(feat_avg.shape)
         np.savetxt(feature_f, feat_avg, fmt='%f')
