@@ -148,6 +148,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
             _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
             feat_sum = tf.math.add(feat_sum, feat_out)
+            print(feat_sum.shape)
+
         feat_avg = sess.run(tf.constant(feat_sum))
         feat_avg = feat_avg / num_votes
         print(feat_avg.shape)
