@@ -61,8 +61,7 @@ def evaluate(num_votes):
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
-        loss = MODEL.get_loss(pred, labels_pl, end_points)
-
+        loss = MODEL.get_constra_loss(feature1, feature2, labels_pl, end_points)
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
@@ -104,8 +103,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
         cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
-        # data = np.concatenate((cut1, cut2), axis=0)
-        data = cut1
+        data = np.concatenate((cut1, cut2), axis=0)
+        # data = cut1
         #
         # cut1, cut2, cut3, cut4, label = provider.loadDataFile_cut_4(TEST_FILES[fn], False)
         # data = np.concatenate((cut1, cut2, cut3, cut4), axis=0)
@@ -136,10 +135,6 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         end_idx = (batch_idx+1) * BATCH_SIZE
         cur_batch_size = end_idx - start_idx
 
-        # Aggregating BEG
-        batch_loss_sum = 0 # sum of losses for the batch
-        batch_pred_sum = np.zeros((cur_batch_size, NUM_CLASSES)) # score for classes
-        batch_pred_classes = np.zeros((cur_batch_size, NUM_CLASSES)) # 0/1 for classes
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
                                               vote_idx/float(num_votes) * np.pi * 2)
@@ -149,14 +144,11 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
 
             loss_val, pred_val, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
-            batch_pred_sum += pred_val
-            batch_pred_val = np.argmax(pred_val, 1)
-            for el_idx in range(cur_batch_size):
-                batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
-            batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
+            feat_sum = tf.math.add(feat_sum, feat_out)
 
-        feat_np = sess.run(tf.constant(feat_out))
-        np.savetxt(feature_f, feat_np, fmt='%f')
+        feat_avg = sess.run(tf.constant(feat_sum))
+        feat_avg = feat_avg / num_votes
+        np.savetxt(feature_f, feat_avg, fmt='%f')
 
 if __name__=='__main__':
     with tf.Graph().as_default():

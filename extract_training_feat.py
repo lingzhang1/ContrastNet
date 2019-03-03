@@ -62,8 +62,7 @@ def evaluate(num_votes):
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
-        loss = MODEL.get_loss(pred, labels_pl, end_points)
-
+        loss = MODEL.get_constra_loss(feature1, feature2, labels_pl, end_points)
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
@@ -105,8 +104,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     for fn in range(len(TRAIN_FILES)):
         # log_string('----'+str(fn)+'----')
         cut1, cut2, label = provider.loadDataFile_cut_2(TRAIN_FILES[fn], False)
-        # data = np.concatenate((cut1, cut2), axis=0)
-        data = cut1
+        data = np.concatenate((cut1, cut2), axis=0)
+        # data = cut1
         #
         # cut1, cut2, cut3, cut4, label = provider.loadDataFile_cut_4(TRAIN_FILES[fn], False)
         # data = np.concatenate((cut1, cut2, cut3, cut4), axis=0)
@@ -146,7 +145,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
                          ops['labels_pl']: current_label[start_idx:end_idx],
                          ops['is_training_pl']: is_training}
 
-            loss_val, pred_val, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
+            _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
             feat_sum = tf.math.add(feat_sum, feat_out)
         feat_avg = sess.run(tf.constant(feat_sum))
