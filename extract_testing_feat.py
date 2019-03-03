@@ -142,12 +142,13 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
                          ops['labels_pl']: current_label[start_idx:end_idx],
                          ops['is_training_pl']: is_training}
 
-            loss_val, pred_val, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
+            _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
             feat_sum = tf.math.add(feat_sum, feat_out)
 
         feat_avg = sess.run(tf.constant(feat_sum))
         feat_avg = feat_avg / num_votes
+        print(feat_avg.shape)
         np.savetxt(feature_f, feat_avg, fmt='%f')
 
 if __name__=='__main__':
