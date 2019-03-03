@@ -134,7 +134,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         start_idx = batch_idx * BATCH_SIZE
         end_idx = (batch_idx+1) * BATCH_SIZE
         cur_batch_size = end_idx - start_idx
-        
+
         # get average featrue
         feat_sum = tf.zeros([cur_batch_size, FEATURE_SIZE], tf.float32)
         for vote_idx in range(num_votes):
@@ -148,7 +148,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
                                       feed_dict=feed_dict)
             feat_sum = tf.math.add(feat_sum, feat_out)
 
-        feat_avg = sess.run(tf.constant(feat_sum))
+        # feat_avg = sess.run(tf.constant(feat_sum))
+        feat_avg = sess.run(feat_sum)
         feat_avg = feat_avg / num_votes
         print(feat_avg.shape)
         np.savetxt(feature_f, feat_avg, fmt='%f')
