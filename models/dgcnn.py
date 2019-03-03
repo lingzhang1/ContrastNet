@@ -111,13 +111,13 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
   # return net1, net2, end_points
 
 
-# def get_loss(pred, label, end_points):
-#   """ pred: B*NUM_CLASSES,
-#       label: B, """
-#   labels = tf.one_hot(indices=label, depth=2)
-#   loss = tf.losses.softmax_cross_entropy(onehot_labels=labels, logits=pred, label_smoothing=0.2)
-#   classify_loss = tf.reduce_mean(loss)
-#   return classify_loss
+def get_loss(pred, label, end_points):
+  """ pred: B*NUM_CLASSES,
+      label: B, """
+  labels = tf.one_hot(indices=label, depth=2)
+  loss = tf.losses.softmax_cross_entropy(onehot_labels=labels, logits=pred, label_smoothing=0.2)
+  classify_loss = tf.reduce_mean(loss)
+  return classify_loss
 
 # contrastive loss
 def get_constra_loss(feat1, feat2, label, end_points):
@@ -130,6 +130,10 @@ def get_constra_loss(feat1, feat2, label, end_points):
   contrastive_loss = tf.contrib.losses.metric_learning.contrastive_loss(label, feat1, feat2, margin=1.0)
   return contrastive_loss
 
+def get_constra_cross_loss(pred, feat1, feat2, label, end_points):
+    constrastive_loss = constra_loss(feat1, feat2, label, end_points)
+    cross_entropy_loss = get_loss(pred, label, end_points)
+    return constrastive_loss + 2 * cross_entropy_loss
 
 if __name__=='__main__':
   batch_size = 2

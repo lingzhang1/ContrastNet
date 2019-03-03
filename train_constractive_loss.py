@@ -109,8 +109,8 @@ def train():
             tf.summary.scalar('bn_decay', bn_decay)
 
             # Get model and loss
-            _, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl, bn_decay=bn_decay)
-            loss = MODEL.get_constra_loss(feature1, feature2, labels_pl, end_points)
+            pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl, bn_decay=bn_decay)
+            loss = MODEL.get_constra_cross_loss(pred, feature1, feature2, labels_pl, end_points)
             tf.summary.scalar('loss', loss)
 
             # Get training operator
