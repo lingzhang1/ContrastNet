@@ -3,7 +3,7 @@ from numpy import array
 from sklearn.svm import SVC
 from sklearn.preprocessing import normalize
 
-test_num = 2000
+test_num = 2400
 train_num = 9800
 NUM_POINT = 256
 
