@@ -70,7 +70,7 @@ read_flabel = open("cluster_label.txt", "r")
 count = 0
 for l in range(TRAIN_NUM):
   line = read_flabel.readline()
-  LABELS[l] = array(int(line))
+  LABELS[l] = np.array(int(line))
 
 
 def log_string(out_str):
