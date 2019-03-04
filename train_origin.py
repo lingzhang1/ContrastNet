@@ -182,13 +182,13 @@ def train_one_epoch(sess, ops, train_writer):
     is_training = True
 
     # Shuffle train files
-    train_file_idxs = np.arange(0, len(TRAIN_FILES))
+    train_file_idxs = np.arange(0, TRAIN_NUM)
     np.random.shuffle(train_file_idxs)
 
-    current_data = np.empty([len(TRAIN_FILES), NUM_POINT*2, 3], dtype=float)
-    current_label  =  np.empty([len(TRAIN_FILES),1], dtype=int)
+    current_data = np.empty([TRAIN_NUM, NUM_POINT*2, 3], dtype=float)
+    current_label  =  np.empty([TRAIN_NUM,1], dtype=int)
 
-    for fn in range(len(TRAIN_FILES)):
+    for fn in range(TRAIN_NUM):
         cut1, cut2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[fn]], False)
         idx = np.random.randint(cut1.shape[0], size=NUM_POINT)
         cut1 = cut1[idx,:]
