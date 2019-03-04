@@ -124,8 +124,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     current_label = np.squeeze(current_label)
     #save labels for test
     label_f =  open('train_label.txt', 'w+')
-    for line in labels:
-        np.savetxt(label_f, line, fmt='%d')
+    np.savetxt(label_f, labels, fmt='%d')
 
     file_size = current_data.shape[0]
     num_batches = file_size // BATCH_SIZE
