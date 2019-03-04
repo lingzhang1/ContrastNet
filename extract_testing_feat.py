@@ -137,7 +137,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         cur_batch_size = end_idx - start_idx
 
         # get average featrue
-        feat_sum = tf.zeros([cur_batch_size, FEATURE_SIZE], tf.float32)
+        # feat_sum = tf.zeros([cur_batch_size, FEATURE_SIZE], tf.float32)
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
                                               vote_idx/float(num_votes) * np.pi * 2)
