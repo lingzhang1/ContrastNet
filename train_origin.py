@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn_origin', help='Model name: dgcnn_origin')
 parser.add_argument('--log_dir', default='log', help='Log dir [default: log]')
-parser.add_argument('--num_point', type=int, default=512, help='Point Number [256/512/1024/2048] [default: 1024]')
+parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=250, help='Epoch to run [default: 250]')
 parser.add_argument('--batch_size', type=int, default=32, help='Batch Size during training [default: 32]')
 parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
@@ -185,14 +185,14 @@ def train_one_epoch(sess, ops, train_writer):
     train_file_idxs = np.arange(0, TRAIN_NUM)
     np.random.shuffle(train_file_idxs)
 
-    current_data = np.empty([TRAIN_NUM, NUM_POINT*2, 3], dtype=float)
+    current_data = np.empty([TRAIN_NUM, NUM_POINT, 3], dtype=float)
     current_label  =  np.empty([TRAIN_NUM,1], dtype=int)
 
     for fn in range(TRAIN_NUM):
         cut1, cut2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[fn]], False)
-        idx = np.random.randint(cut1.shape[0], size=NUM_POINT)
+        idx = np.random.randint(cut1.shape[0], size=NUM_POINT/2)
         cut1 = cut1[idx,:]
-        idx = np.random.randint(cut2.shape[0], size=NUM_POINT)
+        idx = np.random.randint(cut2.shape[0], size=NUM_POINT/2)
         cut2 = cut2[idx,:]
         current_data[fn] = np.concatenate((cut1, cut2), axis=0)
         current_label[fn] = LABELS[train_file_idxs[fn]]
