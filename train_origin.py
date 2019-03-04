@@ -185,7 +185,7 @@ def train_one_epoch(sess, ops, train_writer):
     train_file_idxs = np.arange(0, len(TRAIN_FILES))
     np.random.shuffle(train_file_idxs)
 
-    current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_data = np.empty([len(TRAIN_FILES), NUM_POINT*2, 3], dtype=float)
     current_label  =  np.empty([len(TRAIN_FILES),1], dtype=int)
 
     for fn in range(len(TRAIN_FILES)):
