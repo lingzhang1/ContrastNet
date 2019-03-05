@@ -17,7 +17,8 @@ import pc_util
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
-parser.add_argument('--model', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
+parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
+parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--batch_size', type=int, default=100, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
@@ -31,6 +32,7 @@ NUM_POINT = FLAGS.num_point
 MODEL_PATH = FLAGS.model_path
 GPU_INDEX = FLAGS.gpu
 MODEL = importlib.import_module(FLAGS.model) # import network module
+MODEL_ORIGIN = importlib.import_module(FLAGS.model_origin) # import network module
 DUMP_DIR = FLAGS.dump_dir
 if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
@@ -61,8 +63,9 @@ def evaluate(num_votes):
         pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
-        # pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
-        pred, feature1, end_points = MODEL.get_model(pointclouds_pl, is_training_pl)
+        pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
+        # pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
+        # loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
