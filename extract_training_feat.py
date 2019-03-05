@@ -63,10 +63,10 @@ def evaluate(num_votes):
         pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
-        pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
-        # pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
-        loss = MODEL.get_loss(pred, labels_pl, end_points)
-        # loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
+        # pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
+        pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
+        # loss = MODEL.get_loss(pred, labels_pl, end_points)
+        loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
