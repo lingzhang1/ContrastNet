@@ -38,7 +38,7 @@ if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
-NUM_CLASSES = 2
+NUM_CLASSES = 40
 FEATURE_SIZE = 256
 SHAPE_NAMES = [line.rstrip() for line in \
     open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/shape_names.txt'))]
@@ -65,7 +65,8 @@ def evaluate(num_votes):
         # simple model
         # pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
-        loss = MODEL.get_loss(pred, labels_pl, end_points)
+        # loss = MODEL.get_loss(pred, labels_pl, end_points)
+        loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
@@ -127,6 +128,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     current_label = np.squeeze(current_label)
     #save labels for test
     label_f =  open('train_label.txt', 'w+')
+    # label_f =  open('train_cluster.txt', 'w+')
     np.savetxt(label_f, labels, fmt='%d')
 
     file_size = current_data.shape[0]
