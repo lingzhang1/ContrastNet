@@ -7,7 +7,7 @@ NUM_POINT = 256
 NUM_CLASS = 40
 
 train_X = np.empty([TRAIN_NUM, NUM_POINT], dtype=float)
-read_feature = open("train_feature.txt", "r")
+read_feature = open("train_cluster.txt", "r")
 count = 0
 for l in range(TRAIN_NUM):
   line = read_feature.readline()

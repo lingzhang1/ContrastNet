@@ -26,6 +26,8 @@ parser.add_argument('--momentum', type=float, default=0.9, help='Initial learnin
 parser.add_argument('--optimizer', default='adam', help='adam or momentum [default: adam]')
 parser.add_argument('--decay_step', type=int, default=200000, help='Decay step for lr decay [default: 200000]')
 parser.add_argument('--decay_rate', type=float, default=0.7, help='Decay rate for lr decay [default: 0.8]')
+parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
+
 FLAGS = parser.parse_args()
 
 
@@ -38,6 +40,7 @@ MOMENTUM = FLAGS.momentum
 OPTIMIZER = FLAGS.optimizer
 DECAY_STEP = FLAGS.decay_step
 DECAY_RATE = FLAGS.decay_rate
+MODEL_PATH = FLAGS.model_path
 
 MODEL = importlib.import_module(FLAGS.model) # import network module
 MODEL_FILE = os.path.join(BASE_DIR, 'models', FLAGS.model+'.py')
@@ -140,6 +143,9 @@ def train():
         config.log_device_placement = False
         sess = tf.Session(config=config)
 
+        # saver.restore(sess, MODEL_PATH)
+        # log_string("Model restored.")
+
         # Add summary writers
         #merged = tf.merge_all_summaries()
         merged = tf.summary.merge_all()
@@ -149,9 +155,6 @@ def train():
 
         # Init variables
         init = tf.global_variables_initializer()
-        # To fix the bug introduced in TF 0.12.1 as in
-        # http://stackoverflow.com/questions/41543774/invalidargumenterror-for-tensor-bool-tensorflow-0-12-1
-        #sess.run(init)
         sess.run(init, {is_training_pl: True})
 
         ops = {'pointclouds_pl': pointclouds_pl,
