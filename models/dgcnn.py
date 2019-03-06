@@ -24,15 +24,15 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(point_cloud, nn_idx=nn_idx, k=k)
 
-  with tf.variable_scope('transform_net1') as sc:
-    transform = input_transform_net(edge_feature, is_training, cut, bn_decay, K=3)
+  # with tf.variable_scope('transform_net1') as sc:
+    # transform = input_transform_net(edge_feature, is_training, cut, bn_decay, K=3)
 
-  point_cloud_transformed = tf.matmul(point_cloud, transform)
+  point_cloud_transformed = tf.matmul(point_cloud, edge_feature)
   adj_matrix = tf_util.pairwise_distance(point_cloud_transformed)
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(point_cloud_transformed, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 64, [1,1],
+  net = tf_util.conv2d(edge_feature, 128, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn1', bn_decay=bn_decay)
@@ -43,7 +43,7 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(net, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 64, [1,1],
+  net = tf_util.conv2d(edge_feature, 128, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn2', bn_decay=bn_decay)
@@ -54,7 +54,7 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(net, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 64, [1,1],
+  net = tf_util.conv2d(edge_feature, 128, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn3', bn_decay=bn_decay)
@@ -65,14 +65,14 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(net, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 128, [1,1],
+  net = tf_util.conv2d(edge_feature, 256, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn4', bn_decay=bn_decay)
   net = tf.reduce_max(net, axis=-2, keep_dims=True)
   net4 = net
 
-  net = tf_util.conv2d(tf.concat([net1, net2, net3, net4], axis=-1), 256, [1, 1],
+  net = tf_util.conv2d(tf.concat([net1, net2, net3, net4], axis=-1), 512, [1, 1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'agg', bn_decay=bn_decay)
