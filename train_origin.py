@@ -20,7 +20,7 @@ parser.add_argument('--model', default='dgcnn_origin', help='Model name: dgcnn_o
 parser.add_argument('--log_dir', default='log', help='Log dir [default: log]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=300, help='Epoch to run [default: 250]')
-parser.add_argument('--batch_size', type=int, default=48, help='Batch Size during training [default: 32]')
+parser.add_argument('--batch_size', type=int, default=40, help='Batch Size during training [default: 32]')
 parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
 parser.add_argument('--momentum', type=float, default=0.9, help='Initial learning rate [default: 0.9]')
 parser.add_argument('--optimizer', default='adam', help='adam or momentum [default: adam]')
@@ -232,9 +232,10 @@ def train_one_epoch(sess, ops, train_writer):
         total_seen += BATCH_SIZE
         loss_sum += loss_val
 
-    log_string('mean loss: %f' % (loss_sum / float(num_batches)))
-    log_string('accuracy: %f' % (total_correct / float(total_seen)))
+        if batch_idx % 100 == 0:
+            log_string('[0:i]  mean loss: {0:f}     accuracy: {1:f}'.format(batch_idx, loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
 
+    log_string('[0:i]  mean loss: {1:f}     accuracy: {2:f}'.format(num_batches, loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
 
 if __name__ == "__main__":
     train()
