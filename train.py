@@ -279,9 +279,9 @@ def train_one_epoch(sess, ops, train_writer):
         loss_sum += loss_val
 
         if batch_idx % 50 == 0:
-            log_string('[0:d]  mean loss: {1:f}     accuracy: {2:f}'.format(batch_idx, loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
+            log_string('{0:d}  mean loss: {1:f}     accuracy: {2:f}'.format(batch_idx, loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
 
-    log_string('[0:d]  mean loss: {1:f}     accuracy: {2:f}'.format(num_batches, loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
+    log_string('{0:d}  mean loss: {1:f}     accuracy: {2:f}'.format(num_batches, loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
 
 if __name__ == "__main__":
     train()
