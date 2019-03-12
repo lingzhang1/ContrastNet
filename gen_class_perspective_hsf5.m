@@ -22,13 +22,14 @@ for n=1:length(data_files)
     z = length(data(1, 1, :));
 
     for i = 1:z
-        xyzPoints = data(:,:,600);
+        xyzPoints = data(:,:,i);
         xyzPoints = xyzPoints(1:3,:);
         xyzPoints = xyzPoints';
         xyzLabel = label(i);
-        figure;
-        pcshow(xyzPoints);
-        title('Original');
+        
+%         figure;
+%         pcshow(xyzPoints);
+%         title('Original');
 
         out_path = strcat('./data/modelnet40_ply_hdf5_2048_pers/',num2str(num),'_', data_files(n).name);
         num = num + 1;
@@ -36,34 +37,33 @@ for n=1:length(data_files)
 %%%%%%%%%%%%%%%%  random cut part of the object  %%%%%%%%%%%%%%%
         % create 15 ramdom plains
         count = 0;
-        while count < 30
+        while count < 29
             % a * x + b * y + c * z = 0
             a = (rand - 0.5) * 2;
             b = (rand - 0.5) * 2;
             c = (rand - 0.5) * 2;
-            xyzPoints(13,:)
-            xyzPoints(1,:)
-            xyzPoints(10,:)
-            visiblePtInds = HPR(xyzPoints,[a, b, c], 0.5);
+            
+            visiblePtInds = HPR(xyzPoints,[a, b, c], 1);
             pers = xyzPoints(visiblePtInds,:);
 
-            figure;
-            pcshow(pers);
-            title('pers');
-            num = 0;
+%             figure;
+%             pcshow(pers);
+%             title('pers');
+%             
             if length(pers(:, 1)) > point_num
+                pers = pers';
+                pers_path = strcat( '/cut',num2str(count + 1));
+                h5create(out_path, pers_path,[length(pers(:, 1)) length(pers(1,:))],'Datatype','single');
+                h5write(out_path,pers_path ,pers);
                 
-                num = num + 1;
-%                 
-%                 pers = pers';
-%                 pers_path = strcat( '/cut',num2str(count*2 + 1));
-%                 h5create(out_path, pers_path,[length(pers(:, 1)) length(pers(1,:))],'Datatype','single');
-%                 h5write(out_path,pers_path ,pers);
-%                 
-%                 count = count + 1
+                count = count + 1;
 
             end
         end
+        xyzPoints = xyzPoints';
+        h5create(out_path, '/cut30',[length(xyzPoints(:, 1)) length(xyzPoints(1,:))],'Datatype','single');
+        h5write(out_path, '/cut30' ,xyzPoints);
+                
         h5create(out_path,'/label',[1],'Datatype','uint8');
         h5write(out_path,'/label',xyzLabel);
 %         h5disp(out_path);
