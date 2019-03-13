@@ -16,7 +16,7 @@ def placeholder_inputs(batch_size, num_point):
   labels_pl = tf.placeholder(tf.int32, shape=(batch_size))
   return pointclouds_pl, labels_pl
 
-def model(point_cloud, is_training, cut, bn_decay=None):
+def model(point_cloud, is_training, cut, num_point, bn_decay=None):
   """ Classification PointNet, input is BxNx3, output Bx40 """
   k = 20
 
@@ -95,8 +95,8 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
   num_point = point_cloud_1.get_shape()[1].value
   end_points = {}
 
-  net1 = model(point_cloud_1, is_training, '1', bn_decay=None)
-  net2 = model(point_cloud_2, is_training, '2', bn_decay=None)
+  net1 = model(point_cloud_1, is_training, '1', num_point, bn_decay=None)
+  net2 = model(point_cloud_2, is_training, '2', num_point, bn_decay=None)
 
   net = tf.concat([net1, net2], 3)
 
