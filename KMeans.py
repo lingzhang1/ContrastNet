@@ -4,7 +4,7 @@ from numpy import array
 
 TRAIN_NUM = 9800
 NUM_POINT = 1024
-NUM_CLASS = 80
+NUM_CLASS = 40
 
 train_X = np.empty([TRAIN_NUM, NUM_POINT], dtype=float)
 read_feature = open("train_cluster.txt", "r")
