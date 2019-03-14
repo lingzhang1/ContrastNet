@@ -178,7 +178,7 @@ def train():
                 save_path = saver.save(sess, os.path.join(LOG_DIR, 'model.ckpt'))
                 log_string("Model saved in file: %s" % save_path)
 
-            if epoch % 20 == 0:
+            if epoch % 40 == 0:
                 save_path = saver.save(sess, os.path.join(LOG_DIR, 'epoch_' + str(epoch)+'.ckpt'))
                 log_string("Model saved in file: %s" % save_path)
 
