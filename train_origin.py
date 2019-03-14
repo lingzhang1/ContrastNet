@@ -143,8 +143,8 @@ def train():
         config.log_device_placement = False
         sess = tf.Session(config=config)
 
-        saver.restore(sess, MODEL_PATH)
-        log_string("Model restored.")
+        # saver.restore(sess, MODEL_PATH)
+        # log_string("Model restored.")
 
         # Add summary writers
         #merged = tf.merge_all_summaries()
@@ -154,8 +154,8 @@ def train():
         test_writer = tf.summary.FileWriter(os.path.join(LOG_DIR, 'test'))
 
         # Init variables
-        # init = tf.global_variables_initializer()
-        # sess.run(init, {is_training_pl: True})
+        init = tf.global_variables_initializer()
+        sess.run(init, {is_training_pl: True})
 
         ops = {'pointclouds_pl': pointclouds_pl,
                'labels_pl': labels_pl,
