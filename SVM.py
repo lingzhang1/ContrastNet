@@ -5,8 +5,8 @@ from sklearn.preprocessing import normalize
 
 test_num = 2400
 train_num = 9800
-# NUM_POINT = 1024
-NUM_POINT = 512
+NUM_POINT = 1024
+# NUM_POINT = 512
 
 # train featrue
 train_X = np.empty([train_num, NUM_POINT], dtype=float)

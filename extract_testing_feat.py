@@ -21,7 +21,7 @@ parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default
 parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--batch_size', type=int, default=100, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
-parser.add_argument('--model_path', default='log/epoch_120.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
+parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
 parser.add_argument('--visu', action='store_true', help='Whether to dump image for error case [default: False]')
 FLAGS = parser.parse_args()
@@ -63,10 +63,10 @@ def evaluate(num_votes):
         pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
-        pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
-        # pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
-        # loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
-        loss = MODEL.get_loss(pred, labels_pl, end_points)
+        # pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
+        pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
+        loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
+        # loss = MODEL.get_loss(pred, labels_pl, end_points)
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
 
