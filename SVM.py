@@ -5,7 +5,7 @@ from sklearn.preprocessing import normalize
 
 test_num = 2400
 train_num = 9800
-NUM_POINT = 1024
+NUM_POINT = 2048
 # NUM_POINT = 512
 
 # train featrue
