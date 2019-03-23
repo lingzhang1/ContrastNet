@@ -20,7 +20,7 @@ parser.add_argument('--model', default='dgcnn_origin', help='Model name: dgcnn_o
 parser.add_argument('--log_dir', default='log', help='Log dir [default: log]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=300, help='Epoch to run [default: 250]')
-parser.add_argument('--batch_size', type=int, default=32, help='Batch Size during training [default: 32]')
+parser.add_argument('--batch_size', type=int, default=40, help='Batch Size during training [default: 32]')
 parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
 parser.add_argument('--momentum', type=float, default=0.9, help='Initial learning rate [default: 0.9]')
 parser.add_argument('--optimizer', default='adam', help='adam or momentum [default: adam]')
@@ -52,7 +52,7 @@ LOG_FOUT = open(os.path.join(LOG_DIR, 'log_train.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
 MAX_NUM_POINT = 2048
-NUM_CLASSES = 80
+NUM_CLASSES = 40
 
 BN_INIT_DECAY = 0.5
 BN_DECAY_DECAY_RATE = 0.5
@@ -174,10 +174,13 @@ def train():
             train_one_epoch(sess, ops, train_writer)
 
             # Save the variables to disk.
-            if epoch % 5 == 0:
-                save_path = saver.save(sess, os.path.join(LOG_DIR, "model.ckpt"))
+            if epoch % 10 == 0:
+                save_path = saver.save(sess, os.path.join(LOG_DIR, 'model.ckpt'))
                 log_string("Model saved in file: %s" % save_path)
 
+            if epoch % 40 == 0:
+                save_path = saver.save(sess, os.path.join(LOG_DIR, 'epoch_' + str(epoch)+'.ckpt'))
+                log_string("Model saved in file: %s" % save_path)
 
 
 def train_one_epoch(sess, ops, train_writer):
@@ -232,9 +235,10 @@ def train_one_epoch(sess, ops, train_writer):
         total_seen += BATCH_SIZE
         loss_sum += loss_val
 
-    log_string('mean loss: %f' % (loss_sum / float(num_batches)))
-    log_string('accuracy: %f' % (total_correct / float(total_seen)))
+        if batch_idx % 100 == 0:
+            log_string('mean loss: {0:f}     accuracy: {1:f}'.format(loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
 
+    log_string('mean loss: {0:f}     accuracy: {1:f}'.format(loss_sum / float(batch_idx+1), total_correct / float(total_seen)))
 
 if __name__ == "__main__":
     train()

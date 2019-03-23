@@ -16,7 +16,7 @@ def placeholder_inputs(batch_size, num_point):
   labels_pl = tf.placeholder(tf.int32, shape=(batch_size))
   return pointclouds_pl, labels_pl
 
-def model(point_cloud, is_training, cut, bn_decay=None):
+def model(point_cloud, is_training, cut, num_point, bn_decay=None):
   """ Classification PointNet, input is BxNx3, output Bx40 """
   k = 20
 
@@ -32,7 +32,7 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(point_cloud_transformed, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 128, [1,1],
+  net = tf_util.conv2d(edge_feature, 64, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn1', bn_decay=bn_decay)
@@ -43,7 +43,7 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(net, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 128, [1,1],
+  net = tf_util.conv2d(edge_feature, 64, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn2', bn_decay=bn_decay)
@@ -54,7 +54,7 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(net, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 128, [1,1],
+  net = tf_util.conv2d(edge_feature, 64, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn3', bn_decay=bn_decay)
@@ -65,20 +65,28 @@ def model(point_cloud, is_training, cut, bn_decay=None):
   nn_idx = tf_util.knn(adj_matrix, k=k)
   edge_feature = tf_util.get_edge_feature(net, nn_idx=nn_idx, k=k)
 
-  net = tf_util.conv2d(edge_feature, 256, [1,1],
+  net = tf_util.conv2d(edge_feature, 128, [1,1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'dgcnn4', bn_decay=bn_decay)
   net = tf.reduce_max(net, axis=-2, keep_dims=True)
   net4 = net
 
-  net = tf_util.conv2d(tf.concat([net1, net2, net3, net4], axis=-1), 512, [1, 1],
+  net = tf_util.conv2d(tf.concat([net1, net2, net3, net4], axis=-1), 256, [1, 1],
                        padding='VALID', stride=[1,1],
                        bn=True, is_training=is_training,
                        scope=cut+'agg', bn_decay=bn_decay)
 
-  net = tf.reduce_max(net, axis=1, keep_dims=True)
-  return net
+  # net = tf.reduce_max(net, axis=1, keep_dims=True)
+
+
+  max_net = tf_util.max_pool2d(net, [num_point,1],
+                               padding='VALID', scope='maxpool')
+  avg_net = tf_util.avg_pool2d(net, [num_point,1],
+                               padding='VALID', scope='avgpool')
+  max_avg_net = tf.concat([max_net, avg_net], 3)
+
+  return max_avg_net
 
 
 def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
@@ -87,8 +95,8 @@ def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
   num_point = point_cloud_1.get_shape()[1].value
   end_points = {}
 
-  net1 = model(point_cloud_1, is_training, '1', bn_decay=None)
-  net2 = model(point_cloud_2, is_training, '2', bn_decay=None)
+  net1 = model(point_cloud_1, is_training, '1', num_point, bn_decay=None)
+  net2 = model(point_cloud_2, is_training, '2', num_point, bn_decay=None)
 
   net = tf.concat([net1, net2], 3)
 

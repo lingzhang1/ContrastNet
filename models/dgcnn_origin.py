@@ -81,10 +81,16 @@ def get_model(point_cloud, is_training, bn_decay=None):
                        bn=True, is_training=is_training,
                        scope='agg', bn_decay=bn_decay)
 
-  net = tf.reduce_max(net, axis=1, keep_dims=True)
+  # net = tf.reduce_max(net, axis=1, keep_dims=True)
+
+  max_net = tf_util.max_pool2d(net, [num_point,1],
+                             padding='VALID', scope='maxpool')
+  avg_net = tf_util.avg_pool2d(net, [num_point,1],
+                             padding='VALID', scope='avgpool')
+  max_avg_net = tf.concat([max_net, avg_net], 3)
 
   # MLP on global point cloud vector
-  net = tf.reshape(net, [batch_size, -1])
+  net = tf.reshape(max_avg_net, [batch_size, -1])
   net1 = net
   net = tf_util.fully_connected(net, 512, bn=True, is_training=is_training,
                                 scope='fc1', bn_decay=bn_decay)
@@ -94,7 +100,7 @@ def get_model(point_cloud, is_training, bn_decay=None):
                                 scope='fc2', bn_decay=bn_decay)
   net = tf_util.dropout(net, keep_prob=0.5, is_training=is_training,
                         scope='dp2')
-  net = tf_util.fully_connected(net, 80, activation_fn=None, scope='fc3')
+  net = tf_util.fully_connected(net, 40, activation_fn=None, scope='fc3')
 
   return net, net1, end_points
 
@@ -102,7 +108,7 @@ def get_model(point_cloud, is_training, bn_decay=None):
 def get_loss(pred, label, end_points):
   """ pred: B*NUM_CLASSES,
       label: B, """
-  labels = tf.one_hot(indices=label, depth=80)
+  labels = tf.one_hot(indices=label, depth=40)
   loss = tf.losses.softmax_cross_entropy(onehot_labels=labels, logits=pred, label_smoothing=0.2)
   classify_loss = tf.reduce_mean(loss)
   return classify_loss
