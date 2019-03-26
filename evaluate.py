@@ -61,7 +61,10 @@ def evaluate(num_votes):
         is_training_pl = tf.placeholder(tf.bool, shape=())
 
         # simple model
-        pred, end_points = MODEL.get_model(pointclouds_pl, is_training_pl)
+        # pred, end_points = MODEL.get_model(pointclouds_pl, is_training_pl)
+        # loss = MODEL.get_loss(pred, labels_pl, end_points)
+
+        pred, feat, end_points = MODEL.get_model(pointclouds_pl, is_training_pl, bn_decay=bn_decay)
         loss = MODEL.get_loss(pred, labels_pl, end_points)
 
         # Add ops to save and restore all the variables.
