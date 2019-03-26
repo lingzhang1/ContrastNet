@@ -38,15 +38,15 @@ LOG_FOUT.write(str(FLAGS)+'\n')
 
 NUM_CLASSES = 40
 SHAPE_NAMES = [line.rstrip() for line in \
-    open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048/shape_names.txt'))]
+    open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/shape_names.txt'))]
 
 HOSTNAME = socket.gethostname()
 
 # ModelNet40 official train/test split
 TRAIN_FILES = provider.getDataFiles( \
-    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048/train_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/train_files.txt'))
 TEST_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048/test_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/test_files.txt'))
 
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
@@ -99,63 +99,75 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
     total_seen_class = [0 for _ in range(NUM_CLASSES)]
     total_correct_class = [0 for _ in range(NUM_CLASSES)]
     fout = open(os.path.join(DUMP_DIR, 'pred_label.txt'), 'w')
+
+    current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
+    current_label  =  np.empty([len(TRAIN_FILES),1], dtype=int)
+
     for fn in range(len(TEST_FILES)):
-        log_string('----'+str(fn)+'----')
-        current_data, current_label = provider.loadDataFile(TEST_FILES[fn])
-        current_data = current_data[:,0:NUM_POINT,:]
-        current_label = np.squeeze(current_label)
-        print(current_data.shape)
+        # log_string('----'+str(fn)+'----')
+        cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
+        data = np.concatenate((cut1, cut2), axis=0)
 
-        file_size = current_data.shape[0]
-        num_batches = file_size // BATCH_SIZE
-        print(file_size)
+        idx = np.random.randint(data.shape[0], size=NUM_POINT)
+        data = data[idx,:]
 
-        for batch_idx in range(num_batches):
-            start_idx = batch_idx * BATCH_SIZE
-            end_idx = (batch_idx+1) * BATCH_SIZE
-            cur_batch_size = end_idx - start_idx
+        label = np.squeeze(label)
+        current_data[fn] = data
+        current_label[fn] = label
 
-            # Aggregating BEG
-            batch_loss_sum = 0 # sum of losses for the batch
-            batch_pred_sum = np.zeros((cur_batch_size, NUM_CLASSES)) # score for classes
-            batch_pred_classes = np.zeros((cur_batch_size, NUM_CLASSES)) # 0/1 for classes
-            for vote_idx in range(num_votes):
-                rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
-                                                  vote_idx/float(num_votes) * np.pi * 2)
-                feed_dict = {ops['pointclouds_pl']: rotated_data,
-                             ops['labels_pl']: current_label[start_idx:end_idx],
-                             ops['is_training_pl']: is_training}
-                loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
-                                          feed_dict=feed_dict)
-                batch_pred_sum += pred_val
-                batch_pred_val = np.argmax(pred_val, 1)
-                for el_idx in range(cur_batch_size):
-                    batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
-                batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
-            # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
-            # pred_val = np.argmax(batch_pred_classes, 1)
-            pred_val = np.argmax(batch_pred_sum, 1)
-            # Aggregating END
+    current_label = np.squeeze(current_label)
+    print(current_data.shape)
 
-            correct = np.sum(pred_val == current_label[start_idx:end_idx])
-            # correct = np.sum(pred_val_topk[:,0:topk] == label_val)
-            total_correct += correct
-            total_seen += cur_batch_size
-            loss_sum += batch_loss_sum
+    file_size = current_data.shape[0]
+    num_batches = file_size // BATCH_SIZE
+    print(file_size)
 
-            for i in range(start_idx, end_idx):
-                l = current_label[i]
-                total_seen_class[l] += 1
-                total_correct_class[l] += (pred_val[i-start_idx] == l)
-                fout.write('%d, %d\n' % (pred_val[i-start_idx], l))
+    for batch_idx in range(num_batches):
+        start_idx = batch_idx * BATCH_SIZE
+        end_idx = (batch_idx+1) * BATCH_SIZE
+        cur_batch_size = end_idx - start_idx
 
-                if pred_val[i-start_idx] != l and FLAGS.visu: # ERROR CASE, DUMP!
-                    img_filename = '%d_label_%s_pred_%s.jpg' % (error_cnt, SHAPE_NAMES[l],
-                                                           SHAPE_NAMES[pred_val[i-start_idx]])
-                    img_filename = os.path.join(DUMP_DIR, img_filename)
-                    output_img = pc_util.point_cloud_three_views(np.squeeze(current_data[i, :, :]))
-                    scipy.misc.imsave(img_filename, output_img)
-                    error_cnt += 1
+        # Aggregating BEG
+        batch_loss_sum = 0 # sum of losses for the batch
+        batch_pred_sum = np.zeros((cur_batch_size, NUM_CLASSES)) # score for classes
+        batch_pred_classes = np.zeros((cur_batch_size, NUM_CLASSES)) # 0/1 for classes
+        for vote_idx in range(num_votes):
+            rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
+                                              vote_idx/float(num_votes) * np.pi * 2)
+            feed_dict = {ops['pointclouds_pl']: rotated_data,
+                         ops['labels_pl']: current_label[start_idx:end_idx],
+                         ops['is_training_pl']: is_training}
+            loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
+                                      feed_dict=feed_dict)
+            batch_pred_sum += pred_val
+            batch_pred_val = np.argmax(pred_val, 1)
+            for el_idx in range(cur_batch_size):
+                batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
+            batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
+        # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
+        # pred_val = np.argmax(batch_pred_classes, 1)
+        pred_val = np.argmax(batch_pred_sum, 1)
+        # Aggregating END
+
+        correct = np.sum(pred_val == current_label[start_idx:end_idx])
+        # correct = np.sum(pred_val_topk[:,0:topk] == label_val)
+        total_correct += correct
+        total_seen += cur_batch_size
+        loss_sum += batch_loss_sum
+
+        for i in range(start_idx, end_idx):
+            l = current_label[i]
+            total_seen_class[l] += 1
+            total_correct_class[l] += (pred_val[i-start_idx] == l)
+            fout.write('%d, %d\n' % (pred_val[i-start_idx], l))
+
+            if pred_val[i-start_idx] != l and FLAGS.visu: # ERROR CASE, DUMP!
+                img_filename = '%d_label_%s_pred_%s.jpg' % (error_cnt, SHAPE_NAMES[l],
+                                                       SHAPE_NAMES[pred_val[i-start_idx]])
+                img_filename = os.path.join(DUMP_DIR, img_filename)
+                output_img = pc_util.point_cloud_three_views(np.squeeze(current_data[i, :, :]))
+                scipy.misc.imsave(img_filename, output_img)
+                error_cnt += 1
 
     log_string('eval mean loss: %f' % (loss_sum / float(total_seen)))
     log_string('eval accuracy: %f' % (total_correct / float(total_seen)))

@@ -93,14 +93,7 @@ def evaluate(num_votes):
     eval_one_epoch(sess, ops,feature_f, num_votes)
 
 def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
-    error_cnt = 0
     is_training = False
-    total_correct = 0
-    total_seen = 0
-    loss_sum = 0
-    total_seen_class = [0 for _ in range(NUM_CLASSES)]
-    total_correct_class = [0 for _ in range(NUM_CLASSES)]
-    fout = open(os.path.join(DUMP_DIR, 'pred_label.txt'), 'w')
 
     current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
     labels  =  np.empty([len(TRAIN_FILES),1], dtype=int)
