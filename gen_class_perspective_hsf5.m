@@ -22,7 +22,7 @@ for n=1:length(data_files)
     z = length(data(1, 1, :));
 
     for i = 1:z
-        xyzPoints = data(:,:,i);
+        xyzPoints = data(:,:,450);
         xyzPoints = xyzPoints(1:3,:);
         xyzPoints = xyzPoints';
         xyzLabel = label(i);
@@ -37,7 +37,9 @@ for n=1:length(data_files)
 %%%%%%%%%%%%%%%%  random cut part of the object  %%%%%%%%%%%%%%%
         % create 15 ramdom plains
         count = 0;
+        number = 0; % 250 times
         while count < 29
+            number = number + 1;
             % a * x + b * y + c * z = 0
             a = (rand - 0.5) * 2;
             b = (rand - 0.5) * 2;
@@ -51,22 +53,23 @@ for n=1:length(data_files)
 %             title('pers');
 %             
             if length(pers(:, 1)) > point_num
-                pers = pers';
-                pers_path = strcat( '/cut',num2str(count + 1));
-                h5create(out_path, pers_path,[length(pers(:, 1)) length(pers(1,:))],'Datatype','single');
-                h5write(out_path,pers_path ,pers);
-                
+%                 pers = pers';
+%                 pers_path = strcat( '/cut',num2str(count + 1));
+%                 h5create(out_path, pers_path,[length(pers(:, 1)) length(pers(1,:))],'Datatype','single');
+%                 h5write(out_path,pers_path ,pers);
+%                 
                 count = count + 1;
 
             end
         end
-        xyzPoints = xyzPoints';
-        h5create(out_path, '/cut30',[length(xyzPoints(:, 1)) length(xyzPoints(1,:))],'Datatype','single');
-        h5write(out_path, '/cut30' ,xyzPoints);
-                
-        h5create(out_path,'/label',[1],'Datatype','uint8');
-        h5write(out_path,'/label',xyzLabel);
-%         h5disp(out_path);
+        number
+%         xyzPoints = xyzPoints';
+%         h5create(out_path, '/cut30',[length(xyzPoints(:, 1)) length(xyzPoints(1,:))],'Datatype','single');
+%         h5write(out_path, '/cut30' ,xyzPoints);
+%                 
+%         h5create(out_path,'/label',[1],'Datatype','uint8');
+%         h5write(out_path,'/label',xyzLabel);
+% %         h5disp(out_path);
     end
     num
     processing = data_files(n).name
