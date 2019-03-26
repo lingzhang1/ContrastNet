@@ -81,16 +81,16 @@ def get_model(point_cloud, is_training, bn_decay=None):
                        bn=True, is_training=is_training,
                        scope='agg', bn_decay=bn_decay)
 
-  # net = tf.reduce_max(net, axis=1, keep_dims=True)
+  net = tf.reduce_max(net, axis=1, keep_dims=True)
 
-  max_net = tf_util.max_pool2d(net, [num_point,1],
-                             padding='VALID', scope='maxpool')
-  avg_net = tf_util.avg_pool2d(net, [num_point,1],
-                             padding='VALID', scope='avgpool')
-  max_avg_net = tf.concat([max_net, avg_net], 3)
+  # max_net = tf_util.max_pool2d(net, [num_point,1],
+  #                            padding='VALID', scope='maxpool')
+  # avg_net = tf_util.avg_pool2d(net, [num_point,1],
+  #                            padding='VALID', scope='avgpool')
+  # max_avg_net = tf.concat([max_net, avg_net], 3)
 
   # MLP on global point cloud vector
-  net = tf.reshape(max_avg_net, [batch_size, -1])
+  net = tf.reshape(net, [batch_size, -1])
   net1 = net
   net = tf_util.fully_connected(net, 512, bn=True, is_training=is_training,
                                 scope='fc1', bn_decay=bn_decay)

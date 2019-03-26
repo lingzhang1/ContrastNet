@@ -77,16 +77,15 @@ def model(point_cloud, is_training, cut, num_point, bn_decay=None):
                        bn=True, is_training=is_training,
                        scope=cut+'agg', bn_decay=bn_decay)
 
-  # net = tf.reduce_max(net, axis=1, keep_dims=True)
+  net = tf.reduce_max(net, axis=1, keep_dims=True)
 
+  # max_net = tf_util.max_pool2d(net, [num_point,1],
+  #                              padding='VALID', scope='maxpool')
+  # avg_net = tf_util.avg_pool2d(net, [num_point,1],
+  #                              padding='VALID', scope='avgpool')
+  # max_avg_net = tf.concat([max_net, avg_net], 3)
 
-  max_net = tf_util.max_pool2d(net, [num_point,1],
-                               padding='VALID', scope='maxpool')
-  avg_net = tf_util.avg_pool2d(net, [num_point,1],
-                               padding='VALID', scope='avgpool')
-  max_avg_net = tf.concat([max_net, avg_net], 3)
-
-  return max_avg_net
+  return net
 
 
 def get_model(point_cloud_1, point_cloud_2, is_training, bn_decay=None):
