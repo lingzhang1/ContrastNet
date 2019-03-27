@@ -18,7 +18,7 @@ train_X = array(train_X)
 train_y = []
 read_label = open("train_label.txt", "r")
 lines = read_label.readlines()
-for line in range(lines):
+for line in lines:
     line_split = line.split(" ")
     line_split = [float(i) for i in line_split]
     train_y.append(line_split)
@@ -28,7 +28,7 @@ train_y = array(train_y)
 X = []
 read_feature = open("feature.txt", "r")
 lines = read_feature.readlines()
-for line in range(lines):
+for line in lines:
     line_split = line.split(" ")
     line_split = [float(i) for i in line_split]
     X.append(line_split)
@@ -38,7 +38,7 @@ X = array(X)
 y = []
 read_label = open("label.txt", "r")
 lines = read_label.readlines()
-for l in range(test_num):
+for l in lines:
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
   y.append(line_split)
