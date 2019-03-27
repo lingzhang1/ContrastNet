@@ -60,7 +60,7 @@ def evaluate(num_votes):
     is_training = False
 
     with tf.device('/gpu:'+str(GPU_INDEX)):
-        pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
+        pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE*num_votes, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
