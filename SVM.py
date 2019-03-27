@@ -23,7 +23,7 @@ for line in lines:
     line_split = [float(i) for i in line_split]
     train_y.append(line_split)
 train_y = array(train_y)
-train_y = train_y[0:9500, :]
+train_y = train_y[0:9500]
 
 # test featrue
 X = []
@@ -45,7 +45,7 @@ for l in lines:
   line_split = [float(i) for i in line_split]
   y.append(line_split)
 y = array(y)
-y = y[0:1400, :]
+y = y[0:1400]
 
 print('Training SVM...')
 clf = SVC(gamma='auto')
