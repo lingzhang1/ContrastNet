@@ -127,32 +127,33 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
-    feat = np.zeros((num_batches, FEATURE_SIZE))
     for batch_idx in range(num_batches):
         start_idx = batch_idx * BATCH_SIZE
         end_idx = (batch_idx+1) * BATCH_SIZE
         cur_batch_size = end_idx - start_idx
 
         # get average featrue
-        feat_sum = np.empty([num_votes, NUM_POINT, 3], dtype=float)
-        label_sum = np.empty([num_votes], dtype=int)
+        feat = np.zeros((num_votes, cur_batch_size, FEATURE_SIZE), dtype=float)
+        feat_mean = np.zeros((cur_batch_size, FEATURE_SIZE), dtype=float)
+
         for vote_idx in range(num_votes):
-            rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :], vote_idx/float(num_votes) * np.pi * 2)
-            feat_sum[vote_idx] = rotated_data
-            label_sum[vote_idx] = current_label[start_idx:end_idx]
+            rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
+                                                                vote_idx/float(num_votes) * np.pi * 2)
+            feed_dict = {ops['pointclouds_pl']: rotated_data,
+                         ops['labels_pl']: current_label[start_idx:end_idx],
+                         ops['is_training_pl']: is_training}
 
-        feed_dict = {ops['pointclouds_pl']: feat_sum,
-                     ops['labels_pl']: label_sum,
-                     ops['is_training_pl']: is_training}
+            _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
+                                      feed_dict=feed_dict)
 
-        _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
-                                  feed_dict=feed_dict)
-        feat_out = sess.run(tf.constant(feat_out))
-        feat_mean = np.mean(feat_out, 0)  # [1.5, 1.5]
-        feat[batch_idx] = feat_mean
-        print('batch_idx = ', batch_idx)
+            feat_out = sess.run(tf.constant(feat_out))
+            feat[vote_idx] = feat_out
+        for i in range(cur_batch_size):
+            feat_i = np.squeeze(feat[:, i, :])
+            feat_mean[i] = np.mean(feat_i, 0)  # [1.5, 1.5]
+
         print('feat_mean = ', feat_mean.shape)
-    np.savetxt(feature_f, feat, fmt='%f')
+        np.savetxt(feature_f, feat_mean, fmt='%f')
 
 if __name__=='__main__':
     with tf.Graph().as_default():
