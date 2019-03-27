@@ -149,6 +149,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
 
             feat_out = sess.run(tf.constant(feat_out))
             feat[vote_idx] = feat_out
+            print('vote_idx = ', vote_idx)
         for i in range(cur_batch_size):
             feat_i = np.squeeze(feat[:, i, :])
             feat_mean[i] = np.mean(feat_i, 0)  # [1.5, 1.5]
