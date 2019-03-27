@@ -92,7 +92,7 @@ def evaluate(num_votes):
     # feature_f = open('train_cluster.txt', 'w+')
     eval_one_epoch(sess, ops,feature_f, num_votes)
 
-def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
+def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     is_training = False
 
     current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
@@ -136,8 +136,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         # get average featrue
         feat_sum = np.empty([num_votes, NUM_POINT, 3], dtype=float)
         label_sum = np.empty([num_votes,1], dtype=int)
-        rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
-                                          vote_idx/float(num_votes) * np.pi * 2)
+        rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :], vote_idx/float(num_votes) * np.pi * 2)
         for vote_idx in range(num_votes):
             feat_sum[i] = rotated_data
             label_sum[i] = current_label[start_idx:end_idx]
