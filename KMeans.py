@@ -8,9 +8,9 @@ NUM_CLASS = 40
 # train_X = np.empty([TRAIN_NUM, NUM_POINT], dtype=float)
 train_X = []
 read_feature = open("train_cluster.txt", "r")
-count = 0
 
 lines = read_feature.readlines()
+print(len(lines))
 for line in lines:
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
