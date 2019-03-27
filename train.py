@@ -67,6 +67,14 @@ TRAIN_FILES = provider.getDataFiles( \
 TEST_FILES = provider.getDataFiles(\
     os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/test_files.txt'))
 
+# Get labels
+LABELS = []
+read_flabel = open("cluster_label.txt", "r")
+lines = read_flabel.readlines()
+LABELS = map(int, lines)
+LABELS = np.array(LABELS)
+
+
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
     LOG_FOUT.flush()
@@ -196,10 +204,14 @@ def train_one_epoch(sess, ops, train_writer):
     fn = 0
     count = 0
     while fn < len(TRAIN_FILES) - 1:
-        # log_string('----' + str(fn) + '-----')
+        f1, f2 = fn, fn+1
+        fn = fn + 2
+        # Avoid to pick same class
+        while LABELS[train_file_idxs[f1]] == LABELS[train_file_idxs[f2]]:
+            f2 = f2 + 1
 
         total_current = [];
-        a1, a2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[fn]])
+        a1, a2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[f1]])
 
         idx = np.random.randint(a1.shape[0], size=NUM_POINT)
         a1 = a1[idx,:]
@@ -208,9 +220,9 @@ def train_one_epoch(sess, ops, train_writer):
         total_current.append(a1)
         total_current.append(a2)
 
-        fn = fn + 1;
+        # fn = fn + 1;
 
-        b1, b2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[fn]])
+        b1, b2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[f2]])
 
         idx = np.random.randint(b1.shape[0], size=NUM_POINT)
         b1 = b1[idx,:]
@@ -219,7 +231,7 @@ def train_one_epoch(sess, ops, train_writer):
         total_current.append(b1)
         total_current.append(b2)
 
-        fn = fn + 1;
+        # fn = fn + 1;
 
         pair_num = 0
         for index in range(len(total_current)):

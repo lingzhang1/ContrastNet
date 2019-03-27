@@ -2,18 +2,20 @@ from sklearn.cluster import KMeans
 import numpy as np
 from numpy import array
 
-TRAIN_NUM = 9800
 NUM_POINT = 1024
 NUM_CLASS = 40
 
-train_X = np.empty([TRAIN_NUM, NUM_POINT], dtype=float)
+# train_X = np.empty([TRAIN_NUM, NUM_POINT], dtype=float)
+train_X = []
 read_feature = open("train_cluster.txt", "r")
 count = 0
-for l in range(TRAIN_NUM):
-  line = read_feature.readline()
+
+lines = read_feature.readlines()
+for line in lines:
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
-  train_X[l] = array(line_split)
+  train_X.append(line_split)
+train_X = array(train_X)
 
 kmeans = KMeans(n_clusters=NUM_CLASS, random_state=0).fit(train_X)
 labels = kmeans.labels_
