@@ -138,8 +138,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
         label_sum = np.empty([num_votes,1], dtype=int)
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :], vote_idx/float(num_votes) * np.pi * 2)
-            feat_sum[i] = rotated_data
-            label_sum[i] = current_label[start_idx:end_idx]
+            feat_sum[vote_idx] = rotated_data
+            label_sum[vote_idx] = current_label[start_idx:end_idx]
 
         feed_dict = {ops['pointclouds_pl']: feat_sum,
                      ops['labels_pl']: label_sum,
