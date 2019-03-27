@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
-parser.add_argument('--batch_size', type=int, default=1, help='Batch Size during training [default: 1]')
+parser.add_argument('--batch_size', type=int, default=200, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
@@ -60,7 +60,7 @@ def evaluate(num_votes):
     is_training = False
 
     with tf.device('/gpu:'+str(GPU_INDEX)):
-        pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE*num_votes, NUM_POINT)
+        pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
@@ -157,5 +157,5 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
 
 if __name__=='__main__':
     with tf.Graph().as_default():
-        evaluate(num_votes=5)
+        evaluate(num_votes=12)
     LOG_FOUT.close()
