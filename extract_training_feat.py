@@ -104,7 +104,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         cut1, cut2, label = provider.loadDataFile_cut_2(TRAIN_FILES[fn], False)
         data = np.concatenate((cut1, cut2), axis=0)
         # data = cut1
-        #
+
         # cut1, cut2, cut3, cut4, label = provider.loadDataFile_cut_4(TRAIN_FILES[fn], False)
         # data = np.concatenate((cut1, cut2, cut3, cut4), axis=0)
 
@@ -135,7 +135,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         cur_batch_size = end_idx - start_idx
 
         # get average featrue
-        # feat_sum = tf.zeros([cur_batch_size, FEATURE_SIZE], tf.float32)
+        feat_sum = tf.zeros([cur_batch_size, num_batches, FEATURE_SIZE], tf.float32)
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
                                               vote_idx/float(num_votes) * np.pi * 2)
@@ -145,12 +145,15 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
 
             _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
-            # feat_sum = tf.math.add(feat_sum, feat_out)
+            feat_sum[:, vote_idx, :] = feat_out
+        feat_mean = tf.zeros([cur_batch_size, FEATURE_SIZE], tf.float32)
+        for i in range(cur_batch_size):
+            x = feat_sum[i, :, :]
+            x = np.squeeze(x)
+            feat_mean[i] = tf.reduce_mean(x, 0)  # [1.5, 1.5]
 
-        # feat_avg = sess.run(tf.constant(feat_out))
-        # feat_avg = sess.run(feat_out)
-        # feat_avg = feat_avg / num_votes
-        np.savetxt(feature_f, feat_out, fmt='%f')
+        print('feat_mean = ', feat_mean.shape)
+        np.savetxt(feature_f, feat_mean, fmt='%f')
 
 if __name__=='__main__':
     with tf.Graph().as_default():
