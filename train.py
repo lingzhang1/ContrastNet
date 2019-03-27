@@ -243,7 +243,7 @@ def train_one_epoch(sess, ops, train_writer):
     total_seen = 0
     loss_sum = 0
 
-    for batch_idx in range(num_batches)+1:
+    for batch_idx in range(num_batches+1):
         start_idx = batch_idx * BATCH_SIZE
         if batch_idx == num_batches:
             end_idx = start_idx + file_size - start_idx

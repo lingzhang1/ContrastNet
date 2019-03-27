@@ -127,7 +127,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
-    for batch_idx in range(num_batches)+1:
+    for batch_idx in range(num_batches+1):
         start_idx = batch_idx * BATCH_SIZE
         if batch_idx == num_batches:
             end_idx = start_idx + file_size - batch_idx * BATCH_SIZE

@@ -2,10 +2,8 @@ from sklearn.cluster import KMeans
 import numpy as np
 from numpy import array
 
-NUM_POINT = 1024
 NUM_CLASS = 40
 
-# train_X = np.empty([TRAIN_NUM, NUM_POINT], dtype=float)
 train_X = []
 read_feature = open("train_cluster.txt", "r")
 
