@@ -12,7 +12,7 @@ for line in lines:
     line_split = [float(i) for i in line_split]
     train_X.append(line_split)
 train_X = array(train_X)
-train_X = train_X[0:9800, :]
+train_X = train_X[0:9500, :]
 
 # train label
 train_y = []
@@ -23,7 +23,7 @@ for line in lines:
     line_split = [float(i) for i in line_split]
     train_y.append(line_split)
 train_y = array(train_y)
-train_y = train_y[0:9800, :]
+train_y = train_y[0:9500, :]
 
 # test featrue
 X = []
