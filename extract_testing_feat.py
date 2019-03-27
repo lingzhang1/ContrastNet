@@ -127,6 +127,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
+    feat = np.zeros((num_batches, FEATURE_SIZE))
     for batch_idx in range(num_batches):
         start_idx = batch_idx * BATCH_SIZE
         end_idx = (batch_idx+1) * BATCH_SIZE
@@ -147,10 +148,10 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
         _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                   feed_dict=feed_dict)
         feat_out = sess.run(tf.constant(feat_out))
-        # feat_mean = tf.reduce_mean(feat_out, 0)  # [1.5, 1.5]
         feat_mean = np.mean(feat_out, 0)  # [1.5, 1.5]
-        print('feat_mean = ', feat_mean.shape)
-        np.savetxt(feature_f, feat_mean, fmt='%f')
+        feat[batch_idx] = feat_mean
+        print('feat = ', feat.shape)
+    np.savetxt(feature_f, feat, fmt='%f')
 
 if __name__=='__main__':
     with tf.Graph().as_default():
