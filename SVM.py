@@ -12,7 +12,6 @@ for line in lines:
     line_split = [float(i) for i in line_split]
     train_X.append(line_split)
 train_X = array(train_X)
-train_X = train_X[0:9500, :]
 
 # train label
 train_y = []
@@ -20,7 +19,6 @@ read_label = open("train_label.txt", "r")
 train_y = read_label.readlines()
 train_y = [float(i) for i in train_y]
 train_y = array(train_y)
-train_y = train_y[0:9500]
 
 # test featrue
 X = []
@@ -31,7 +29,6 @@ for line in lines:
     line_split = [float(i) for i in line_split]
     X.append(line_split)
 X = array(X)
-X = X[0:2400, :]
 
 # test label
 y = []
@@ -39,7 +36,6 @@ read_label = open("label.txt", "r")
 y = read_label.readlines()
 y = [float(i) for i in y]
 y = array(y)
-y = y[0:2400]
 
 print('Training SVM...')
 clf = SVC(gamma='auto')
