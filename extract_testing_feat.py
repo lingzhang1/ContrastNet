@@ -95,8 +95,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     is_training = False
 
     current_data = np.empty([len(TEST_FILES), NUM_POINT, 3], dtype=float)
-    labels  =  np.empty([len(TEST_FILES),1], dtype=int)
-    current_label  =  np.empty([len(TEST_FILES),1], dtype=int)
+    labels  =  np.empty([len(TEST_FILES)], dtype=int)
+    current_label  =  np.empty([len(TEST_FILES)], dtype=int)
 
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')

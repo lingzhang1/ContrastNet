@@ -96,8 +96,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     is_training = False
 
     current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    labels  =  np.empty([len(TRAIN_FILES),1], dtype=int)
-    current_label  =  np.empty([len(TRAIN_FILES),1], dtype=int)
+    labels  =  np.empty([len(TRAIN_FILES)], dtype=int)
+    current_label  =  np.empty([len(TRAIN_FILES)], dtype=int)
 
     for fn in range(len(TRAIN_FILES)):
         cut1, cut2, label = provider.loadDataFile_cut_2(TRAIN_FILES[fn], False)
