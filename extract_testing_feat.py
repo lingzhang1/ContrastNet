@@ -150,7 +150,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
         feat_out = sess.run(tf.constant(feat_out))
         feat_mean = np.mean(feat_out, 0)  # [1.5, 1.5]
         feat[batch_idx] = feat_mean
-        print('feat = ', feat.shape)
+        print('batch_idx = ', batch_idx)
+        print('feat_mean = ', feat_mean.shape)
     np.savetxt(feature_f, feat, fmt='%f')
 
 if __name__=='__main__':
