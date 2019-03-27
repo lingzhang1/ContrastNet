@@ -128,9 +128,13 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
-    for batch_idx in range(num_batches):
+    for batch_idx in range(num_batches)+1:
         start_idx = batch_idx * BATCH_SIZE
-        end_idx = (batch_idx+1) * BATCH_SIZE
+        if batch_idx == num_batches:
+            end_idx = start_idx + file_size - start_idx
+        else:
+            end_idx = (batch_idx+1) * BATCH_SIZE
+
         cur_batch_size = end_idx - start_idx
 
         # get average featrue
