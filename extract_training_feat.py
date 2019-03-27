@@ -149,8 +149,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
                                   feed_dict=feed_dict)
         print('feat_out = ', feat_out.shape)
         feat_mean = tf.reduce_mean(feat_out, 0)  # [1.5, 1.5]
-        feat_mean = tf.squeeze(feat_mean)
-        # feat_mean = tf.convert_to_tensor(feat_mean, dtype=tf.float32)
+        ffeat_mean = tf.reshape(feat_mean, tf.TensorShape([-1, 1]))
         print('feat_mean = ', feat_mean.shape)
         np.savetxt(feature_f, feat_mean, fmt='%f')
 
