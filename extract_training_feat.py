@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
-parser.add_argument('--batch_size', type=int, default=100, help='Batch Size during training [default: 1]')
+parser.add_argument('--batch_size', type=int, default=1, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
@@ -100,7 +100,6 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
     current_label  =  np.empty([len(TRAIN_FILES),1], dtype=int)
 
     for fn in range(len(TRAIN_FILES)):
-        # log_string('----'+str(fn)+'----')
         cut1, cut2, label = provider.loadDataFile_cut_2(TRAIN_FILES[fn], False)
         data = np.concatenate((cut1, cut2), axis=0)
         # data = cut1
@@ -135,27 +134,27 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=1, topk=1):
         cur_batch_size = end_idx - start_idx
 
         # get average featrue
-        feat_sum = tf.zeros([cur_batch_size, num_batches, FEATURE_SIZE], tf.float32)
+        feat_sum = np.empty([num_votes, NUM_POINT, 3], dtype=float)
+        label_sum = np.empty([num_votes,1], dtype=int)
+        rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
+                                          vote_idx/float(num_votes) * np.pi * 2)
         for vote_idx in range(num_votes):
-            rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
-                                              vote_idx/float(num_votes) * np.pi * 2)
-            feed_dict = {ops['pointclouds_pl']: rotated_data,
-                         ops['labels_pl']: current_label[start_idx:end_idx],
-                         ops['is_training_pl']: is_training}
+            feat_sum[i] = rotated_data
+            label_sum[i] = current_label[start_idx:end_idx]
 
-            _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
-                                      feed_dict=feed_dict)
-            feat_sum[:, vote_idx, :] = feat_out
-        feat_mean = tf.zeros([cur_batch_size, FEATURE_SIZE], tf.float32)
-        for i in range(cur_batch_size):
-            x = feat_sum[i, :, :]
-            x = np.squeeze(x)
-            feat_mean[i] = tf.reduce_mean(x, 0)  # [1.5, 1.5]
+        feed_dict = {ops['pointclouds_pl']: feat_sum,
+                     ops['labels_pl']: label_sum,
+                     ops['is_training_pl']: is_training}
+
+        _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
+                                  feed_dict=feed_dict)
+
+        feat_mean = tf.reduce_mean(feat_out, 0)  # [1.5, 1.5]
 
         print('feat_mean = ', feat_mean.shape)
         np.savetxt(feature_f, feat_mean, fmt='%f')
 
 if __name__=='__main__':
     with tf.Graph().as_default():
-        evaluate(num_votes=1)
+        evaluate(num_votes=12)
     LOG_FOUT.close()
