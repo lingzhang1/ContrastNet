@@ -124,7 +124,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     # label_f =  open('train_cluster.txt', 'w+')
     np.savetxt(label_f, labels, fmt='%d')
 
-    file_size = current_data.shape[0]
+    # file_size = current_data.shape[0]
+    file_size = 20
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
