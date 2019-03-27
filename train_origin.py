@@ -72,7 +72,7 @@ LABELS = []
 read_flabel = open("cluster_label.txt", "r")
 lines = read_flabel.readlines()
 LABELS = map(int, lines)
-LABELS = np.array(LABELS)
+# LABELS = np.array(LABELS)
 
 
 def log_string(out_str):
@@ -187,13 +187,13 @@ def train_one_epoch(sess, ops, train_writer):
     is_training = True
 
     # Shuffle train files
-    train_file_idxs = np.arange(0, len(TRAIN_FILES))
+    train_file_idxs = np.arange(0, len(LABELS))
     np.random.shuffle(train_file_idxs)
 
-    current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
-    current_label  =  np.empty([len(TRAIN_FILES),1], dtype=int)
+    current_data = np.empty([len(LABELS), NUM_POINT, 3], dtype=float)
+    current_label  =  np.empty([len(LABELS),1], dtype=int)
 
-    for fn in range(len(TRAIN_FILES)):
+    for fn in range(len(LABELS)):
         cut1, cut2, _ = provider.loadDataFile_cut_2(TRAIN_FILES[train_file_idxs[fn]], False)
         idx = np.random.randint(cut1.shape[0], size=NUM_POINT/2)
         cut1 = cut1[idx,:]
