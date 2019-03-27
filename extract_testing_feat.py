@@ -134,7 +134,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
 
         # get average featrue
         feat_sum = np.empty([num_votes, NUM_POINT, 3], dtype=float)
-        label_sum = np.empty([num_votes,1], dtype=int)
+        label_sum = np.empty([num_votes], dtype=int)
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :], vote_idx/float(num_votes) * np.pi * 2)
             feat_sum[vote_idx] = rotated_data
