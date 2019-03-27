@@ -3,53 +3,46 @@ from numpy import array
 from sklearn.svm import SVC
 from sklearn.preprocessing import normalize
 
-test_num = 2400
-train_num = 9800
-NUM_POINT = 2048
-# NUM_POINT = 512
-
 # train featrue
-train_X = np.empty([train_num, NUM_POINT], dtype=float)
+train_X = []
 read_feature = open("train_feature.txt", "r")
-count = 0
-for l in range(train_num):
-  line = read_feature.readline()
-  line_split = line.split(" ")
-  line_split = [float(i) for i in line_split]
-  train_X[l] = array(line_split)
 
-# train_X = normalize(train_X, norm='l2', axis=1, copy=True, return_norm=False)
+lines = read_feature.readlines()
+for line in lines:
+    line_split = line.split(" ")
+    line_split = [float(i) for i in line_split]
+    train_X.append(line_split)
+train_X = array(train_X)
 
 # train label
-train_y = np.empty([train_num], dtype=int)
+train_y = []
 read_label = open("train_label.txt", "r")
-for l in range(train_num):
-  line = read_label.readline()
-  line_split = line.split(" ")
-  line_split = [float(i) for i in line_split]
-  train_y[l] = array(line_split)
-
+lines = read_label.readlines()
+for line in range(lines):
+    line_split = line.split(" ")
+    line_split = [float(i) for i in line_split]
+    train_y.append(line_split)
+train_y = array(train_y)
 
 # test featrue
-X = np.empty([test_num, NUM_POINT], dtype=float)
+X = []
 read_feature = open("feature.txt", "r")
-for l in range(test_num):
-  line = read_feature.readline()
-  line_split = line.split(" ")
-  line_split = [float(i) for i in line_split]
-  X[l] = array(line_split)
-
-# X = normalize(X, norm='l2', axis=1, copy=True, return_norm=False)
-# X = array(X)
+lines = read_feature.readlines()
+for line in range(lines):
+    line_split = line.split(" ")
+    line_split = [float(i) for i in line_split]
+    X.append(line_split)
+X = array(X)
 
 # test label
-y = np.empty([test_num], dtype=int)
+y = []
 read_label = open("label.txt", "r")
+lines = read_label.readlines()
 for l in range(test_num):
-  line = read_label.readline()
   line_split = line.split(" ")
   line_split = [float(i) for i in line_split]
-  y[l] = array(line_split)
+  y.append(line_split)
+y = array(y)
 
 print('Training SVM...')
 clf = SVC(gamma='auto')
