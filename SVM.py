@@ -37,7 +37,7 @@ X = X[0:2400, :]
 y = []
 read_label = open("label.txt", "r")
 y = read_label.readlines()
-y = [float(i) for i in lines]
+y = [float(i) for i in y]
 y = array(y)
 y = y[0:2400]
 
