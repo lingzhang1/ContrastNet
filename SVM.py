@@ -17,11 +17,8 @@ train_X = train_X[0:9500, :]
 # train label
 train_y = []
 read_label = open("train_label.txt", "r")
-lines = read_label.readlines()
-for line in lines:
-    line_split = line.split(" ")
-    line_split = [float(i) for i in line_split]
-    train_y.append(line_split)
+train_y = read_label.readlines()
+train_y = [float(i) for i in train_y]
 train_y = array(train_y)
 train_y = train_y[0:9500]
 
@@ -34,18 +31,15 @@ for line in lines:
     line_split = [float(i) for i in line_split]
     X.append(line_split)
 X = array(X)
-X = X[0:1400, :]
+X = X[0:2400, :]
 
 # test label
 y = []
 read_label = open("label.txt", "r")
-lines = read_label.readlines()
-for l in lines:
-  line_split = line.split(" ")
-  line_split = [float(i) for i in line_split]
-  y.append(line_split)
+y = read_label.readlines()
+y = [float(i) for i in lines]
 y = array(y)
-y = y[0:1400]
+y = y[0:2400]
 
 print('Training SVM...')
 clf = SVC(gamma='auto')
