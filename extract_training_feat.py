@@ -153,7 +153,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
             feat_i = np.squeeze(feat[:, i, :])
             feat_mean[i] = np.mean(feat_i, 0)  # [1.5, 1.5]
 
-        print('feat_mean = ', feat_mean.shape)
+        print('batch_idx = ', batch_idx)
         np.savetxt(feature_f, feat_mean, fmt='%f')
 
 if __name__=='__main__':
