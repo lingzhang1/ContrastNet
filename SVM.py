@@ -31,7 +31,7 @@ for line in lines:
     line_split = [float(i) for i in line_split]
     X.append(line_split)
 X = array(X)
-X = X[0:2400, :]
+X = X[0:2350, :]
 
 # test label
 y = []
@@ -39,7 +39,7 @@ read_label = open("label.txt", "r")
 y = read_label.readlines()
 y = [float(i) for i in y]
 y = array(y)
-y = y[0:2400]
+y = y[0:2350]
 
 print('Training SVM...')
 clf = SVC(gamma='auto')
