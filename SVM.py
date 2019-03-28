@@ -22,13 +22,13 @@ y = [float(i) for i in y]
 y = array(y)
 
 for vote_id in range(num_votes):
-    print("VOTE = ", i)
+    print("VOTE = ", vote_id)
     # train featrue
     train_X = []
     read_feature = open("features/train_feature_"+str(vote_id)+".txt", "r")
     lines = read_feature.readlines()
     for line in lines:
-        line_split = line.split(" ")
+        line_split = line.split(' ')
         line_split = [float(i) for i in line_split]
         train_X.append(line_split)
     train_X = array(train_X)
@@ -38,7 +38,7 @@ for vote_id in range(num_votes):
     read_feature = open("features/feature_"+str(vote_id)+".txt", "r")
     lines = read_feature.readlines()
     for line in lines:
-        line_split = line.split(" ")
+        line_split = line.split(' ')
         line_split = [float(i) for i in line_split]
         X.append(line_split)
     X = array(X)
