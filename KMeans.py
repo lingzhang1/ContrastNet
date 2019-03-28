@@ -5,7 +5,7 @@ from numpy import array
 NUM_CLASS = 40
 
 train_X = []
-read_feature = open("features/train_feature.txt", "r")
+read_feature = open("train_feature.txt", "r")
 
 lines = read_feature.readlines()
 print(len(lines))
@@ -18,6 +18,6 @@ train_X = array(train_X)
 kmeans = KMeans(n_clusters=NUM_CLASS, random_state=0).fit(train_X)
 labels = kmeans.labels_
 
-label_f =  open('cluster_label.txt', 'w+')
-np.savetxt(label_f, labels, fmt='%d')
+label_f =  open('cluster_label.npy', 'w+')
+np.save(label_f, labels)
 # array([1, 1, 1, 0, 0, 0], dtype=int32)

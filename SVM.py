@@ -60,4 +60,4 @@ for vote_id in range(num_votes):
     print(clf.score(X, y))
 
 results = array(results)
-print(np.mean(results))
+print('mean', np.mean(results))
