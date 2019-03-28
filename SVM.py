@@ -22,10 +22,10 @@ y = [float(i) for i in y]
 y = array(y)
 
 for i in range(num_votes):
-    print("VOTE = ", num_votes)
+    print("VOTE = ", i)
     # train featrue
     train_X = []
-    read_feature = open("features/train_feature_"+str(num_votes)+".txt", "r")
+    read_feature = open("features/train_feature_"+str(i)+".txt", "r")
     lines = read_feature.readlines()
     for line in lines:
         line_split = line.split(" ")
@@ -35,7 +35,7 @@ for i in range(num_votes):
 
     # test featrue
     X = []
-    read_feature = open("features/feature_"+str(num_votes)+".txt", "r")
+    read_feature = open("features/feature_"+str(i)+".txt", "r")
     lines = read_feature.readlines()
     for line in lines:
         line_split = line.split(" ")
