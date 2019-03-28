@@ -134,7 +134,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
         cur_batch_size = end_idx - start_idx
 
     for vote_idx in range(num_votes):
-        print('vote_idx = '，vote_idx)
+        print('vote_idx = ', vote_idx)
         feature_f = open('features/train_feature_'+ str(vote_idx) +'.txt', 'w+')
         for batch_idx in range(num_batches):
             start_idx = batch_idx * BATCH_SIZE
