@@ -9,24 +9,24 @@ results = []
 
 # train label
 train_y = []
-read_label = open("features/train_label.txt", "r")
+read_label = open("features/train_label.npy", "r")
 train_y = np.load(read_label)
 
 # test label
 y = []
-read_label = open("features/label.txt", "r")
+read_label = open("features/label.npy", "r")
 y = np.load(read_label)
 
 for vote_id in range(num_votes):
     print("VOTE = ", vote_id)
     # train featrue
     train_X = []
-    read_feature = open("features/train_feature_"+str(vote_id)+".txt", "r")
+    read_feature = open("features/train_feature_"+str(vote_id)+".npy", "r")
     train_X = np.load(read_feature)
 
     # test featrue
     X = []
-    read_feature = open("features/feature_"+str(vote_id)+".txt", "r")
+    read_feature = open("features/feature_"+str(vote_id)+".npy", "r")
     X = np.load(read_feature)
 
     print('Training SVM...')

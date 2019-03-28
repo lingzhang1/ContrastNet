@@ -124,7 +124,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
-    label_f =  open('features/label.txt', 'w')
+    label_f =  open('features/label.npy', 'w')
     labels = labels[0:num_batches*BATCH_SIZE]
     np.save(label_f, labels)
     # np.savetxt(label_f, labels, fmt='%d')
@@ -148,7 +148,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
             _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
             #save labels for test
-            feature_f = open('features/feature_'+ str(vote_idx) +'.txt', 'a+')
+            feature_f = open('features/feature_'+ str(vote_idx) +'.npy', 'a+')
             np.save(feature_f, feat_out)
             # np.savetxt(feature_f, feat_out, fmt='%f')
 
