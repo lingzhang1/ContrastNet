@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
-parser.add_argument('--batch_size', type=int, default=80, help='Batch Size during training [default: 1]')
+parser.add_argument('--batch_size', type=int, default=100, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
@@ -126,23 +126,21 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     print(file_size)
 
     #save labels for test
-    label_f =  open('features/train_label.npy', 'w+')
+    label_f =  open('features/train_label.txt', 'w+')
     # label_f =  open('train_cluster.txt', 'w+')
     labels = labels[0:num_batches*BATCH_SIZE]
-    np.save(label_f, labels)
-    # np.savetxt(label_f, labels, fmt='%d')
+    np.savetxt(label_f, labels, fmt='%d')
     print('num_batches =  ',num_batches)
-    for batch_idx in range(num_batches):
-        start_idx = batch_idx * BATCH_SIZE
-        end_idx = (batch_idx+1) * BATCH_SIZE
-        cur_batch_size = end_idx - start_idx
 
-        # get average featrue
-        feat = np.zeros((num_votes, cur_batch_size, FEATURE_SIZE), dtype=float)
-        feat_mean = np.zeros((cur_batch_size, FEATURE_SIZE), dtype=float)
+    for vote_idx in range(num_votes):
+        print('vote_idx = '，vote_idx)
+        feature_f = open('features/train_feature_'+ str(vote_idx) +'.txt', 'w+')
+        for batch_idx in range(num_batches):
+            start_idx = batch_idx * BATCH_SIZE
+            end_idx = (batch_idx+1) * BATCH_SIZE
+            cur_batch_size = end_idx - start_idx
 
-        print(batch_idx)
-        for vote_idx in range(num_votes):
+            print(batch_idx)
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
                                                                 vote_idx/float(num_votes) * np.pi * 2)
             feed_dict = {ops['pointclouds_pl']: rotated_data,
@@ -152,9 +150,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
             _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
 
-            feature_f = open('features/train_feature_'+ str(vote_idx) +'.npy', 'a+')
-            # np.savetxt(feature_f, feat_out, fmt='%f')
-            np.save(feature_f, feat_out)
+            np.savetxt(feature_f, feat_out, fmt='%f')
 
 if __name__=='__main__':
     with tf.Graph().as_default():
