@@ -127,7 +127,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
     label_f =  open('features/label.txt', 'w')
     labels = labels[0:num_batches*BATCH_SIZE]
     np.savetxt(label_f, labels, fmt='%d')
-
+    print(num_batches)
     for batch_idx in range(num_batches):
         start_idx = batch_idx * BATCH_SIZE
         end_idx = (batch_idx+1) * BATCH_SIZE
@@ -136,7 +136,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
         # get average featrue
         # feat = np.zeros((num_votes, cur_batch_size, FEATURE_SIZE), dtype=float)
         # feat_mean = np.zeros((cur_batch_size, FEATURE_SIZE), dtype=float)
-
+        print(vote_idx)
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
                                                                 vote_idx/float(num_votes) * np.pi * 2)
