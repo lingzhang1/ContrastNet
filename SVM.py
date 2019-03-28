@@ -11,6 +11,7 @@ results = []
 train_y = []
 read_label = open("features/train_label.txt", "r")
 train_y = read_label.readlines()
+train_y = train_y.split('\n')[0]
 train_y = [float(i) for i in train_y]
 train_y = array(train_y)
 
@@ -18,6 +19,7 @@ train_y = array(train_y)
 y = []
 read_label = open("features/label.txt", "r")
 y = read_label.readlines()
+y = y.split('\n')[0]
 y = [float(i) for i in y]
 y = array(y)
 
@@ -28,10 +30,11 @@ for vote_id in range(num_votes):
     read_feature = open("features/train_feature_"+str(vote_id)+".txt", "r")
     lines = read_feature.readlines()
     for line in lines:
-        line_split = line.split(' ')
-        print(line_split)
-        line_split = [float(i) for i in line_split]
-        train_X.append(line_split)
+        line = line.split('\n')[0]
+        line = line.split(' ')
+        # print(line)
+        line = [float(i) for i in line]
+        train_X.append(line)
     train_X = array(train_X)
 
     # test featrue
@@ -39,9 +42,10 @@ for vote_id in range(num_votes):
     read_feature = open("features/feature_"+str(vote_id)+".txt", "r")
     lines = read_feature.readlines()
     for line in lines:
-        line_split = line.split(' ')
-        line_split = [float(i) for i in line_split]
-        X.append(line_split)
+        line = line.split('\n')[0]
+        line = line.split(' ')
+        line = [float(i) for i in line]
+        X.append(line)
     X = array(X)
 
     print('Training SVM...')
