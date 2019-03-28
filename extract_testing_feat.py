@@ -127,7 +127,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
 
 
     label_f =  open('features/label.txt', 'w')
-    labels = labels[0:num_batches*BATCH_SIZE]
+    labels = labels[0:(num_batches+1)*BATCH_SIZE]
     np.savetxt(label_f, labels, fmt='%d')
 
     for batch_idx in range(num_batches):
