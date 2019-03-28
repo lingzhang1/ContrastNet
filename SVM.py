@@ -29,6 +29,7 @@ for vote_id in range(num_votes):
     lines = read_feature.readlines()
     for line in lines:
         line_split = line.split(' ')
+        print(line_split)
         line_split = [float(i) for i in line_split]
         train_X.append(line_split)
     train_X = array(train_X)
