@@ -10,41 +10,24 @@ results = []
 # train label
 train_y = []
 read_label = open("features/train_label.txt", "r")
-train_y = read_label.readlines()
-train_y = [float(i) for i in train_y]
-train_y = array(train_y)
+train_y = np.load(read_label)
 
 # test label
 y = []
 read_label = open("features/label.txt", "r")
-y = read_label.readlines()
-y = [float(i) for i in y]
-y = array(y)
+y = np.load(read_label)
 
 for vote_id in range(num_votes):
     print("VOTE = ", vote_id)
     # train featrue
     train_X = []
     read_feature = open("features/train_feature_"+str(vote_id)+".txt", "r")
-    lines = read_feature.readlines()
-    for line in lines:
-        line = line.split('\n')[0]
-        line = line.split(' ')
-        # print(line)
-        line = [float(i) for i in line]
-        train_X.append(line)
-    train_X = array(train_X)
+    train_X = np.load(read_feature)
 
     # test featrue
     X = []
     read_feature = open("features/feature_"+str(vote_id)+".txt", "r")
-    lines = read_feature.readlines()
-    for line in lines:
-        line = line.split('\n')[0]
-        line = line.split(' ')
-        line = [float(i) for i in line]
-        X.append(line)
-    X = array(X)
+    X = np.load(read_feature)
 
     print('Training SVM...')
     clf = SVC(gamma='auto')
