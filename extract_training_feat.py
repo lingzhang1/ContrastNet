@@ -140,7 +140,7 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
         feat = np.zeros((num_votes, cur_batch_size, FEATURE_SIZE), dtype=float)
         feat_mean = np.zeros((cur_batch_size, FEATURE_SIZE), dtype=float)
 
-        print(vote_idx)
+        print(batch_idx)
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
                                                                 vote_idx/float(num_votes) * np.pi * 2)
