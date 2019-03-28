@@ -120,14 +120,12 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
     current_label = np.squeeze(current_label)
     #save labels for test
 
-
     file_size = current_data.shape[0]
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
-
     label_f =  open('features/label.txt', 'w')
-    labels = labels[0:(num_batches+1)*BATCH_SIZE]
+    labels = labels[0:num_batches*BATCH_SIZE]
     np.savetxt(label_f, labels, fmt='%d')
 
     for batch_idx in range(num_batches):
@@ -151,7 +149,6 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
             #save labels for test
             feature_f = open('features/feature_'+ str(vote_idx) +'.txt', 'a+')
             np.savetxt(feature_f, feat_out, fmt='%f')
-            print('vote_idx = ', vote_idx)
 
 if __name__=='__main__':
     with tf.Graph().as_default():
