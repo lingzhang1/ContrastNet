@@ -251,12 +251,9 @@ def train_one_epoch(sess, ops, train_writer):
     total_seen = 0
     loss_sum = 0
 
-    for batch_idx in range(num_batches+1):
+    for batch_idx in range(num_batches):
         start_idx = batch_idx * BATCH_SIZE
-        if batch_idx == num_batches:
-            end_idx = start_idx + file_size - start_idx
-        else:
-            end_idx = (batch_idx+1) * BATCH_SIZE
+        end_idx = (batch_idx+1) * BATCH_SIZE
 
         # shuffle each batch
         data_1 = current_data_1[start_idx:end_idx, :, :]

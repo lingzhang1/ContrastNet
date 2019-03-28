@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
-parser.add_argument('--batch_size', type=int, default=140, help='Batch Size during training [default: 1]')
+parser.add_argument('--batch_size', type=int, default=100, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
@@ -87,11 +87,10 @@ def evaluate(num_votes):
            'loss': loss,
            'feature': feature1}
 
-    #save labels for test
-    feature_f = open('feature.txt', 'w+')
-    eval_one_epoch(sess, ops,feature_f, num_votes)
 
-def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
+    eval_one_epoch(sess, ops, num_votes)
+
+def eval_one_epoch(sess, ops, num_votes=12, topk=1):
     is_training = False
 
     current_data = np.empty([len(TEST_FILES), NUM_POINT, 3], dtype=float)
@@ -120,24 +119,25 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
 
     current_label = np.squeeze(current_label)
     #save labels for test
-    label_f =  open('label.txt', 'w+')
-    np.savetxt(label_f, labels, fmt='%d')
+
 
     file_size = current_data.shape[0]
     num_batches = file_size // BATCH_SIZE
     print(file_size)
 
-    for batch_idx in range(num_batches+1):
+
+    label_f =  open('features/label.txt', 'w')
+    labels = labels[0:num_batches*BATCH_SIZE]
+    np.savetxt(label_f, labels, fmt='%d')
+
+    for batch_idx in range(num_batches):
         start_idx = batch_idx * BATCH_SIZE
-        if batch_idx == num_batches:
-            end_idx = start_idx + file_size - batch_idx * BATCH_SIZE
-        else:
-            end_idx = (batch_idx+1) * BATCH_SIZE
+        end_idx = (batch_idx+1) * BATCH_SIZE
         cur_batch_size = end_idx - start_idx
 
         # get average featrue
-        feat = np.zeros((num_votes, cur_batch_size, FEATURE_SIZE), dtype=float)
-        feat_mean = np.zeros((cur_batch_size, FEATURE_SIZE), dtype=float)
+        # feat = np.zeros((num_votes, cur_batch_size, FEATURE_SIZE), dtype=float)
+        # feat_mean = np.zeros((cur_batch_size, FEATURE_SIZE), dtype=float)
 
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
@@ -148,17 +148,10 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
 
             _, _, feat_out = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
-
-            feat_out = sess.run(tf.constant(feat_out))
-            feat[vote_idx] = feat_out
+            #save labels for test
+            feature_f = open('features/feature_'+ str(vote_idx) +'.txt', 'a+')
+            np.savetxt(feature_f, feat_out, fmt='%f')
             print('vote_idx = ', vote_idx)
-        for i in range(cur_batch_size):
-            feat_i = np.squeeze(feat[:, i, :])
-            feat_mean[i] = np.mean(feat_i, 0)  # [1.5, 1.5]
-
-        print('num_batches = ', num_batches)
-        print('batch_idx = ', batch_idx)
-        np.savetxt(feature_f, feat_mean, fmt='%f')
 
 if __name__=='__main__':
     with tf.Graph().as_default():

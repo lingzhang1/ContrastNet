@@ -5,7 +5,7 @@ from numpy import array
 NUM_CLASS = 40
 
 train_X = []
-read_feature = open("train_cluster.txt", "r")
+read_feature = open("features/train_feature.txt", "r")
 
 lines = read_feature.readlines()
 print(len(lines))
