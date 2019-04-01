@@ -24,7 +24,7 @@ classes = np.zeros((CLASS_NUM, CLASS_NUM))
 print('Loading cluster labels ...')
 cluster_f = open("cluster_label.txt", "r")
 cluster_labels = cluster_f.readlines()
-cluster_labels = map(int, cluster_labels)
+cluster_labels = [int(i) for i in cluster_labels]
 
 print('Caculating proportion ...')
 for i in range(len(cluster_labels)):
