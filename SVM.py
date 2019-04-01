@@ -11,14 +11,14 @@ results = []
 train_y = []
 read_label = open("features/train_label.txt", "r")
 train_y = read_label.readlines()
-train_y = [float(i) for i in train_y]
+train_y = [int(i) for i in train_y]
 train_y = array(train_y)
 
 # test label
 y = []
 read_label = open("features/label.txt", "r")
 y = read_label.readlines()
-y = [float(i) for i in y]
+y = [int(i) for i in y]
 y = array(y)
 
 for vote_id in range(num_votes):
