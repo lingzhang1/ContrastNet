@@ -8,7 +8,7 @@ sys.path.append(os.path.join(BASE_DIR, 'utils'))
 import provider
 
 TRAIN_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/train_files.txt'))
+    os.path.join(BASE_DIR, 'data/shapenet_cut/train_files.txt'))
 
 gt_labels = np.empty([len(TRAIN_FILES),1], dtype=int)
 
@@ -18,7 +18,7 @@ for fn in range(len(TRAIN_FILES)):
     label = np.squeeze(label)
     gt_labels[fn] = label
 
-CLASS_NUM = 40
+CLASS_NUM = 16
 classes = np.zeros((CLASS_NUM, CLASS_NUM))
 
 print('Loading cluster labels ...')
