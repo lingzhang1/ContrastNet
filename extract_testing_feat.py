@@ -99,9 +99,9 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
 
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
-        # cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
-        data, label = provider.loadDataFile(TRAIN_FILES[fn])
-        # data = np.concatenate((cut1, cut2), axis=0)
+        cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
+        # data, label = provider.loadDataFile(TRAIN_FILES[fn])
+        data = np.concatenate((cut1, cut2), axis=0)
         # data = cut1
         #
         # cut1, cut2, cut3, cut4, label = provider.loadDataFile_cut_4(TEST_FILES[fn], False)
