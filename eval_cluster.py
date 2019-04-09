@@ -8,7 +8,7 @@ sys.path.append(os.path.join(BASE_DIR, 'utils'))
 import provider
 
 TRAIN_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/shapenet_cut/train_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/train_files.txt'))
 
 gt_labels = np.empty([len(TRAIN_FILES),1], dtype=int)
 
