@@ -63,10 +63,10 @@ def evaluate(num_votes):
         pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
         # simple model
-        # pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
-        pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
-        # loss = MODEL.get_loss(pred, labels_pl, end_points)
-        loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
+        pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
+        # pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
+        loss = MODEL.get_loss(pred, labels_pl, end_points)
+        # loss = MODEL_ORIGIN.get_loss(pred, labels_pl, end_points)
 
         # Add ops to save and restore all the variables.
         saver = tf.train.Saver()
@@ -101,9 +101,9 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
     current_label  =  np.empty([len(TRAIN_FILES)], dtype=int)
 
     for fn in range(len(TRAIN_FILES)):
-        cut1, cut2, label = provider.loadDataFile_cut_2(TRAIN_FILES[fn], False)
-        # data, label = provider.loadDataFile(TRAIN_FILES[fn])
-        data = np.concatenate((cut1, cut2), axis=0)
+        # cut1, cut2, label = provider.loadDataFile_cut_2(TRAIN_FILES[fn], False)
+        data, label = provider.loadDataFile(TRAIN_FILES[fn])
+        # data = np.concatenate((cut1, cut2), axis=0)
         # data = cut1
 
         # cut1, cut2, cut3, cut4, label = provider.loadDataFile_cut_4(TRAIN_FILES[fn], False)
