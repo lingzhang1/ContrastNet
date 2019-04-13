@@ -173,12 +173,12 @@ def train():
             train_one_epoch(sess, ops, train_writer)
 
             # Save the variables to disk.
-            if epoch % 10 == 0:
-                save_path = saver.save(sess, os.path.join(LOG_DIR, 'model.ckpt'))
-                log_string("Model saved in file: %s" % save_path)
 
-            if epoch % 20 == 0:
-                save_path = saver.save(sess, os.path.join(LOG_DIR, 'epoch_' + str(epoch)+'.ckpt'))
+            if epoch % 20 == 0 and epoch >= 80:
+                save_path = saver.save(sess, os.path.join(LOG_DIR, 'epoch_' + str(epoch)+'.ckpt'), max_to_keep = 10)
+                log_string("Model saved in file: %s" % save_path)
+            elif epoch % 10 == 0:
+                save_path = saver.save(sess, os.path.join(LOG_DIR, 'model.ckpt'), max_to_keep = 10)
                 log_string("Model saved in file: %s" % save_path)
 
 
