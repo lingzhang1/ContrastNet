@@ -21,7 +21,7 @@ parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: 
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--batch_size', type=int, default=64, help='Batch Size during training [default: 1]')
 parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
-parser.add_argument('--model_path', default='log/epoch_120.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
+parser.add_argument('--model_path', default='log/epoch_160.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
 parser.add_argument('--visu', action='store_true', help='Whether to dump image for error case [default: False]')
 FLAGS = parser.parse_args()
