@@ -104,8 +104,8 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
         # data = np.concatenate((cut1, cut2), axis=0)
         # data = cut1
 
-        # idx = np.random.randint(data.shape[0], size=NUM_POINT)
-        # data = data[idx,:]
+        idx = np.random.randint(data.shape[0], size=NUM_POINT)
+        data = data[idx,:]
 
         label = np.squeeze(label)
         current_data[fn] = data
