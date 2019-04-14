@@ -126,7 +126,7 @@ def train():
             train_op = optimizer.minimize(loss, global_step=batch)
 
             # Add ops to save and restore all the variables.
-            saver = tf.train.Saver()
+            saver = tf.train.Saver(max_to_keep = 10)
 
         # Create a session
         config = tf.ConfigProto()
@@ -174,10 +174,10 @@ def train():
             # Save the variables to disk.
 
             if epoch % 40 == 0 and epoch >= 120:
-                save_path = saver.save(sess, os.path.join(LOG_DIR, 'epoch_' + str(epoch)+'.ckpt'), max_to_keep = 10)
+                save_path = saver.save(sess, os.path.join(LOG_DIR, 'epoch_' + str(epoch)+'.ckpt'))
                 log_string("Model saved in file: %s" % save_path)
             elif epoch % 10 == 0:
-                save_path = saver.save(sess, os.path.join(LOG_DIR, 'model.ckpt'), max_to_keep = 10)
+                save_path = saver.save(sess, os.path.join(LOG_DIR, 'model.ckpt'))
                 log_string("Model saved in file: %s" % save_path)
 
 
