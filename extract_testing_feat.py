@@ -38,8 +38,6 @@ if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
-NUM_CLASSES = 2
-FEATURE_SIZE = 256
 # SHAPE_NAMES = [line.rstrip() for line in \
 #     open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/shape_names.txt'))]
 
@@ -47,9 +45,9 @@ HOSTNAME = socket.gethostname()
 
 # ModelNet40 official train/test split
 TRAIN_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/ModelNet10Hdf5/train_files.txt'))
+    os.path.join(BASE_DIR, 'data/ModelNet10Hdf5_cut/train_files.txt'))
 TEST_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/ModelNet10Hdf5/test_files.txt'))
+    os.path.join(BASE_DIR, 'data/ModelNet10Hdf5_cut/test_files.txt'))
 
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
@@ -103,7 +101,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
         data, label = provider.loadDataFile(TRAIN_FILES[fn])
         # data = np.concatenate((cut1, cut2), axis=0)
         # data = cut1
-        
+
         # idx = np.random.randint(data.shape[0], size=NUM_POINT)
         # data = data[idx,:]
 
