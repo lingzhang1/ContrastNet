@@ -2,7 +2,7 @@ from sklearn.cluster import KMeans
 import numpy as np
 from numpy import array
 
-NUM_CLASS = 300
+NUM_CLASS = 400
 
 train_X = []
 read_feature = open("train_feature.txt", "r")
