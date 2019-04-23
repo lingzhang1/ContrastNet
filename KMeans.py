@@ -19,7 +19,7 @@ kmeans = KMeans(n_clusters=NUM_CLASS, random_state=0).fit(train_X)
 labels = kmeans.labels_
 
 j = 10
-d = kmeans.transform(X)[:, j]
+d = kmeans.transform(train_X)[:, j]
 ind = np.argsort(d)[::-1][:11]
 # close_feat = X[ind]
 
