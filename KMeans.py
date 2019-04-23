@@ -18,7 +18,7 @@ train_X = array(train_X)
 kmeans = KMeans(n_clusters=NUM_CLASS, random_state=0).fit(train_X)
 labels = kmeans.labels_
 
-j = 10
+j = 0
 d = kmeans.transform(train_X)[:, j]
 ind = np.argsort(d)[::-1][:11]
 # close_feat = X[ind]
@@ -26,5 +26,5 @@ ind = np.argsort(d)[::-1][:11]
 closed_f =  open('closed_index.txt', 'w+')
 np.savetxt(closed_f, ind, fmt='%d')
 
-label_f =  open('cluster_label.txt', 'w+')
-np.savetxt(label_f, labels, fmt='%d')
+# label_f =  open('cluster_label.txt', 'w+')
+# np.savetxt(label_f, labels, fmt='%d')
