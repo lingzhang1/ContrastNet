@@ -49,12 +49,6 @@ for vote_id in range(num_votes):
     # X = array(X)
 
     # pick random points
-
-    print('train_X = ', len(train_X))
-    print('train_y = ', len(train_y))
-    print('X = ', len(X))
-    print('y = ', len(y))
-    
     num = 100
     train_X_tmp,  train_y_tmp = [], []
     for i in range(len(train_X)):
