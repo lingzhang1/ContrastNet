@@ -7,22 +7,24 @@ num_votes = 12
 
 results = []
 
-# train label
-train_y = []
-read_label = open("features/train_label.txt", "r")
-train_y = read_label.readlines()
-train_y = [int(i) for i in train_y]
-# train_y = array(train_y)
-
-# test label
-y = []
-read_label = open("features/label.txt", "r")
-y = read_label.readlines()
-y = [int(i) for i in y]
-# y = array(y)
 
 for vote_id in range(num_votes):
     print("VOTE = ", vote_id)
+
+    # train label
+    train_y = []
+    read_label = open("features/train_label.txt", "r")
+    train_y = read_label.readlines()
+    train_y = [int(i) for i in train_y]
+    # train_y = array(train_y)
+
+    # test label
+    y = []
+    read_label = open("features/label.txt", "r")
+    y = read_label.readlines()
+    y = [int(i) for i in y]
+    # y = array(y)
+
     # train featrue
     train_X = []
     read_feature = open("features/train_feature_"+str(vote_id)+".txt", "r")
@@ -52,6 +54,7 @@ for vote_id in range(num_votes):
     print('train_y = ', len(train_y))
     print('X = ', len(X))
     print('y = ', len(y))
+    
     num = 100
     train_X_tmp,  train_y_tmp = [], []
     for i in range(len(train_X)):
