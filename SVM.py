@@ -58,13 +58,13 @@ for vote_id in range(num_votes):
     train_X = array(train_X_tmp)
     train_y = array(train_y_tmp)
 
-    X_tmp,  y_tmp = [], []
-    for i in range(len(X)):
-        if i % num == 0:
-            X_tmp.append(X[i])
-            y_tmp.append(y[i])
-    X = array(X_tmp)
-    y = array(y_tmp)
+    # X_tmp,  y_tmp = [], []
+    # for i in range(len(X)):
+    #     if i % num == 0:
+    #         X_tmp.append(X[i])
+    #         y_tmp.append(y[i])
+    # X = array(X_tmp)
+    # y = array(y_tmp)
 
     clf = SVC(gamma='auto')
     clf.fit(train_X, train_y)
