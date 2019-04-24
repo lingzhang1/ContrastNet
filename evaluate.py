@@ -84,10 +84,7 @@ def evaluate(num_votes):
            'labels_pl': labels_pl,
            'is_training_pl': is_training_pl,
            'pred': pred,
-           'loss': loss,
-           'train_op': train_op,
-           'merged': merged,
-           'step': batch}
+           'loss': loss}
 
 
     eval_one_epoch(sess, ops, num_votes)
