@@ -52,7 +52,7 @@ for vote_id in range(num_votes):
     num = 100
     count = len(train_X) // num
     choice = np.random.randint(len(train_X), size=count)
-    train_X = train_X[choice]
+    train_X = train_X[choice, :]
     train_y = train_y[choice]
 
 
