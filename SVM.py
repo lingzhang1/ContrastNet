@@ -35,7 +35,7 @@ for vote_id in range(num_votes):
         # print(line)
         line = [float(i) for i in line]
         train_X.append(line)
-    # train_X = array(train_X)
+    train_X = array(train_X)
 
     # test featrue
     X = []
