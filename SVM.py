@@ -16,14 +16,14 @@ for vote_id in range(num_votes):
     read_label = open("features/train_label.txt", "r")
     train_y = read_label.readlines()
     train_y = [int(i) for i in train_y]
-    # train_y = array(train_y)
+    train_y = array(train_y)
 
     # test label
     y = []
     read_label = open("features/label.txt", "r")
     y = read_label.readlines()
     y = [int(i) for i in y]
-    # y = array(y)
+    y = array(y)
 
     # train featrue
     train_X = []
@@ -46,25 +46,15 @@ for vote_id in range(num_votes):
         line = line.split(' ')
         line = [float(i) for i in line]
         X.append(line)
-    # X = array(X)
+    X = array(X)
 
     # pick random points
     num = 100
-    train_X_tmp,  train_y_tmp = [], []
-    for i in range(len(train_X)):
-        if i % num == 0:
-            train_X_tmp.append(train_X[i])
-            train_y_tmp.append(train_y[i])
-    train_X = array(train_X_tmp)
-    train_y = array(train_y_tmp)
+    count = len(train_X) // num
+    choice = np.random.randint(len(train_X), size=count)
+    train_X = train_X[choice]
+    train_y = train_y[choice]
 
-    # X_tmp,  y_tmp = [], []
-    # for i in range(len(X)):
-    #     if i % num == 0:
-    #         X_tmp.append(X[i])
-    #         y_tmp.append(y[i])
-    # X = array(X_tmp)
-    # y = array(y_tmp)
 
     clf = SVC(gamma='auto')
     clf.fit(train_X, train_y)
