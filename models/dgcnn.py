@@ -79,12 +79,6 @@ def model(point_cloud, is_training, cut, num_point, bn_decay=None):
 
   net = tf.reduce_max(net, axis=1, keep_dims=True)
 
-  # max_net = tf_util.max_pool2d(net, [num_point,1],
-  #                              padding='VALID', scope='maxpool')
-  # avg_net = tf_util.avg_pool2d(net, [num_point,1],
-  #                              padding='VALID', scope='avgpool')
-  # max_avg_net = tf.concat([max_net, avg_net], 3)
-
   return net
 
 
