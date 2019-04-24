@@ -99,7 +99,7 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
         # log_string('----'+str(fn)+'----')
         cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
         # data, label = provider.loadDataFile(TRAIN_FILES[fn])
-        data = np.concatenate((cut1, cut2), axis=0)
+        data = np.concatenate((cut1, cut2), axis=0)ex
         # data = cut1
 
         idx = np.random.randint(data.shape[0], size=NUM_POINT)
@@ -121,10 +121,6 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
     labels = labels[0:num_batches*BATCH_SIZE]
     np.savetxt(label_f, labels, fmt='%d')
     print(num_batches)
-    for batch_idx in range(num_batches):
-        start_idx = batch_idx * BATCH_SIZE
-        end_idx = (batch_idx+1) * BATCH_SIZE
-        cur_batch_size = end_idx - start_idx
 
     for vote_idx in range(num_votes):
         print('vote_idx = ', vote_idx)
