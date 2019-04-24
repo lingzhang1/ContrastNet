@@ -58,8 +58,11 @@ def evaluate(num_votes):
     is_training = False
 
     with tf.device('/gpu:'+str(GPU_INDEX)):
-        pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
+        pointclouds_pl_1, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
+        pointclouds_pl_2, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
+        print(is_training_pl)
+
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         # pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
@@ -76,14 +79,15 @@ def evaluate(num_votes):
     sess = tf.Session(config=config)
 
     # Restore variables from disk.
-    saver.restore(sess, MODEL_PATH)
-    log_string("Model restored.")
-    ops = {'pointclouds_pl': pointclouds_pl,
+    ops = {'pointclouds_pl_1': pointclouds_pl_1,
+           'pointclouds_pl_2': pointclouds_pl_2,
            'labels_pl': labels_pl,
            'is_training_pl': is_training_pl,
            'pred': pred,
            'loss': loss,
-           'feature': feature1}
+           'train_op': train_op,
+           'merged': merged,
+           'step': batch}
 
 
     eval_one_epoch(sess, ops, num_votes)
