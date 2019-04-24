@@ -172,9 +172,6 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
 
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
-
-            loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
-                                      feed_dict=feed_dict)
             batch_pred_sum += pred_val
             batch_pred_val = np.argmax(pred_val, 1)
             for el_idx in range(cur_batch_size):
