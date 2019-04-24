@@ -46,6 +46,10 @@ for vote_id in range(num_votes):
         X.append(line)
     X = array(X)
 
+    # pick random points
+
+    
+
     clf = SVC(gamma='auto')
     clf.fit(train_X, train_y)
 

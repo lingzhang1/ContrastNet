@@ -20,8 +20,8 @@ parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--batch_size', type=int, default=64, help='Batch Size during training [default: 1]')
-parser.add_argument('--num_point', type=int, default=2048, help='Point Number [256/512/1024/2048] [default: 1024]')
-parser.add_argument('--model_path', default='log/epoch_160.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
+parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
+parser.add_argument('--model_path', default='log/epoch_140.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
 parser.add_argument('--visu', action='store_true', help='Whether to dump image for error case [default: False]')
 FLAGS = parser.parse_args()
@@ -45,9 +45,9 @@ HOSTNAME = socket.gethostname()
 
 # ModelNet40 official train/test split
 TRAIN_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/ModelNet10Hdf5/train_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/train_files.txt'))
 TEST_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/ModelNet10Hdf5/test_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/test_files.txt'))
 
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
@@ -97,9 +97,9 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
 
     for fn in range(len(TEST_FILES)):
         # log_string('----'+str(fn)+'----')
-        # cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
-        data, label = provider.loadDataFile(TRAIN_FILES[fn])
-        # data = np.concatenate((cut1, cut2), axis=0)
+        cut1, cut2, label = provider.loadDataFile_cut_2(TEST_FILES[fn], False)
+        # data, label = provider.loadDataFile(TRAIN_FILES[fn])
+        data = np.concatenate((cut1, cut2), axis=0)
         # data = cut1
 
         idx = np.random.randint(data.shape[0], size=NUM_POINT)
