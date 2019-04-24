@@ -145,7 +145,7 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
     current_label = np.squeeze(current_label)
 
 
-    file_size = current_data.shape[0]
+    file_size = current_data_1.shape[0]
     num_batches = file_size // BATCH_SIZE
     print(file_size)
     print(num_batches)
@@ -162,9 +162,14 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
         for vote_idx in range(num_votes):
             rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
                                               vote_idx/float(num_votes) * np.pi * 2)
-            feed_dict = {ops['pointclouds_pl']: rotated_data,
+            feed_dict = {ops['pointclouds_pl_1']: current_data_1,
+                         ops['pointclouds_pl_2']: current_data_2,
                          ops['labels_pl']: current_label[start_idx:end_idx],
                          ops['is_training_pl']: is_training}
+
+            loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
+                                      feed_dict=feed_dict)
+
             loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
             batch_pred_sum += pred_val
