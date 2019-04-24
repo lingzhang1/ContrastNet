@@ -26,7 +26,7 @@ parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]'
 parser.add_argument('--visu', action='store_true', help='Whether to dump image for error case [default: False]')
 FLAGS = parser.parse_args()
 
-
+NUM_CLASSES = 2
 BATCH_SIZE = FLAGS.batch_size
 NUM_POINT = FLAGS.num_point
 MODEL_PATH = FLAGS.model_path
