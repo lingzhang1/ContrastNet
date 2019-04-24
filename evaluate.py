@@ -160,10 +160,12 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
         batch_pred_sum = np.zeros((cur_batch_size, NUM_CLASSES)) # score for classes
         batch_pred_classes = np.zeros((cur_batch_size, NUM_CLASSES)) # 0/1 for classes
         for vote_idx in range(num_votes):
-            rotated_data = provider.rotate_point_cloud_by_angle(current_data[start_idx:end_idx, :, :],
+            rotated_data_1 = provider.rotate_point_cloud_by_angle(current_data_1[start_idx:end_idx, :, :],
                                               vote_idx/float(num_votes) * np.pi * 2)
-            feed_dict = {ops['pointclouds_pl_1']: current_data_1,
-                         ops['pointclouds_pl_2']: current_data_2,
+            rotated_data_2 = provider.rotate_point_cloud_by_angle(current_data_2[start_idx:end_idx, :, :],
+                                              vote_idx/float(num_votes) * np.pi * 2)
+            feed_dict = {ops['pointclouds_pl_1']: rotated_data_1,
+                         ops['pointclouds_pl_2']: rotated_data_2,
                          ops['labels_pl']: current_label[start_idx:end_idx],
                          ops['is_training_pl']: is_training}
 
