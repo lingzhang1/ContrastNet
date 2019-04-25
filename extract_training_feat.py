@@ -116,17 +116,17 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
 
     file_size = current_data.shape[0]
     num_batches = file_size // BATCH_SIZE
-    print(file_size)
+    log_string('file_size: %f' % (file_size))
+    log_string('num_batches: %f' % (num_batches))
 
     #save labels for test
     label_f =  open('features/train_label.txt', 'w+')
     # label_f =  open('train_cluster.txt', 'w+')
     labels = labels[0:num_batches*BATCH_SIZE]
     np.savetxt(label_f, labels, fmt='%d')
-    print('num_batches =  ',num_batches)
 
     for vote_idx in range(num_votes):
-        print('vote_idx = ', vote_idx)
+        log_string('vote: %f' % (vote_idx))
         feature_f = open('features/train_feature_'+ str(vote_idx) +'.txt', 'w')
         for batch_idx in range(num_batches):
             start_idx = batch_idx * BATCH_SIZE

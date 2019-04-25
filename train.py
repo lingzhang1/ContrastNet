@@ -273,7 +273,7 @@ def train_one_epoch(sess, ops, train_writer):
         feed_dict = {ops['pointclouds_pl_1']: jittered_data_1,
                      ops['pointclouds_pl_2']: jittered_data_2,
                      ops['labels_pl']: label,
-                     ops['is_training_pl']: is_training,}
+                     ops['is_training_pl']: is_training}
         summary, step, _, loss_val, pred_val = sess.run([ops['merged'], ops['step'],
             ops['train_op'], ops['loss'], ops['pred']], feed_dict=feed_dict)
         train_writer.add_summary(summary, step)
