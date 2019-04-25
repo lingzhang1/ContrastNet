@@ -148,14 +148,14 @@ def eval_one_epoch(sess, ops, num_votes=12, topk=1):
 
     file_size = current_data_1.shape[0]
     num_batches = file_size // BATCH_SIZE
-    log_string('file_size: %f' % (file_size))
-    log_string('num_batches: %f' % (num_batches))
+    log_string('file_size: %d' % (file_size))
+    log_string('num_batches: %d' % (num_batches))
 
     for batch_idx in range(num_batches):
         start_idx = batch_idx * BATCH_SIZE
         end_idx = (batch_idx+1) * BATCH_SIZE
         cur_batch_size = end_idx - start_idx
-        log_string('batch: %f' % (batch_idx))
+        log_string('batch: %d' % (batch_idx))
         # Aggregating BEG
         batch_loss_sum = 0 # sum of losses for the batch
         batch_pred_sum = np.zeros((cur_batch_size, NUM_CLASSES)) # score for classes
