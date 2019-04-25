@@ -20,13 +20,13 @@ parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU
 parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--model_origin', default='dgcnn_origin', help='Model name: dgcnn [default: dgcnn]')
 parser.add_argument('--batch_size', type=int, default=64, help='Batch Size during training [default: 1]')
-parser.add_argument('--num_point', type=int, default=1024, help='Point Number [256/512/1024/2048] [default: 1024]')
+parser.add_argument('--num_point', type=int, default=512, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--model_path', default='log/model.ckpt', help='model checkpoint file path [default: log/model.ckpt]')
 parser.add_argument('--dump_dir', default='dump', help='dump folder path [dump]')
 parser.add_argument('--visu', action='store_true', help='Whether to dump image for error case [default: False]')
 FLAGS = parser.parse_args()
 
-NUM_CLASSES = 2
+
 BATCH_SIZE = FLAGS.batch_size
 NUM_POINT = FLAGS.num_point
 MODEL_PATH = FLAGS.model_path
@@ -37,6 +37,8 @@ DUMP_DIR = FLAGS.dump_dir
 if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
+
+NUM_CLASSES = 2
 
 # SHAPE_NAMES = [line.rstrip() for line in \
 #     open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/shape_names.txt'))]
@@ -58,11 +60,10 @@ def evaluate(num_votes):
     is_training = False
 
     with tf.device('/gpu:'+str(GPU_INDEX)):
+        # pointclouds_pl, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         pointclouds_pl_1, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         pointclouds_pl_2, labels_pl = MODEL.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
-        print(is_training_pl)
-
         # simple model
         pred, feature1, feature2, end_points = MODEL.get_model(pointclouds_pl_1, pointclouds_pl_2, is_training_pl)
         # pred, feature1, end_points = MODEL_ORIGIN.get_model(pointclouds_pl, is_training_pl)
@@ -79,25 +80,24 @@ def evaluate(num_votes):
     sess = tf.Session(config=config)
 
     # Restore variables from disk.
+    saver.restore(sess, MODEL_PATH)
+    log_string("Model restored.")
     ops = {'pointclouds_pl_1': pointclouds_pl_1,
            'pointclouds_pl_2': pointclouds_pl_2,
            'labels_pl': labels_pl,
            'is_training_pl': is_training_pl,
            'pred': pred,
-           'loss': loss}
+           'loss': loss,
+           'feature': feature1}
 
 
     eval_one_epoch(sess, ops, num_votes)
 
-def eval_one_epoch(sess, ops, num_votes=1, topk=1):
-    error_cnt = 0
+def eval_one_epoch(sess, ops, num_votes=12, topk=1):
     is_training = False
     total_correct = 0
     total_seen = 0
     loss_sum = 0
-    total_seen_class = [0 for _ in range(NUM_CLASSES)]
-    total_correct_class = [0 for _ in range(NUM_CLASSES)]
-
 
     current_data_1 = np.empty([3*len(TEST_FILES), NUM_POINT, 3], dtype=float)
     current_data_2 = np.empty([3*len(TEST_FILES), NUM_POINT, 3], dtype=float)
@@ -159,7 +159,7 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
         # Aggregating BEG
         batch_loss_sum = 0 # sum of losses for the batch
         batch_pred_sum = np.zeros((cur_batch_size, NUM_CLASSES)) # score for classes
-        batch_pred_classes = np.zeros((cur_batch_size, NUM_CLASSES)) # 0/1 for classes
+        # batch_pred_classes = np.zeros((cur_batch_size, NUM_CLASSES)) # 0/1 for classes
         for vote_idx in range(num_votes):
             rotated_data_1 = provider.rotate_point_cloud_by_angle(current_data_1[start_idx:end_idx, :, :],
                                               vote_idx/float(num_votes) * np.pi * 2)
@@ -170,12 +170,12 @@ def eval_one_epoch(sess, ops, num_votes=1, topk=1):
                          ops['labels_pl']: current_label[start_idx:end_idx],
                          ops['is_training_pl']: is_training}
 
-            loss_val, pred_val = sess.run([ops['loss'], ops['pred']],
+            loss_val, pred_val, _ = sess.run([ops['loss'], ops['pred'], ops['feature']],
                                       feed_dict=feed_dict)
             batch_pred_sum += pred_val
-            batch_pred_val = np.argmax(pred_val, 1)
-            for el_idx in range(cur_batch_size):
-                batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
+            # batch_pred_val = np.argmax(pred_val, 1)
+            # for el_idx in range(cur_batch_size):
+            #     batch_pred_classes[el_idx, batch_pred_val[el_idx]] += 1
             batch_loss_sum += (loss_val * cur_batch_size / float(num_votes))
         # pred_val_topk = np.argsort(batch_pred_sum, axis=-1)[:,-1*np.array(range(topk))-1]
         # pred_val = np.argmax(batch_pred_classes, 1)
