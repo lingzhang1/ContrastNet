@@ -72,23 +72,9 @@ python extract_testing_feat.py
 python SVM.py
 ```
 
-
-
-
-
-## Citation
-
-Please cite this paper if you want to use it in your work,
-
-	@article{dgcnn,
-	  title={Dynamic Graph CNN for Learning on Point Clouds},
-	  author={Yue Wang, Yongbin Sun, Ziwei Liu, Sanjay E. Sarma, Michael M. Bronstein, Justin M. Solomon},
-	  journal={arXiv preprint arXiv:1801.07829},
-	  year={2018}
-	}
-
 ## License
+
 MIT License
 
 ## Acknowledgement
-This code is heavily borrowed from [PointNet](https://github.com/charlesq34/pointnet).
+This code is heavily borrowed from [PointNet](https://github.com/charlesq34/pointnet) and [DGCNN](<https://github.com/WangYueFt/dgcnn>).
