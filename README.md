@@ -1,30 +1,83 @@
-# Dynamic Graph CNN for Learning on Point Clouds
-We propose a new neural network module dubbed EdgeConv suitable for CNN-based high-level tasks on point clouds including classification and segmentation. EdgeConv is differentiable and can be plugged into existing architectures.
+# Unsupervised Feature Learning for Point Cloud by Contrasting and Clustering With Graph Convolution Neural Network
+We propose an unsupervised learning approach to learn features from unlabeled point cloud "3D object" dataset by using part contrasting and object clustering with deep graph neural networks (GNNs).
 
-[[Project]](https://liuziwei7.github.io/projects/DGCNN) [[Paper]](https://arxiv.org/abs/1801.07829)     
+ [[Paper]](https://arxiv.org/abs/1801.07829)     
 
-## Overview
-`DGCNN` is the author's re-implementation of Dynamic Graph CNN, which achieves state-of-the-art performance on point-cloud-related high-level tasks including category classification, semantic segmentation and part segmentation. 
+## Pipeline
+To learn features from unlabeled point cloud data, we propose to learn features by training networks to accomplish both of the part contrasting and the object clustering pretext tasks. The pipeline of our framework is illustrated in the Figure, which includes three major steps: ContrastNet for part contrast learning, clustering using the learned features, and then ClusterNet for object cluster learning using the cluster IDs. 
 
-<img src='./misc/demo_teaser.png' width=800>
-
-Further information please contact [Yue Wang](https://www.csail.mit.edu/person/yue-wang) and [Yongbin Sun](https://autoid.mit.edu/people-2).
+<img src='./misc/pipeline.jpg' width=800>  
 
 ## Requirements
-* [TensorFlow](https://www.tensorflow.org/)
+* [TensorFlow](https://www.tensorflow.org/), Matlab
 
-## Point Cloud Classification
+
+
+## Process Data
+
+- For ModelNet40,  run script `gen_modelnet40_cut2_hdf5.m` using Matlab.
+
+- For ShapeNet,  run script `gen_shapenet_cut2_hdf5.m`  using Matlab.
+- Then run script `gen_filesnames.m`  using Matlab. Need to change the files path in gen_filesnames.m  file to the corresponding name of datasets.
+
+## ContrastNet
 * Run the training script:
 ``` bash
-python train.py
+python train_contrastnet.py
 ```
-* Run the evaluation script after training finished:
+* Run the extracting script after training finished:
 ``` bash
-python evalutate.py
+python extract_training_feat.py
+
+python extract_testing_feat.py
+```
+
+- Run the classifier script after extracting finished:
 
 ```
+python SVM.py
+```
+
+## ClusterNet
+
+- Run the clustering script (for sure there is a train_feature.txt file in current pathway):
+
+```
+Python KMeans.py
+```
+
+- Run the training script:
+
+```bash
+python train_clusternet.py
+```
+
+- Run the evaluate script after extracting finished:
+
+```
+python evaluate.py
+```
+
+- Run the extracting script after training finished:
+
+```bash
+python extract_training_feat.py
+
+python extract_testing_feat.py
+```
+
+- Run the classifier script after extracting finished:
+
+```
+python SVM.py
+```
+
+
+
+
 
 ## Citation
+
 Please cite this paper if you want to use it in your work,
 
 	@article{dgcnn,
