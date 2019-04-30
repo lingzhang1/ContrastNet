@@ -1,7 +1,7 @@
 # Unsupervised Feature Learning for Point Cloud by Contrasting and Clustering With Graph Convolution Neural Network
 We propose an unsupervised learning approach to learn features from unlabeled point cloud "3D object" dataset by using part contrasting and object clustering with deep graph neural networks (GNNs).
 
- [[Paper]](https://arxiv.org/abs/1801.07829)     
+ [[Paper]](https://arxiv.org/abs/1904.12359)  
 
 ## Pipeline
 To learn features from unlabeled point cloud data, we propose to learn features by training networks to accomplish both of the part contrasting and the object clustering pretext tasks. The pipeline of our framework is illustrated in the Figure, which includes three major steps: ContrastNet for part contrast learning, clustering using the learned features, and then ClusterNet for object cluster learning using the cluster IDs. 
