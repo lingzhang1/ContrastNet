@@ -25,6 +25,11 @@ To learn features from unlabeled point cloud data, we propose to learn features 
 ``` bash
 python train_contrastnet.py
 ```
+* Run the evaluating script after training finished:
+```
+python evaluate.py
+```
+
 * Run the extracting script after training finished:
 ``` bash
 python extract_training_feat.py
@@ -50,12 +55,6 @@ Python KMeans.py
 
 ```bash
 python train_clusternet.py
-```
-
-- Run the evaluating script after training finished:
-
-```
-python evaluate.py
 ```
 
 - Run the extracting script after training finished:
