@@ -16,7 +16,7 @@ import tf_util
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
-parser.add_argument('--model', default='dgcnn', help='Model name: dgcnn')
+parser.add_argument('--model', default='contrastnet', help='Model name: contrastnet')
 parser.add_argument('--log_dir', default='log', help='Log dir [default: log]')
 parser.add_argument('--num_point', type=int, default=512, help='Point Number [256/512/1024/2048] [default: 1024]')
 parser.add_argument('--max_epoch', type=int, default=600, help='Epoch to run [default: 250]')
@@ -63,9 +63,9 @@ HOSTNAME = socket.gethostname()
 
 # ModelNet40 official train/test split
 TRAIN_FILES = provider.getDataFiles( \
-    os.path.join(BASE_DIR, 'data/shapenet_cut/train_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/train_files.txt'))
 TEST_FILES = provider.getDataFiles(\
-    os.path.join(BASE_DIR, 'data/shapenet_cut/test_files.txt'))
+    os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/test_files.txt'))
 
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
@@ -135,10 +135,6 @@ def train():
         config.log_device_placement = False
         sess = tf.Session(config=config)
 
-        # saver.restore(sess, tf.train.latest_checkpoint(MODEL_PATH))
-        # saver.restore(sess, MODEL_PATH)
-        # log_string("Model restored.")
-
         # Add summary writers
         #merged = tf.merge_all_summaries()
         merged = tf.summary.merge_all()
@@ -149,9 +145,6 @@ def train():
         # Init variables
         init = tf.global_variables_initializer()
 
-        # To fix the bug introduced in TF 0.12.1 as in
-        # http://stackoverflow.com/questions/41543774/invalidargumenterror-for-tensor-bool-tensorflow-0-12-1
-        #sess.run(init)
         sess.run(init, {is_training_pl: True})
 
         ops = {'pointclouds_pl_1': pointclouds_pl_1,
@@ -169,9 +162,6 @@ def train():
             sys.stdout.flush()
 
             train_one_epoch(sess, ops, train_writer)
-            # eval_one_epoch(sess, ops, test_writer)
-
-            # Save the variables to disk.
 
             if epoch % 40 == 0 and epoch >= 120:
                 save_path = saver.save(sess, os.path.join(LOG_DIR, 'epoch_' + str(epoch)+'.ckpt'))
