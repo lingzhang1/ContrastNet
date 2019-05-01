@@ -52,7 +52,7 @@ Python KMeans.py
 python train_clusternet.py
 ```
 
-- Run the evaluate script after extracting finished:
+- Run the evaluating script after training finished:
 
 ```
 python evaluate.py
