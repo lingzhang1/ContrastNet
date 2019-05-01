@@ -37,10 +37,6 @@ DUMP_DIR = FLAGS.dump_dir
 if not os.path.exists(DUMP_DIR): os.mkdir(DUMP_DIR)
 LOG_FOUT = open(os.path.join(DUMP_DIR, 'log_evaluate.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
-
-# SHAPE_NAMES = [line.rstrip() for line in \
-#     open(os.path.join(BASE_DIR, 'data/modelnet40_ply_hdf5_2048_cut/shape_names.txt'))]
-
 HOSTNAME = socket.gethostname()
 
 # ModelNet40 official train/test split

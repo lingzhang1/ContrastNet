@@ -72,8 +72,6 @@ LABELS = []
 read_flabel = open("cluster_label.txt", "r")
 LABELS = read_flabel.readlines()
 LABELS = [int(i) for i in LABELS]
-# LABELS = np.array(LABELS)
-
 
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
