@@ -125,10 +125,6 @@ if __name__=='__main__':
   label_feed[label_feed<0.5] = 0
   label_feed = label_feed.astype(np.int32)
 
-  # # np.save('./debug/input_feed.npy', input_feed)
-  # input_feed = np.load('./debug/input_feed.npy')
-  # print input_feed
-
   with tf.Graph().as_default():
     input_pl, label_pl = placeholder_inputs(batch_size, num_pt)
     pos, ftr = get_model(input_pl, tf.constant(True))
