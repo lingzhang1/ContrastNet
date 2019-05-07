@@ -56,6 +56,7 @@ def evaluate(num_votes):
     with tf.device('/gpu:'+str(GPU_INDEX)):
         pointclouds_pl, labels_pl = MODEL_CONTRAST.placeholder_inputs(BATCH_SIZE, NUM_POINT)
         is_training_pl = tf.placeholder(tf.bool, shape=())
+        
         # for ContrastNet, uncomment this
         pred, feature1, feature2, end_points = MODEL_CONTRAST.get_model(pointclouds_pl, pointclouds_pl, is_training_pl)
         loss = MODEL_CONTRAST.get_loss(pred, labels_pl, end_points)
@@ -84,12 +85,9 @@ def evaluate(num_votes):
            'loss': loss,
            'feature': feature1}
 
-    #save labels for test
-    feature_f = open('train_feature.txt', 'w+')
-    # feature_f = open('train_cluster.txt', 'w+')
-    eval_one_epoch(sess, ops,feature_f, num_votes)
+    eval_one_epoch(sess, ops, num_votes)
 
-def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
+def eval_one_epoch(sess, ops, num_votes=12, topk=1):
     is_training = False
 
     current_data = np.empty([len(TRAIN_FILES), NUM_POINT, 3], dtype=float)
@@ -119,7 +117,6 @@ def eval_one_epoch(sess, ops, feature_f, num_votes=12, topk=1):
 
     #save labels for test
     label_f =  open('features/train_label.txt', 'w+')
-    # label_f =  open('train_cluster.txt', 'w+')
     labels = labels[0:num_batches*BATCH_SIZE]
     np.savetxt(label_f, labels, fmt='%d')
 

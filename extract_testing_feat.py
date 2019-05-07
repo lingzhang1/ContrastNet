@@ -85,7 +85,6 @@ def evaluate(num_votes):
            'loss': loss,
            'feature': feature1}
 
-
     eval_one_epoch(sess, ops, num_votes)
 
 def eval_one_epoch(sess, ops, num_votes=12, topk=1):
