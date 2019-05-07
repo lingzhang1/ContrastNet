@@ -21,7 +21,7 @@ labels = kmeans.labels_
 label_f =  open('cluster_label.txt', 'w+')
 np.savetxt(label_f, labels, fmt='%d')
 
-#  topk closest pojects of controid
+#  topk closest points of controid
 count = 16
 topk = 11
 indexs = np.zeros((count,topk), dtype=int)
