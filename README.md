@@ -3,6 +3,8 @@ We propose an unsupervised learning approach to learn features from unlabeled po
 
  [[Paper]](https://arxiv.org/abs/1904.12359)  
 
+The short version for this paper is accepted by [CVPRW](https://scene-understanding.com) 2019.  [[Short Version Paper]](https://scene-understanding.com/papers/ContrastNet_CVPRW.pdf)
+
 ## Pipeline
 To learn features from unlabeled point cloud data, we propose to learn features by training networks to accomplish both of the part contrasting and the object clustering pretext tasks. The pipeline of our framework is illustrated in the Figure, which includes three major steps: ContrastNet for part contrast learning, clustering using the learned features, and then ClusterNet for object cluster learning using the cluster IDs. 
 
