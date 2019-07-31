@@ -1,7 +1,7 @@
 # Unsupervised Feature Learning for Point Cloud by Contrasting and Clustering With Graph Convolutional Neural Network
 We propose an unsupervised learning approach to learn features from unlabeled point cloud "3D object" dataset by using part contrasting and object clustering with deep graph neural networks (GNNs).
 
- [[Paper]](https://arxiv.org/abs/1904.12359)  
+This paper is accepted by [3DV](http://3dv19.gel.ulaval.ca) 2019. [[Paper]](https://arxiv.org/abs/1904.12359)  
 
 The short version for this paper is accepted by [CVPRW](https://scene-understanding.com) 2019.  [[Short Version Paper]](https://scene-understanding.com/papers/ContrastNet_CVPRW.pdf)
 
