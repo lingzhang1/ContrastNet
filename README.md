@@ -59,7 +59,7 @@ Python KMeans.py
 python train_clusternet.py
 ```
 
-- Run the extracting script after training finished (uncomment the ContrastNet model):
+- Run the extracting script after training finished (uncomment the ClusterNet model):
 
 ```bash
 python extract_training_feat.py
